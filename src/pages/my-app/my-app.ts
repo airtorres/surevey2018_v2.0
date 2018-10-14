@@ -1,15 +1,25 @@
 import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { WelcomePage } from '../pages/welcome/welcome';
+import { TabsPage } from '../tabs/tabs';
 
+/**
+ * Generated class for the MyAppPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+
+@IonicPage()
 @Component({
-  templateUrl: 'app.html'
+  selector: 'page-my-app',
+  templateUrl: 'my-app.html',
 })
-export class MyApp {
-  rootPage:any = WelcomePage;
+export class MyAppPage {
+  rootPage:any = TabsPage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
@@ -19,4 +29,5 @@ export class MyApp {
       splashScreen.hide();
     });
   }
+
 }

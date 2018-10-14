@@ -3,6 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
+import { WelcomePage } from '../pages/welcome/welcome';
+import { SignupPage } from '../pages/signup/signup';
+import { SigninPage } from '../pages/signin/signin';
+import { MyAppPage } from '../pages/my-app/my-app';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
@@ -17,7 +21,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    WelcomePage,
+    SignupPage,
+    SigninPage,
+    MyAppPage
   ],
   imports: [
     BrowserModule,
@@ -29,7 +37,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    WelcomePage,
+    SignupPage,
+    SigninPage,
+    MyAppPage
   ],
   providers: [
     StatusBar,
