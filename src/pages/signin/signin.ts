@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { SignupPage } from '../signup/signup';
-import { MyAppPage } from '../my-app/my-app';
+import { WelcomePage } from '../welcome/welcome';
 
 /**
  * Generated class for the SigninPage page.
@@ -30,7 +30,7 @@ export class SigninPage {
   }
 
   navigateToHome(){
-  	this.navCtrl.setRoot(MyAppPage);
+  	this.navCtrl.setRoot(WelcomePage);
   }
 
 }

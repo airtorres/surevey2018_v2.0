@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { SignupPage } from '../signup/signup';
+import { MyAppPage } from '../my-app/my-app';
 
 /**
  * Generated class for the WelcomePage page.
@@ -25,7 +25,7 @@ export class WelcomePage {
   }
 
   navigateToHome(){
-  	this.navCtrl.setRoot(SignupPage);
+  	this.navCtrl.setRoot(MyAppPage);
   	// use this.navCtrl.push(PageName, {}); // para may "back" button
   }
 
