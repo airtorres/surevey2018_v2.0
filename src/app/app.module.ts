@@ -14,6 +14,17 @@ import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
+ const firebaseAuth = {
+    apiKey: "AIzaSyDllAkdkwDHAifL7d_1aGkCFcXMT_zY09s",
+    authDomain: "surevey2018.firebaseapp.com",
+    databaseURL: "https://surevey2018.firebaseio.com",
+    projectId: "surevey2018",
+    storageBucket: "surevey2018.appspot.com",
+    messagingSenderId: "1031322702252"
+  };
 
 @NgModule({
   declarations: [
@@ -29,7 +40,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    AngularFireModule.initializeApp(firebaseAuth),
+    AngularFireAuthModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
