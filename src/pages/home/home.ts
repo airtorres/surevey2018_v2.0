@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, App } from 'ionic-angular';
+
+import { SigninPage } from '../signin/signin';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 import { SigninPage } from '../signin/signin';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -11,9 +14,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class HomePage {
 
   constructor(public navCtrl: NavController,
-  	private fire: AngularFireAuth) {
-
-  }
+  	private fire: AngularFireAuth,
+  	public app: App) {}
 
   logout(){
   	this.fire.auth.signOut().then()
@@ -25,7 +27,8 @@ export class HomePage {
     });
 
   	// navigate back to sign-in page
-  	this.navCtrl.setRoot(SigninPage);
+  	this.navCtrl.popToRoot();
+  	this.app.getRootNav().setRoot(SigninPage);
   }
 
 }
