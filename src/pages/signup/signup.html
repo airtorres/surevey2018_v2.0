@@ -6,30 +6,34 @@
 -->
 
 <ion-content padding>
-	(Logo and Name somewhere here)
+  <div class="fixed-content" padding>
+  	<div text-center>
+      <ion-img width="200" height="200" src="../assets/imgs/logo1.png"></ion-img>
+    </div>
 
-    <ion-item>
-      <ion-label floating>Username</ion-label>
-      <ion-input type="text" #username></ion-input>
-    </ion-item>
+    <ion-grid>
+      <ion-row style="margin: 5px 0;">
+        <ion-input type="text" placeholder="Username" #username></ion-input>
+      </ion-row>
 
-    <ion-item>
-      <ion-label floating>Email</ion-label>
-      <ion-input type="text" #email></ion-input>
-    </ion-item>
+      <ion-row style="margin: 5px 0;">
+        <ion-input type="text" #email placeholder="Email"></ion-input>
+      </ion-row>
 
-    <ion-item>
-      <ion-label floating>Password</ion-label>
-      <ion-input type="password" #password></ion-input>
-    </ion-item>
+      <ion-row style="margin: 5px 0;">
+        <ion-input type="password" #password placeholder="Password"></ion-input>
+      </ion-row>
+    </ion-grid>
 
-	<div padding>
-		<button block ion-button round (click)="signup()">Sign up</button>
-	</div>
+    <div text-center>
+  		<button ion-button round (click)="signup()">Sign up</button>
+  	</div>
 
-	<div padding>
-		<p>Already have an account?</p>
-		<button block ion-button clear (click)="navigateToSignIn()">Sign in</button>
-	</div>
+  	<div text-center>
+  		<p>Already have an account?</p>
+  		<button ion-button clear (click)="navigateToSignIn()">Sign in</button>
+  	</div>
+
+  </div>
 
 </ion-content>

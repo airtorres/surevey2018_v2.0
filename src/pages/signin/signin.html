@@ -6,25 +6,31 @@
 -->
 
 <ion-content padding>
-    <ion-img src="resources\logo.png"></ion-img>
 
-    <ion-item>
-      <ion-label floating>Email</ion-label>
-      <ion-input type="text" #email></ion-input>
-    </ion-item>
+  <div padding class="fixed-content" text-center>
+    <div text-center>
+      <ion-img width="200" height="200" src="../assets/imgs/logos.png"></ion-img>
+    </div>
 
-    <ion-item>
-      <ion-label floating>Password</ion-label>
-      <ion-input type="password" #password></ion-input>
-    </ion-item>
+    <ion-grid>
+      <ion-row style="margin: 5px 0;">
+        <ion-input block type="text" placeholder="Email" #email></ion-input>
+      </ion-row>
 
-	<div padding>
-		<button block ion-button round (click)="signin()">Sign in</button>
-	</div>
+      <ion-row style="margin: 5px 0;">
+        <ion-input block type="password" placeholder="Password" #password></ion-input>
+      </ion-row>
+    </ion-grid>
 
-	<div padding>
-		<p>Don't have an account?</p>
-		<button block ion-button clear (click)="navigateToSignUp()">Sign Up</button>
-	</div>
+  	<div text-center>
+  		<button color="primary" ion-button round (click)="signin()" #signIn_btn>Sign in</button>
+  	</div>
+
+  	<div text-center>
+  		<p>Don't have an account?</p>
+  		<button ion-button clear (click)="navigateToSignUp()">Sign Up</button>
+  	</div>
+
+  </div>
 
 </ion-content>
