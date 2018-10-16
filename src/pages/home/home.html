@@ -1,8 +1,26 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Dashboard</ion-title>
+    <ion-title><button menuToggle><ion-icon ios="ios-menu" md="md-menu"></ion-icon></button>Dashboard</ion-title>
   </ion-navbar>
 </ion-header>
+
+<ion-menu [content]="content">
+	<ion-header>
+		<ion-toolbar>
+			<ion-title>Title Here</ion-title>
+		</ion-toolbar>
+	</ion-header>
+
+	<ion-content>
+		<ion-list>
+			<ion-item>profile</ion-item>
+			<ion-item>settings</ion-item>
+			<ion-item (click)="logout()">sign out</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-menu>
+
+<ion-nav id="nav" #content [root]="rootPage"></ion-nav>
 
 <ion-content padding>
   (contents here)

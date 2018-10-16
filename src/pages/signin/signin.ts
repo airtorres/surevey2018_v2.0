@@ -39,16 +39,20 @@ export class SigninPage {
   }
 
   signin(){
-    this.fire.auth.signInWithEmailAndPassword(this.email.value, this.password.value)
-    .then(data => {
-      console.log("Data got:\n", data);
-      this.navigateToHome();
-    })
-    .catch( function(error) {
-      console.log("got an error:", error);
-      // only temporary alert. Show error later.
-      alert(error.message);
-    });
+    // GIN-COMMENT PARA NO NEED MUNA MAGLOGIN
+    // this.fire.auth.signInWithEmailAndPassword(this.email.value, this.password.value)
+    // .then(data => {
+    //   console.log("Data got:\n", data);
+    //   this.navigateToHome();
+    // })
+    // .catch( function(error) {
+    //   console.log("got an error:", error);
+    //   // only temporary alert. Show error later.
+    //   alert(error.message);
+    // });
+
+    // TEMPORARY
+    this.navigateToHome()
   }
 
 }
