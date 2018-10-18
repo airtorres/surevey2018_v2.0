@@ -4,9 +4,6 @@ import { NavController, App } from 'ionic-angular';
 import { SigninPage } from '../signin/signin';
 import { AngularFireAuth } from '@angular/fire/auth';
 
-import { SigninPage } from '../signin/signin';
-import { AngularFireAuth } from '@angular/fire/auth';
-
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
