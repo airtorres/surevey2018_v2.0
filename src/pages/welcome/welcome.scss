@@ -1,11 +1,22 @@
 page-welcome {
 	h3{
 		text-transform: uppercase;
-		text-align: center;
+		font-size: 28px;
+		font-family: Moon;
+		color: #5E5555;
 	}
 
 	p{
+		font-family: Segoe Ui;
+		font-size: 13px;
+	}
+
+	ion-content{
+		margin-top: 180px;
+	}
+
+	.button-md{
+		margin-top: 120px;
 		text-transform: capitalize;
-		text-align: center;
 	}
 }

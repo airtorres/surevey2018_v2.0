@@ -1,29 +1,45 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title><button menuToggle><ion-icon ios="ios-menu" md="md-menu"></ion-icon></button>Dashboard</ion-title>
-  </ion-navbar>
+	<ion-navbar>
+		<button ion-button icon-only clear menuToggle>
+			<ion-icon name="menu" color="primary"></ion-icon>
+		</button>
+		<ion-title>Dashboard</ion-title>
+	</ion-navbar>
 </ion-header>
 
 <ion-menu [content]="content">
-	<ion-header>
+	<ion-header text-center>
 		<ion-toolbar>
-			<ion-title>Title Here</ion-title>
+			<ion-avatar></ion-avatar>
+			<ion-title>Maxx Quintero</ion-title>
+			<ion-label>maxxq@gmail.com</ion-label>
 		</ion-toolbar>
 	</ion-header>
 
 	<ion-content>
 		<ion-list>
-			<ion-item>profile</ion-item>
-			<ion-item>settings</ion-item>
-			<ion-item (click)="logout()">sign out</ion-item>
+			<ion-item>
+				<ion-icon item-left name="person"></ion-icon>
+				Profile
+			</ion-item>
+			<ion-item>
+				<ion-icon item-left name="settings"></ion-icon>
+				Settings
+			</ion-item>
+			<ion-item (click)="logout()">
+				<ion-icon  item-left name="log-out"></ion-icon>
+				Sign out
+			</ion-item>
 		</ion-list>
 	</ion-content>
 </ion-menu>
 
 <ion-nav id="nav" #content [root]="rootPage"></ion-nav>
 
-<ion-content padding>
-  (contents here)
-  (tabs are subject for change pa man )
-  
+<ion-content>
+	<ion-card padding text-center>
+		<ion-card-header>Start your survey now!</ion-card-header>
+		<button block ion-button>Create survey</button>
+		<button block ion-button>Browse survey templates</button>
+	</ion-card>
 </ion-content>
