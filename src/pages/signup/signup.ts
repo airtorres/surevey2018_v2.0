@@ -4,6 +4,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { SigninPage } from '../signin/signin';
 import { WelcomePage } from '../welcome/welcome';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireDatabase } from '@angular/fire/database';
 
 /**
  * Generated class for the SignupPage page.
@@ -23,9 +24,12 @@ export class SignupPage {
   @ViewChild('email') email;
   @ViewChild('password') password;
 
+  arrayUsers = []
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private fire: AngularFireAuth) {
+    private fire: AngularFireAuth,
+    private fireDB: AngularFireDatabase) {
   }
 
   ionViewDidLoad() {
@@ -40,6 +44,13 @@ export class SignupPage {
   signup(){
     console.log(this.email.value)
     console.log(this.password.value);
+
+    // this.fireDB.list("/users/").valueChanges().subscribe(_data => {
+    //   this.arrayUsers = _data;
+
+    //   console.log(this.arrayUsers);
+    // });
+
     this.fire.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
     .then(data => {
       console.log("Data got:\n", data);
