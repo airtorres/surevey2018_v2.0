@@ -1,12 +1,55 @@
 page-home {
 
 }
+.main-card{
+	margin-top: 25px;
+}
+
+.card-radius{
+	border-radius: 12px;
+}
+
+
+.page-header{
+	background: #FFFEFE;
+}
 
 ion-icon{
 	font-size: 20px;
 }
 
 ion-card-header{
-	font-family: Segoe Ui;
 	letter-spacing: 2px;
+}
+
+.avatar{
+	margin-left: 93px;
+	margin-top: 10px;
+}
+
+.menu_items{
+	margin-top: 10px;
+}
+.ongoing-card-header{
+	background-color:  map-get($colors, primary);
+}
+
+#ongoing-card-title, .ongoing-card-header p{
+	color: white;
+}
+
+#view-ongoing-btn{
+	border: 2px solid white;
+	border-radius: 54px;
+}
+
+.invite-card{
+	background-color:  #E6EEF2
+}
+#invite-card-title{
+	font-size: 16px;
+	font-weight: 500;
+}
+#invite-respond-btn{
+	border-radius: 54px;
 }

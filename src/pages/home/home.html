@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="page-header">
 	<ion-navbar>
 		<button ion-button icon-only clear menuToggle>
 			<ion-icon name="menu" color="primary"></ion-icon>
@@ -9,14 +9,18 @@
 
 <ion-menu [content]="content">
 	<ion-header text-center>
-		<ion-toolbar>
-			<ion-avatar></ion-avatar>
-			<ion-title>Maxx Quintero</ion-title>
-			<ion-label>maxxq@gmail.com</ion-label>
+		<ion-toolbar padding>
+			<ion-avatar class="avatar">
+				<img src="../assets/imgs/avatar.png">
+			</ion-avatar>
+			<ion-card-title>
+				Maxx Quintero
+				<span style="font-size: 14px;">maxxq@gmail.com</span>
+			</ion-card-title>
 		</ion-toolbar>
 	</ion-header>
 
-	<ion-content>
+	<ion-content class="menu_items">
 		<ion-list>
 			<ion-item>
 				<ion-icon item-left name="person"></ion-icon>
@@ -37,9 +41,64 @@
 <ion-nav id="nav" #content [root]="rootPage"></ion-nav>
 
 <ion-content>
-	<ion-card padding text-center>
-		<ion-card-header>Start your survey now!</ion-card-header>
-		<button block ion-button (click)="create_survey()">Create survey</button>
-		<button block ion-button>Browse survey templates</button>
+	<ion-card padding text-center class="main-card card-radius">
+		<ion-card-content>
+			<ion-card-title>Start your survey now!</ion-card-title>
+			<button block ion-button (click)="create_survey()">Create survey</button>
+			<button block ion-button>Browse survey templates</button>
+		</ion-card-content>
 	</ion-card>
+
+	<ion-item-divider no-lines style="text-transform: uppercase;">Ongoing Surveys</ion-item-divider>
+
+	<ion-card class="ongoing-card card-radius">
+
+		<div padding class="ongoing-card-header">
+			<ion-card-title id="ongoing-card-title">Music for the brain</ion-card-title>
+			<ion-row>
+			    <ion-col>
+			      	<p style="font-size: 12px;">Created: Sept. 22, 2018</p>
+			    </ion-col>
+
+			    <ion-col>
+			     	<button ion-button id="view-ongoing-btn">VIEW DETAILS</button>
+			    </ion-col>
+		  	</ion-row>
+		</div>
+
+		<ion-row padding>
+		    <ion-col>
+		      	5 total responses
+		    </ion-col>
+
+		    <ion-col>
+		     	5 complete responses
+		    </ion-col>
+		</ion-row>
+		 
+		
+	</ion-card>
+
+	<ion-item-divider no-lines style="text-transform: uppercase;">Survey Invites</ion-item-divider>
+
+	<ion-card class="invite-card card-radius">
+
+		<ion-card-content>
+
+			<ion-card-title id="invite-card-title">Computer Science: Course of the Future</ion-card-title>
+			
+			<ion-row>
+			    <ion-col>
+			      	<p>By: Alliah Wriths</p> 
+			    </ion-col>
+
+			    <ion-col>
+			     	<button ion-button small id="invite-respond-btn">RESPOND NOW</button>
+			    </ion-col>
+		  	</ion-row>
+
+		</ion-card-content>
+
+	</ion-card>
+
 </ion-content>
