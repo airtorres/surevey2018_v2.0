@@ -3,6 +3,8 @@ import { NavController, App } from 'ionic-angular';
 
 import { SigninPage } from '../signin/signin';
 import { CreateSurveyPage } from '../create-survey/create-survey';
+import { ProfilePage } from '../profile/profile';
+import { SettingPage } from '../setting/setting';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -15,6 +17,14 @@ export class HomePage {
   constructor(public navCtrl: NavController,
   	private fire: AngularFireAuth,
   	public app: App) {}
+
+  gotoProfile(){
+  	this.navCtrl.push(ProfilePage, {});
+  }
+
+  gotoSettings(){
+  	this.navCtrl.push(SettingPage, {});
+  }
 
   logout(){
   	this.fire.auth.signOut().then()

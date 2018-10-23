@@ -7,11 +7,15 @@ import { WelcomePage } from '../pages/welcome/welcome';
 import { SignupPage } from '../pages/signup/signup';
 import { SigninPage } from '../pages/signin/signin';
 import { MyAppPage } from '../pages/my-app/my-app';
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
+
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { CreateSurveyPage } from '../pages/create-survey/create-survey';
+import { SurveyListPage } from '../pages/survey-list/survey-list';
+import { ChatBoxPage } from '../pages/chat-box/chat-box';
+import { NotificationPage } from '../pages/notification/notification';
+import { ProfilePage } from '../pages/profile/profile';
+import { SettingPage } from '../pages/setting/setting';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -31,15 +35,18 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
-    ContactPage,
     HomePage,
     TabsPage,
     WelcomePage,
     SignupPage,
     SigninPage,
     MyAppPage,
-    CreateSurveyPage
+    CreateSurveyPage,
+    SurveyListPage,
+    ChatBoxPage,
+    NotificationPage,
+    ProfilePage,
+    SettingPage
   ],
   imports: [
     BrowserModule,
@@ -51,15 +58,18 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
-    ContactPage,
     HomePage,
     TabsPage,
     WelcomePage,
     SignupPage,
     SigninPage,
     MyAppPage,
-    CreateSurveyPage
+    CreateSurveyPage,
+    SurveyListPage,
+    ChatBoxPage,
+    NotificationPage,
+    ProfilePage,
+    SettingPage
   ],
   providers: [
     StatusBar,
