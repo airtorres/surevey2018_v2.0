@@ -15,22 +15,22 @@
 
 <ion-content padding>
 	<ion-item>
-	    <ion-label color="primary" stacked>Question</ion-label>
-	    <ion-input [(ngModel)]="inputQuestion" type="text" placeholder="Enter question" #shortAns></ion-input>
-		</ion-item>
+	   <ion-label color="primary" stacked>Question</ion-label>
+	   <ion-input [(ngModel)]="inputQuestion" type="text" placeholder="Enter question" #shortAns></ion-input>
+	</ion-item>
 
 <!-- SHORT ANSWER  -->
-  	<ion-item *ngIf = isShortAnswer()>
+  	<ion-item *ngIf="type == 'shortAnswer'">
     	<ion-input type="text" placeholder="Short answer text" disabled #answer></ion-input>
 		</ion-item>
 
 <!-- LONG ANSWER -->
-		<ion-item *ngIf = isLongAnswer()>
+		<ion-item *ngIf="type == 'longAnswer'">
 			<ion-textarea placeholder="Long answer text" disabled #answer rows=2></ion-textarea>
 		</ion-item>
 
 <!-- MULTIPLE CHOICE -->
-    <ion-list radio-group [(ngModel)]="autoManufacturers" *ngIf = isMultipleChoice()>
+    <ion-list radio-group *ngIf="type == 'multipleChoice'">
 	    <ion-item>
 	    	<ion-radio disabled></ion-radio>
 	    	<ion-input type="text" placeholder="Option" #answer></ion-input>
@@ -43,7 +43,7 @@
     </ion-list>
 
 <!-- CHECKBOX -->
-  	<ion-list *ngIf = isCheckbox()>
+  	<ion-list *ngIf="type == 'checkbox'">
     	<ion-item>
        		<ion-input type="text" placeholder="Option" #answer></ion-input>
       		<ion-checkbox disabled></ion-checkbox>
@@ -56,26 +56,26 @@
   	</ion-list>
 
 <!-- DROPDOWN -->
-	<ion-list radio-group [(ngModel)]="autoManufacturers" *ngIf = isDropdown()>
+	<ion-list radio-group *ngIf="type == 'dropdown'">
       <ion-item>
-        <ion-radio disabled></ion-radio>
+        <ion-label>1. </ion-label>
         <ion-input type="text" placeholder="Option" #answer></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-radio disabled></ion-radio>
+        <ion-label>2. </ion-label>
         <ion-input type="text" placeholder="Option" #answer></ion-input>
       </ion-item>
     </ion-list>
 
 <!-- DATE -->
-	<ion-item *ngIf = isDate()>
+	<ion-item *ngIf="type == 'date'">
 		<ion-label>Select Date</ion-label>
 		<ion-datetime displayFormat="MMM DD, YYYY" disabled></ion-datetime>
 	</ion-item>
 
 <!-- TIME -->
-	<ion-item *ngIf = isTime()>
+	<ion-item *ngIf="type == 'time'">
 		<ion-label>Select Time</ion-label>
 		<ion-datetime displayFormat= "HH:mm" disabled></ion-datetime>
 	</ion-item>

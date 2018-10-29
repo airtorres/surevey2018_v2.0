@@ -22,54 +22,7 @@ export class QuestionPage {
   	ionViewDidLoad() {
     	console.log('ionViewDidLoad QuestionPage');
   	}
-
-  	isShortAnswer() {
-		if (this.type == "shortAnswer") {
-			return true;
-		}
-		return false;
-	}
-
-	isLongAnswer() {
-		if (this.type == "longAnswer") {
-			return true;
-		}
-		return false;
-	}
-
-  	isMultipleChoice() {
-    	if (this.type == "multipleChoice") {
-      		return true;
-    	}
-    	return false;
-  	}
-
-  	isCheckbox() {
-    	if (this.type == "checkbox") {
-      		return true;
-    	}	
-    	return false;
-  	}
-
-  	isDropdown() {
-	    if (this.type == "dropdown") {
-	      return true;
-	    }
-	    return false;
- 	}
-  	isDate() {
-	  	if (this.type == "date") {
-	      return true;
-	    }
-	    return false;
-  	}
-  	isTime() {
-  		if (this.type == "time"){
-  			return true;
-  		}
-  		return false;
-  	}
-
+    
   closeQuestionModal() {
   	this.view.dismiss();
   }

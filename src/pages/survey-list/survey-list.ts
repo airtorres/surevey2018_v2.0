@@ -14,7 +14,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'survey-list.html',
 })
 export class SurveyListPage {
-
+	surveyList: string = "all";
+	
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 

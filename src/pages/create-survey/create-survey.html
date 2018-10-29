@@ -35,4 +35,34 @@
 			<button ion-button (click)="addQuestion('shortAnswer')">Short Answer</button>	
 		</ion-fab-list>
  	</ion-fab>
+
+ 	<!-- CARDS -->
+
+ 	<!-- MULTIPLE CHOICE -->
+ 	<ion-card padding style="border-radius: 12px;">
+ 		<div text-right>
+ 			<ion-note>Multiple Choice</ion-note>
+ 		</div>
+ 		<ion-card-title id="question-title">Do you like ice cream?</ion-card-title>
+ 		<ion-list radio-group [(ngModel)]="relationship">
+  			<ion-item>
+			    <ion-label>Yes</ion-label>
+			    <ion-radio disabled></ion-radio>
+	  		</ion-item>
+
+		  	<ion-item>
+			    <ion-label>No</ion-label>
+			    <ion-radio disabled></ion-radio>
+		  	</ion-item>
+		</ion-list>
+
+		<ion-buttons end>
+			<button ion-button clear>
+				<ion-icon name="trash"></ion-icon>
+			</button>
+			<button ion-button clear>
+				<ion-icon name="create"></ion-icon>
+			</button>
+		</ion-buttons>
+ 	</ion-card>
 </ion-content>

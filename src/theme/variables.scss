@@ -50,12 +50,11 @@ $colors: (
 
 
 
-
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
 $toolbar-md-title-text-color: map-get($colors, primary);
-
+$toolbar-background: map-get($colors, white);
 
 
 // App Windows Variables
