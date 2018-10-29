@@ -16,6 +16,7 @@ import { ChatBoxPage } from '../pages/chat-box/chat-box';
 import { NotificationPage } from '../pages/notification/notification';
 import { ProfilePage } from '../pages/profile/profile';
 import { SettingPage } from '../pages/setting/setting';
+import { QuestionPage } from '../pages/question/question';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -46,7 +47,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
     ChatBoxPage,
     NotificationPage,
     ProfilePage,
-    SettingPage
+    SettingPage,
+    QuestionPage
   ],
   imports: [
     BrowserModule,
@@ -69,7 +71,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
     ChatBoxPage,
     NotificationPage,
     ProfilePage,
-    SettingPage
+    SettingPage,
+    QuestionPage
   ],
   providers: [
     StatusBar,

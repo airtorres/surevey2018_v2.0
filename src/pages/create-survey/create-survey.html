@@ -6,13 +6,33 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>create_survey</ion-title>
-  </ion-navbar>
-
+	<ion-navbar color="primary">
+	    <ion-title>Edit</ion-title>
+	    <ion-buttons end>
+	    	<button ion-button>Save</button>
+	    </ion-buttons>
+	</ion-navbar>
 </ion-header>
 
 
-<ion-content padding>
+<ion-content style="margin-top: 10px;">
+	<ion-item>
+		<ion-input type="text" placeholder="Untitled survey" id="survey-title-input"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-input type="text" placeholder="Description" style="font-size: 16px;"></ion-input>
+	</ion-item>
 
+	<ion-fab bottom right>
+		<button ion-fab><ion-icon name="add"></ion-icon></button>
+		<ion-fab-list side="top" class="questionChoice">
+			<button ion-button (click)="addQuestion('date')">Date</button>
+			<button ion-button (click)="addQuestion('time')">Time</button>
+			<button ion-button (click)="addQuestion('dropdown')">Dropdown</button>
+			<button ion-button (click)="addQuestion('checkbox')">Checkbox</button>
+			<button ion-button (click)="addQuestion('multipleChoice')">Multiple Choice</button>
+			<button ion-button (click)="addQuestion('longAnswer')">Long Answer</button>
+			<button ion-button (click)="addQuestion('shortAnswer')">Short Answer</button>	
+		</ion-fab-list>
+ 	</ion-fab>
 </ion-content>
