@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { QuestionPage } from '../question/question';
@@ -15,6 +15,7 @@ import { QuestionPage } from '../question/question';
   templateUrl: 'create-survey.html',
 })
 export class CreateSurveyPage {
+	@ViewChild('fab') fab;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
@@ -29,6 +30,7 @@ export class CreateSurveyPage {
   	}
   	console.log(data);
 
+  	this.fab.close();
   	this.navCtrl.push(QuestionPage, data);
   }
 

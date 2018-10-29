@@ -23,8 +23,8 @@
 		<ion-input type="text" placeholder="Description" style="font-size: 16px;"></ion-input>
 	</ion-item>
 
-	<ion-fab bottom right>
-		<button ion-fab><ion-icon name="add"></ion-icon></button>
+	<ion-fab bottom right #fab>
+		<button ion-fab style="margin-bottom: 10px;"><ion-icon name="add"></ion-icon></button>
 		<ion-fab-list side="top" class="questionChoice">
 			<button ion-button (click)="addQuestion('date')">Date</button>
 			<button ion-button (click)="addQuestion('time')">Time</button>
