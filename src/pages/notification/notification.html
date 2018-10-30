@@ -13,6 +13,56 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+	<ion-list text-wrap>
 
+		<!-- UNREAD NOTIFICATIONS -->
+		<ion-item style="background-color: #E6EEF2;">
+			<ion-icon item-left name="ios-undo" style="font-size: 25px;" color="blue"></ion-icon>
+			Jesiah Neely responded to "Music for the Brain"
+		</ion-item>
+
+		<!-- RESPONDED NOTIFICATIONS -->
+		<ion-item>
+			<ion-icon item-left name="ios-undo" style="font-size: 25px;" color="blue"></ion-icon>
+			Nathan Sykes responded to "Music for the Brain"
+		</ion-item>
+
+		<!-- INVITES NOTIFICATIONS -->
+		<ion-item>
+			<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
+			Aliah Pitts invited you to respond to "Computer Science: Course of the Future"
+
+			<ion-buttons end>
+				<button ion-button round  small color="green">ACCEPT</button>
+				<button ion-button round  small color="red">DECLINE</button>
+			</ion-buttons>
+		</ion-item>
+
+		<!-- USER DECLINED SURVEY INVITES -->
+		<ion-item>
+			<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
+			Aliah Pitts invited you to respond to "Social Media Pros and Cons"
+			<ion-note item-end color="red">Declined</ion-note>
+		</ion-item>
+
+		<!-- USER ACCEPTED SURVEY INVITES -->
+		<ion-item>
+			<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
+			Aayden Smith invited you to respond to "E-Learning for Students"
+			<ion-note item-end color="green">Accepted</ion-note>
+		</ion-item>
+
+		<!-- DECLINED INVITES OF USER SURVEY -->
+		<ion-item>
+			<ion-icon item-left name="close-circle" style="font-size: 25px;" color="red"></ion-icon>
+			Sophia Rose declined your survey invitation to "Music for the Brain"
+		</ion-item>
+
+		<!-- ACCEPTED INVITES OF USER SURVEY -->
+		<ion-item>
+			<ion-icon item-left name="checkmark-circle" style="font-size: 25px;" color="green"></ion-icon>
+			Alex Lee accepted your survey invitatiion to "Music for the Brain"
+		</ion-item>
+	</ion-list>
 </ion-content>

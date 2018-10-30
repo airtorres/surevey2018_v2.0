@@ -24,7 +24,7 @@
   	<div [ngSwitch] = "surveyList">
 
   		<!-- ALL -->
-  		<ion-list *ngSwitchCase="'all'">
+  		<ion-list *ngSwitchCase="'all'" text-wrap>
 			<ion-item>
 			  	Music for the Brain
 				<button item-end clear ion-button>
@@ -42,7 +42,22 @@
 			</ion-item>
 
 			<ion-item>
+				What are the effects of not having enough sleep?
+				<button item-end clear ion-button>
+					View 
+					<ion-icon name="ios-arrow-forward"></ion-icon>
+				</button>
+			</ion-item>
+
+			<ion-item>
 				Advantages of Bullet Journaling
+				<button item-end round ion-button>
+					Respond Now
+				</button>
+			</ion-item>
+
+			<ion-item>
+				Supernatural: It is real or just an illusion?
 				<button item-end round ion-button>
 					Respond Now
 				</button>
@@ -63,7 +78,7 @@
 		</ion-list>
 
 		<!-- USER OWN CREATED SURVEYS -->
-		<ion-list *ngSwitchCase="'surveys'">
+		<ion-list *ngSwitchCase="'surveys'" text-wrap>
 			<ion-item>
 			  	Music for the Brain
 				<button item-end clear ion-button>
@@ -79,10 +94,17 @@
 					<ion-icon name="ios-arrow-forward"></ion-icon>
 				</button>
 			</ion-item>
+			<ion-item>
+				What are the effects of not having enough sleep?
+				<button item-end clear ion-button>
+					View 
+					<ion-icon name="ios-arrow-forward"></ion-icon>
+				</button>
+			</ion-item>
 		</ion-list>
 
 		<!-- SURVEY INVITES -->
-		<ion-list *ngSwitchCase="'invites'">
+		<ion-list *ngSwitchCase="'invites'" text-wrap>
 			<ion-item>
 				Advantages of Bullet Journaling
 				<button item-end round ion-button>
@@ -92,6 +114,13 @@
 
 			<ion-item>
 				Social Media Pros and Cons
+				<button item-end round ion-button>
+					Respond Now
+				</button>
+			</ion-item>
+
+			<ion-item>
+				Supernatural: It is real or just an illusion?
 				<button item-end round ion-button>
 					Respond Now
 				</button>
