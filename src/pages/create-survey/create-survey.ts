@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { QuestionPage } from '../question/question';
+import { SurveyListPage } from '../survey-list/survey-list';
 /**
  * Generated class for the CreateSurveyPage page.
  *
@@ -32,6 +33,13 @@ export class CreateSurveyPage {
 
   	this.fab.close();
   	this.navCtrl.push(QuestionPage, data);
+  }
+
+  saveChanges(){
+    // save changes to local
+
+    // redirect to survey-list: showing all surveys
+    this.navCtrl.setRoot(SurveyListPage);
   }
 
 }

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { ChatPage } from '../chat/chat';
+import { SendInvitePage } from '../send-invite/send-invite';
 
 /**
- * Generated class for the ChatBoxPage page.
+ * Generated class for the SurveySummaryPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -12,20 +12,20 @@ import { ChatPage } from '../chat/chat';
 
 @IonicPage()
 @Component({
-  selector: 'page-chat-box',
-  templateUrl: 'chat-box.html',
+  selector: 'page-survey-summary',
+  templateUrl: 'survey-summary.html',
 })
-export class ChatBoxPage {
+export class SurveySummaryPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ChatBoxPage');
+    console.log('ionViewDidLoad SurveySummaryPage');
   }
 
-  gotoChat(){
-  	this.navCtrl.push(ChatPage, {});
+  gotoSendInvitePage(){
+  	this.navCtrl.push(SendInvitePage, {});
   }
 
 }
