@@ -20,6 +20,7 @@ import { QuestionPage } from '../pages/question/question';
 import { SurveySummaryPage } from '../pages/survey-summary/survey-summary';
 import { SendInvitePage } from '../pages/send-invite/send-invite';
 import { ChatPage } from '../pages/chat/chat';
+import { NewMsgPage } from '../pages/new-msg/new-msg';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -54,7 +55,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
     QuestionPage,
     SurveySummaryPage,
     SendInvitePage,
-    ChatPage
+    ChatPage,
+    NewMsgPage
   ],
   imports: [
     BrowserModule,
@@ -81,7 +83,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
     QuestionPage,
     SurveySummaryPage,
     SendInvitePage,
-    ChatPage
+    ChatPage,
+    NewMsgPage
   ],
   providers: [
     StatusBar,
