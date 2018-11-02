@@ -6,6 +6,8 @@ import { WelcomePage } from '../welcome/welcome';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 
+import { Storage } from '@ionic/storage';
+
 /**
  * Generated class for the SignupPage page.
  *
@@ -24,12 +26,38 @@ export class SignupPage {
   @ViewChild('email') email;
   @ViewChild('password') password;
 
+  // for firebaseDB
   arrayUsers = []
+
+  // for local storage
+  users = {}
+  user = {
+    'username':'',
+    'first name': '',
+    'last name': '',
+    'age':'',
+    'birthdate': '',
+    'address': '',
+    'sex':'',
+    'gender':'',
+    'email': '',
+    'password':'',
+    'surveys':[],
+    'invitations': [{
+        's_id': '',
+        'status': ''  //status: cancelled/deleted/pending/incomplete/completed
+    }]
+  }
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private fire: AngularFireAuth,
-    private fireDB: AngularFireDatabase) {
+    private fireDB: AngularFireDatabase,
+    private storage: Storage) {
+
+    this.storage.get("users").then(value => {
+        this.users = value;
+    });
   }
 
   ionViewDidLoad() {
@@ -38,29 +66,46 @@ export class SignupPage {
 
   navigateToSignIn(){
   	this.navCtrl.setRoot(SigninPage);
-  	// use this.navCtrl.push(PageName, {}); // para may "back" button
   }
 
   signup(){
-    console.log(this.email.value)
-    console.log(this.password.value);
+    console.log(this.email.value);
 
+    // PARA SA ANO JA? UPDATE? -------------------------------------------------
     // this.fireDB.list("/users/").valueChanges().subscribe(_data => {
     //   this.arrayUsers = _data;
-
     //   console.log(this.arrayUsers);
     // });
 
-    this.fire.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
-    .then(data => {
-      console.log("Data got:\n", data);
-      this.navigateToHome();
-    })
-    .catch( function(error) {
-      console.log("got an error:", error);
-      // only temporary alert. Show error later.
-      alert(error.message);
-    });
+    // SIGNING UP TO FIREBASE AUTH -----------------------------------------
+    // this.fire.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
+    // .then(data => {
+    //   console.log("Data got:\n", data);
+    //   this.navigateToHome();
+    // })
+    // .catch( function(error) {
+    //   console.log("got an error:", error);
+    //   // only temporary alert. Show error later.
+    //   alert(error.message);
+    // });
+
+    // SIGNING UP TO IONIC LOCAL STORAGE --------------------------------------
+    this.user['username'] = this.username.value;
+    this.user['email'] = this.email.value;
+    this.user['password'] = this.password.value;
+
+    if(this.users){
+      JSON.parse(this.users['users'].push(this.user));
+    }
+    else{
+      this.users = {'users': ''};
+      this.users['users'] = [this.user];
+    }
+    this.storage.set('users', this.users);
+    this.storage.set('currentUser', this.email.value);
+    this.navigateToHome();
+    // ENDOF SIGNUP-LOCAL -----------------------------------------------------
+
   }
 
   navigateToHome(){

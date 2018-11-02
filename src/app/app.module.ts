@@ -27,6 +27,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { IonicStorageModule } from '@ionic/storage';
 
  const firebaseAuth = {
     apiKey: "AIzaSyDllAkdkwDHAifL7d_1aGkCFcXMT_zY09s",
@@ -63,7 +64,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseAuth),
     AngularFireAuthModule,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [

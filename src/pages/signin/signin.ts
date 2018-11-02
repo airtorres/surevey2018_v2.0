@@ -5,6 +5,8 @@ import { SignupPage } from '../signup/signup';
 import { WelcomePage } from '../welcome/welcome';
 import { AngularFireAuth } from '@angular/fire/auth';
 
+import { Storage } from '@ionic/storage';
+
 /**
  * Generated class for the SigninPage page.
  *
@@ -23,7 +25,8 @@ export class SigninPage {
   @ViewChild('password') password;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private fire: AngularFireAuth) {
+    private fire: AngularFireAuth,
+    private storage: Storage) {
   }
 
   ionViewDidLoad() {
@@ -51,8 +54,28 @@ export class SigninPage {
     //   alert(error.message);
     // });
 
-    // TEMPORARY
-    this.navigateToHome()
+    // TEMP: ALLOWING ALL LOGINS AND SAVE CURRENT USER -----------------------------------------------------
+    if (this.email.value){
+      // Checking all users
+      this.storage.get('users').then((val) => {
+        for ( var i in val['users']){
+          if (val['users'][i]['email'] == this.email.value && val['users'][i]['password'] == this.password.value){
+            this.storage.set('currentUser', this.email.value);
+            this.navigateToHome();
+            return
+          }
+        }
+
+        // if no valid users that match
+        alert("Not a valid user!");
+      });
+    }
+    else{
+      alert("Error Login!");
+    }
+
+    // TEMP: currentUser from local: uncomment for auto-login
+    // this.navigateToHome()
   }
 
 }
