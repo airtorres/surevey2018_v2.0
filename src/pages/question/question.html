@@ -16,7 +16,7 @@
 <ion-content padding>
 	<ion-item>
 	   <ion-label color="primary" stacked>Question</ion-label>
-	   <ion-input [(ngModel)]="inputQuestion" type="text" placeholder="Enter question" #shortAns></ion-input>
+	   <ion-input type="text" placeholder="Enter question" #question></ion-input>
 	</ion-item>
 
 <!-- SHORT ANSWER  -->
@@ -33,24 +33,24 @@
     <ion-list radio-group *ngIf="type == 'multipleChoice'">
 	    <ion-item>
 	    	<ion-radio disabled></ion-radio>
-	    	<ion-input type="text" placeholder="Option" #answer></ion-input>
+	    	<ion-input type="text" placeholder="Option" class="multipleChoice_options" #answer></ion-input>
 	    </ion-item>
 
 	    <ion-item>
 	    	<ion-radio disabled></ion-radio>
-	    	<ion-input type="text" placeholder="Option" #answer></ion-input>
+	    	<ion-input type="text" placeholder="Option" class="multipleChoice_options" #answer></ion-input>
 	    </ion-item>
     </ion-list>
 
 <!-- CHECKBOX -->
   	<ion-list *ngIf="type == 'checkbox'">
     	<ion-item>
-       		<ion-input type="text" placeholder="Option" #answer></ion-input>
+       		<ion-input type="text" placeholder="Option" class="checkbox_options" #answer></ion-input>
       		<ion-checkbox disabled></ion-checkbox>
    		</ion-item>
 
     	<ion-item>
-      		<ion-input type="text" placeholder="Option" #answer></ion-input>
+      		<ion-input type="text" placeholder="Option" class="checkbox_options" #answer></ion-input>
       		<ion-checkbox disabled></ion-checkbox>
     	</ion-item>
   	</ion-list>
@@ -59,12 +59,12 @@
 	<ion-list radio-group *ngIf="type == 'dropdown'">
       <ion-item>
         <ion-label>1. </ion-label>
-        <ion-input type="text" placeholder="Option" #answer></ion-input>
+        <ion-input type="text" placeholder="Option" class="dropdown_options" #answer></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label>2. </ion-label>
-        <ion-input type="text" placeholder="Option" #answer></ion-input>
+        <ion-input type="text" placeholder="Option" class="dropdown_options" #answer></ion-input>
       </ion-item>
     </ion-list>
 
@@ -89,6 +89,6 @@
 
   	<ion-buttons color="gray" end>
      	<button ion-button clear (click)="closeQuestionModal()">Cancel</button>
-      	<button ion-button primary (click)="Add()">Add</button>
+      	<button ion-button primary (click)="addQuestion()">Add</button>
   	</ion-buttons>
 </ion-content>

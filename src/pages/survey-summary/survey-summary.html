@@ -16,7 +16,7 @@
 <ion-content padding>
   <div text-center>
     <ion-label text-wrap style="font-size: 25px; margin: 13px 8px 0 0;">
-      Music for the Brain
+      {{ title }}
     </ion-label>
 
     <ion-grid>
@@ -56,8 +56,11 @@
   <!-- SETTINGS -->
   <ion-item-divider style="color: #12608A; font-size: 16px;" no-lines>SETTINGS</ion-item-divider>	
   <ion-item>
-    <ion-label>Survey Status: <span style="color: #1EA0E5;">ACTIVE</span> </ion-label>
-    <ion-toggle [(ngModel)]="required" color="blue"></ion-toggle>
+    <ion-label>Survey Status:
+      <span style="color: #73CA5F;" *ngIf="isActive">OPEN</span>
+      <span style="color: #FF675C;" *ngIf="!isActive">CLOSED</span> 
+    </ion-label>
+    <ion-toggle [(ngModel)]="isActive" color="blue"></ion-toggle>
   </ion-item>
 
   <!-- DETAILS -->
@@ -71,12 +74,12 @@
 
     <ion-item>
       <ion-label>Created</ion-label>
-      <ion-note item-end style="font-size: 1.6rem;">09/26/18</ion-note>
+      <ion-note item-end style="font-size: 1.6rem;">{{ created_date }}</ion-note>
     </ion-item>
 
     <ion-item>
       <ion-label>Modified</ion-label>
-      <ion-note item-end style="font-size: 1.6rem;">09/27/18</ion-note>
+      <ion-note item-end style="font-size: 1.6rem;">{{ updated_date }}</ion-note>
     </ion-item>
 
   </ion-list>

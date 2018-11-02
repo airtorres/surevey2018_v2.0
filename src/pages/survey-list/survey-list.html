@@ -25,9 +25,13 @@
 
   		<!-- ALL -->
   		<ion-list *ngSwitchCase="'all'" text-wrap>
-			<ion-item>
+  			<div *ngIf="all_surveys.length == 0">
+				No surveys found.
+			</div>
+
+			<!-- <ion-item (click)="gotoSummary()">
 			  	Music for the Brain
-				<button item-end clear ion-button (click)="gotoSummary()">
+				<button item-end clear ion-button>
 					View 
 					<ion-icon name="ios-arrow-forward"></ion-icon>
 				</button>
@@ -73,21 +77,25 @@
 			<ion-item>
 				E-learning for Students
 				<ion-note item-end color="primary">Responded</ion-note>
-			</ion-item>
+			</ion-item> -->
 
 		</ion-list>
 
 		<!-- USER OWN CREATED SURVEYS -->
 		<ion-list *ngSwitchCase="'surveys'" text-wrap>
-			<ion-item>
-			  	Music for the Brain
+			<div *ngIf="mySurveys.length == 0">
+				You haven't created any surveys yet.
+			</div>
+
+			<ion-item *ngFor="let item of mySurveys" value="item" (click)="gotoSummary(item)">
+			  	{{ item['title'] }}
 				<button item-end clear ion-button>
 					View 
 					<ion-icon name="ios-arrow-forward"></ion-icon>
 				</button>
 			</ion-item>
 			
-			<ion-item>
+			<!-- <ion-item>
 				How Music Affects Mood of Students
 				<button item-end clear ion-button>
 					View 
@@ -100,12 +108,16 @@
 					View 
 					<ion-icon name="ios-arrow-forward"></ion-icon>
 				</button>
-			</ion-item>
+			</ion-item> -->
 		</ion-list>
 
 		<!-- SURVEY INVITES -->
 		<ion-list *ngSwitchCase="'invites'" text-wrap>
-			<ion-item>
+			<div *ngIf="survey_invites.length == 0">
+				No survey invitations.
+			</div>
+
+			<!-- <ion-item>
 				Advantages of Bullet Journaling
 				<button item-end round ion-button>
 					Respond Now
@@ -129,7 +141,7 @@
 			<ion-item>
 				E-learning for Students
 				<ion-note item-end color="primary">Responded</ion-note>
-			</ion-item>
+			</ion-item> -->
 		</ion-list>
   	</div>
 

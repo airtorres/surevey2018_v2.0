@@ -16,8 +16,24 @@ import { SendInvitePage } from '../send-invite/send-invite';
   templateUrl: 'survey-summary.html',
 })
 export class SurveySummaryPage {
+  isActive;
+  thisSurvey;
+  title;
+  created_date;
+  updated_date;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.thisSurvey = navParams.get('item');
+    this.title = this.thisSurvey['title'];
+    this.isActive = this.thisSurvey['isActive'];
+
+    var date = this.thisSurvey['created_at'];
+    date = date? ((date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear()):null;
+    this.created_date =  date;
+
+    date = this.thisSurvey['updated_at'];
+    date = date? ((date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear()):null;
+    this.updated_date =  date;
   }
 
   ionViewDidLoad() {

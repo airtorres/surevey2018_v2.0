@@ -7,16 +7,24 @@ import { ProfilePage } from '../profile/profile';
 import { SettingPage } from '../setting/setting';
 
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
+  currentUser;
 
   constructor(public navCtrl: NavController,
   	private fire: AngularFireAuth,
-  	public app: App) {}
+  	public app: App,
+    private storage: Storage) {
+
+    this.storage.get('currentUser').then(x =>{
+      this.currentUser = x;
+    });
+  }
 
   gotoProfile(){
   	this.navCtrl.push(ProfilePage, {});
