@@ -1,3 +1,14 @@
 page-chat {
 
 }
+
+#chatPage {
+	display: flex;
+	flex-direction: row;
+
+	.chat {
+		background-color: pink;
+		border: none;
+		
+	}
+}

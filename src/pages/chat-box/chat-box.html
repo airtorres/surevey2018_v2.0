@@ -13,21 +13,58 @@
 </ion-header>
 
 
-<ion-content padding>
-
-	<!-- just delete it... -->
-	<button ion-button (click)="gotoChat()">
-		openThisMessage - del this later
-	</button>
-
+<ion-content>
 	<!-- CHAT MESSAGES HERE -->
 
 	<ion-list>
-		<ion-item>
+
+		<!-- UNREAD MESSAGES WILL HAVE A BACKGROUND COLOR : LIGHT BLUE -->
+		<button ion-item style="background-color: #E6EEF2;" (click)="gotoChat()">
+			<div text-right> <ion-note color="blue">NEW</ion-note> </div>
 			<ion-avatar item-start>
 	       		<ion-img src="https://images.unsplash.com/photo-1510227272981-87123e259b17?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=e388ff4b45f7f2dfdcdb6dfe44c97a63&auto=format&fit=crop&w=400&q=60"></ion-img>
 	      	</ion-avatar>
-	    </ion-item>
+	      	<h3 #name>Dana Mason</h3>
+	      	<p>Thank you for answering the survey. Your participation is deeply appreciated.</p>
+	    </button>
+
+	    <button ion-item style="background-color: #E6EEF2;" (click)="gotoChat()">
+	    	<div text-right> <ion-note color="blue">NEW</ion-note> </div>
+			<ion-avatar item-start>
+	       		<ion-img src="https://images.unsplash.com/photo-1514794749374-fb67509dbb7f?ixlib=rb-0.3.5&s=3c84ff15fa377687de6ccc8161453032&auto=format&fit=crop&w=400&q=60"></ion-img>
+	      	</ion-avatar>
+	      	<h3 #name>Aayden Gay</h3>
+	      	<p>Do you have any questions about the survey? Feel free to ask.</p>
+	    </button>
+
+	    <!-- READ MESSAGES -->
+	    <button ion-item (click)="gotoChat()">
+			<div text-right> <ion-note>7:02 PM</ion-note> </div>
+			<ion-avatar item-start>
+	       		<ion-img src="https://images.unsplash.com/photo-1510274332963-71d4e866fccf?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=3c4425b78cf43bb51fa70306c34b4bb0&auto=format&fit=crop&w=750&q=80"></ion-img>
+	      	</ion-avatar>
+	      	<h3 #name>Ava Wright</h3>
+	      	<p>Hey! Thanks for answering the survey.</p>
+	    </button>
+
+	    <button ion-item (click)="gotoChat()">
+	    	<div text-right> <ion-note>Oct 19</ion-note> </div>
+			<ion-avatar item-start>
+	       		<ion-img src="https://images.unsplash.com/photo-1495472772658-b1d6f8472877?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=cc54f503d674e8b9dfc8cc6a0703d9dd&auto=format&fit=crop&w=400&q=60"></ion-img>
+	      	</ion-avatar>
+	      	<h3 #name>Nyle Patterson</h3>
+	      	<p>Thanks so much. :)</p>
+	    </button>
+
+	    <button ion-item (click)="gotoChat()">
+			<div text-right> <ion-note>Sep 17</ion-note> </div>
+			<ion-avatar item-start>
+	       		<ion-img src="https://images.unsplash.com/photo-1512550937872-e223faeff005?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=d8958b0f3d723d75bb59aae3d1510dfa&auto=format&fit=crop&w=400&q=60"></ion-img>
+	      	</ion-avatar>
+	      	<h3 #name>Dianne Cleveland</h3>
+	      	<p>Yes. Just choose from the options.</p>
+	    </button>
+
 	</ion-list>
 
 	<ion-fab bottom right #fab (click)="gotoNewMsg()">

@@ -6,18 +6,33 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>chat</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>name</ion-title>
   </ion-navbar>
 
 </ion-header>
 
-
-<ion-content padding>
-	Hi Leica!
-
-	Dito mo makikita ang mga mensahe ninyong dalawa.
-
-	Haha.
-
+<!-- CHAT -->
+<ion-content #content padding id="chatPage">
+	<ion-list text-wrap>
+		<ion-item class="chat">
+		</ion-item>
+	</ion-list>
 </ion-content>
+
+<!-- SEND MESSAGE INPUT -->
+<ion-footer>
+	<ion-toolbar>
+		<ion-row>
+			<ion-col col-10>
+				<ion-input type="text" [(ngModel)]="chatMessage" placeholder="Type your message..."></ion-input>
+			</ion-col>
+
+			<ion-col col-2>
+				<button ion-button block clear (click)="sendMessage()">
+					<ion-icon name="send" style="font-size: 35px;"></ion-icon>
+				</button>
+			</ion-col>
+		</ion-row>
+	</ion-toolbar>
+</ion-footer>

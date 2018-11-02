@@ -6,18 +6,80 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>survey-summary</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>Summary</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+  <div text-center>
+    <ion-label text-wrap style="font-size: 25px; margin: 13px 8px 0 0;">
+      Music for the Brain
+    </ion-label>
 
-	<!-- just delete it... -->
-	<button ion-button (click)="gotoSendInvitePage()">
-		send invite
-	</button>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <p> <span class="num-title">15</span> 
+          TOTAL RESPONSES</p>
+        </ion-col>
+
+        <ion-col>
+          <p> <span class="num-title">15</span>
+          COMPLETE RESPONSES</p>
+        </ion-col>
+    </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- MAIN BUTTONS -->
+
+  <ion-list>
+    <button ion-item>
+      <ion-icon item-left name="create" color="blue" style="font-size: 25px;"></ion-icon>
+      Edit
+    </button>
+
+    <button ion-item (click)="gotoSendInvitePage()">
+      <ion-icon item-left name="send" color="blue" style="font-size: 25px;"></ion-icon>
+      Send Invites
+    </button>
+
+    <button ion-item>
+      <ion-icon item-left name="analytics" color="blue" style="font-size: 25px;"></ion-icon>
+      Analyze
+    </button>
+  </ion-list>
+
+  <!-- SETTINGS -->
+  <ion-item-divider style="color: #12608A; font-size: 16px;" no-lines>SETTINGS</ion-item-divider>	
+  <ion-item>
+    <ion-label>Survey Status: <span style="color: #1EA0E5;">ACTIVE</span> </ion-label>
+    <ion-toggle [(ngModel)]="required" color="blue"></ion-toggle>
+  </ion-item>
+
+  <!-- DETAILS -->
+  <ion-item-divider style="color: #12608A; font-size: 16px;" no-lines>DETAILS</ion-item-divider> 
+
+  <ion-list>
+    <ion-item>
+      <ion-label>Respondents</ion-label>
+      <ion-note item-end color="blue" style="font-size: 1.6rem;">15</ion-note>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Created</ion-label>
+      <ion-note item-end style="font-size: 1.6rem;">09/26/18</ion-note>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Modified</ion-label>
+      <ion-note item-end style="font-size: 1.6rem;">09/27/18</ion-note>
+    </ion-item>
+
+  </ion-list>
+
 
 </ion-content>
