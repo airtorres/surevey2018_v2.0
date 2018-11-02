@@ -27,6 +27,7 @@ export class CreateSurveyPage {
   survey = {
     'title':'untitled survey',
     'description':'No Description to show.',
+    'author': '',
     'created_at': new Date(),
     'updated_at': null,
     'end_date': null,
@@ -69,6 +70,7 @@ export class CreateSurveyPage {
     this.survey['title'] = this.surveyTitle.value || "untitled survey";
     this.survey['description'] = this.surveyDescription.value || "No Description to show.";
     this.survey['updated_at'] = new Date();
+    this.survey['author'] = this.currUser;
     this.survey['isActive'] = true;//the survey is active upon creation
 
     if(this.surveys){
