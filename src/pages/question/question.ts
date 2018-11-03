@@ -15,7 +15,9 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 })
 export class QuestionPage {
   @ViewChild('question') question;
-  @ViewChild('answer') answer;
+  @ViewChild('firstOpt_multipleChoice') firstOpt_multipleChoice;
+  @ViewChild('firstOpt_checkbox') firstOpt_checkbox;
+  @ViewChild('firstOpt_dropdown') firstOpt_dropdown;
 
   thisQuestion = {
     'type' : '',
@@ -42,6 +44,16 @@ export class QuestionPage {
 
     if (this.type == 'multipleChoice' || this.type == 'checkbox' || this.type == 'dropdown'){
       console.log('this.anArray', this.anArray);
+
+      if (this.type == 'multipleChoice'){
+        this.thisQuestion['options'][0] = this.firstOpt_multipleChoice.value;
+      }
+      else if (this.type == 'checkbox'){
+        this.thisQuestion['options'][0] = this.firstOpt_checkbox.value;
+      }
+      else if (this.type == 'dropdown'){
+        this.thisQuestion['options'][0] = this.firstOpt_dropdown.value;
+      }
 
       for( var opt in this.anArray){
         this.thisQuestion['options'].push(this.anArray[opt]['value']);

@@ -38,12 +38,15 @@
 
  	<!-- CARDS -->
 
- 	<!-- MULTIPLE CHOICE -->
  	<ion-card padding style="border-radius: 12px;" *ngFor="let question of questions">
  		<div text-right>
+ 			<!-- Pwede ni ma-edit for Appearance :) -->
+ 			<!-- ngIf lang tas ibutang ang hard-coded display -->
  			<ion-note>{{ question['type'] }}</ion-note>
  		</div>
  		<ion-card-title id="question-title">{{ question['message'] }}</ion-card-title>
+
+ 		<!-- MULTIPLE CHOICE -->
  		<ion-list radio-group [(ngModel)]="relationship" *ngIf="question['type'] == 'multipleChoice'">
   			<ion-item *ngFor="let opt of question['options']">
 			    <ion-label>{{ opt }}</ion-label>
@@ -51,7 +54,43 @@
 	  		</ion-item>
 		</ion-list>
 
-		<!-- Please add UI for displaying shortAns,longAns,Date,Time,checkBox etc? here :) -->
+		<!-- CHECKBOX -->
+		<ion-list *ngIf="question['type'] == 'checkbox'">
+  			<ion-item *ngFor="let opt of question['options']">
+			    <ion-label>{{ opt }}</ion-label>
+			    <ion-checkbox disabled></ion-checkbox>
+	  		</ion-item>
+	  	</ion-list>
+
+ 		<!-- DROPDOWN -->
+	  	<ion-item *ngIf="question['type'] == 'dropdown'">
+			<ion-label>Select</ion-label>
+		  	<ion-select>
+			    <ion-option *ngFor="let opt of question['options']" disable>{{ opt }}</ion-option>
+		  	</ion-select>
+		</ion-item>
+
+		<!-- SHORT ANSWER -->
+		<ion-item *ngIf="question['type'] == 'shortAnswer'">
+ 			<ion-input type="text" placeholder="Short answer text" disabled #answer></ion-input>
+ 		</ion-item>
+
+ 		<!-- LONG ANSWER -->
+ 		<ion-item *ngIf="question['type'] == 'longAnswer'">
+ 			<ion-input type="text" placeholder="Long answer text" disabled #answer></ion-input>
+ 		</ion-item>
+
+ 		<!-- DATE -->
+ 		<ion-item *ngIf="question['type'] == 'date'">
+ 			<ion-label>Select Date</ion-label>
+			<ion-datetime displayFormat="MMM DD, YYYY" disabled></ion-datetime>
+ 		</ion-item>
+
+ 		<!-- TIME -->
+ 		<ion-item *ngIf="question['type'] == 'time'">
+ 			<ion-label>Select Time</ion-label>
+			<ion-datetime displayFormat= "HH:mm" disabled></ion-datetime>
+ 		</ion-item>
 
 		<ion-buttons end>
 			<button ion-button clear>

@@ -31,6 +31,11 @@
 
 <!-- MULTIPLE CHOICE -->
     <ion-list radio-group *ngIf="type == 'multipleChoice'">
+      <ion-item>
+        <ion-radio disabled></ion-radio>
+        <ion-input type="text" placeholder="Option" id="firstOpt_multipleChoice" class="multipleChoice_options" #firstOpt_multipleChoice></ion-input>
+      </ion-item>
+
 	    <ion-item *ngFor="let att of anArray; let idx = index">
 	    	<ion-radio disabled></ion-radio>
 	    	<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="multipleChoice_options" #answer></ion-input>
@@ -41,43 +46,45 @@
 
 <!-- CHECKBOX -->
   	<ion-list *ngIf="type == 'checkbox'">
-    	<ion-item>
-       		<ion-input type="text" placeholder="Option" class="checkbox_options" #answer></ion-input>
+      <ion-item>
+          <ion-input type="text" placeholder="Option" id="firstOpt_checkbox" class="checkbox_options" #firstOpt_checkbox></ion-input>
+          <ion-checkbox disabled></ion-checkbox>
+      </ion-item>
+
+    	<ion-item *ngFor="let att of anArray; let idx = index">
+       		<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="checkbox_options" #answer></ion-input>
       		<ion-checkbox disabled></ion-checkbox>
    		</ion-item>
 
-    	<ion-item>
-      		<ion-input type="text" placeholder="Option" class="checkbox_options" #answer></ion-input>
-      		<ion-checkbox disabled></ion-checkbox>
-    	</ion-item>
+      <button ion-button (click)="addMoreOption()">Add Option</button>
   	</ion-list>
 
 <!-- DROPDOWN -->
 	<ion-list radio-group *ngIf="type == 'dropdown'">
       <ion-item>
         <ion-label>1. </ion-label>
-        <ion-input type="text" placeholder="Option" class="dropdown_options" #answer></ion-input>
+        <ion-input type="text" placeholder="Option" id="firstOpt_dropdown" class="dropdown_options" #firstOpt_dropdown></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label>2. </ion-label>
-        <ion-input type="text" placeholder="Option" class="dropdown_options" #answer></ion-input>
+      <ion-item *ngFor="let att of anArray; let idx = index">
+        <ion-label>{{ idx+2 }}</ion-label>
+        <ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="dropdown_options" #answer></ion-input>
       </ion-item>
+
+      <button ion-button (click)="addMoreOption()">Add Option</button>
     </ion-list>
 
 <!-- DATE -->
 	<ion-item *ngIf="type == 'date'">
 		<ion-label>Select Date</ion-label>
-		<ion-datetime displayFormat="MMM DD, YYYY" disabled></ion-datetime>
+		<ion-datetime displayFormat="MMM DD, YYYY" disabled #answerDate></ion-datetime>
 	</ion-item>
 
 <!-- TIME -->
 	<ion-item *ngIf="type == 'time'">
 		<ion-label>Select Time</ion-label>
-		<ion-datetime displayFormat= "HH:mm" disabled></ion-datetime>
+		<ion-datetime displayFormat= "HH:mm" disabled #answerTime></ion-datetime>
 	</ion-item>
-
-
 
   	<ion-item>
     	<ion-label>Required</ion-label>
