@@ -39,22 +39,19 @@
  	<!-- CARDS -->
 
  	<!-- MULTIPLE CHOICE -->
- 	<ion-card padding style="border-radius: 12px;">
+ 	<ion-card padding style="border-radius: 12px;" *ngFor="let question of questions">
  		<div text-right>
- 			<ion-note>Multiple Choice</ion-note>
+ 			<ion-note>{{ question['type'] }}</ion-note>
  		</div>
- 		<ion-card-title id="question-title">Do you like ice cream?</ion-card-title>
- 		<ion-list radio-group [(ngModel)]="relationship">
-  			<ion-item>
-			    <ion-label>Yes</ion-label>
+ 		<ion-card-title id="question-title">{{ question['message'] }}</ion-card-title>
+ 		<ion-list radio-group [(ngModel)]="relationship" *ngIf="question['type'] == 'multipleChoice'">
+  			<ion-item *ngFor="let opt of question['options']">
+			    <ion-label>{{ opt }}</ion-label>
 			    <ion-radio disabled></ion-radio>
 	  		</ion-item>
-
-		  	<ion-item>
-			    <ion-label>No</ion-label>
-			    <ion-radio disabled></ion-radio>
-		  	</ion-item>
 		</ion-list>
+
+		<!-- Please add UI for displaying shortAns,longAns,Date,Time,checkBox etc? here :) -->
 
 		<ion-buttons end>
 			<button ion-button clear>

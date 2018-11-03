@@ -75,7 +75,7 @@ export class SigninPage {
     }
 
     // TEMP: currentUser from local: uncomment for auto-login
-    // this.navigateToHome()
+    // this.navigateToHome();
   }
 
 }

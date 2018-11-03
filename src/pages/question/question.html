@@ -31,15 +31,12 @@
 
 <!-- MULTIPLE CHOICE -->
     <ion-list radio-group *ngIf="type == 'multipleChoice'">
-	    <ion-item>
+	    <ion-item *ngFor="let att of anArray; let idx = index">
 	    	<ion-radio disabled></ion-radio>
-	    	<ion-input type="text" placeholder="Option" class="multipleChoice_options" #answer></ion-input>
+	    	<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="multipleChoice_options" #answer></ion-input>
 	    </ion-item>
 
-	    <ion-item>
-	    	<ion-radio disabled></ion-radio>
-	    	<ion-input type="text" placeholder="Option" class="multipleChoice_options" #answer></ion-input>
-	    </ion-item>
+      <button ion-button (click)="addMoreOption()">Add Option</button>
     </ion-list>
 
 <!-- CHECKBOX -->

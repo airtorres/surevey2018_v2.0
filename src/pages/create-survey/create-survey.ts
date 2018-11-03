@@ -121,6 +121,7 @@ export class CreateSurveyPage {
     // push the question to this particular survey
     if (this.question_data != null){
       this.survey['questions'].push(this.question_data);
+      this.questions.push(this.question_data);
     }
   }
 

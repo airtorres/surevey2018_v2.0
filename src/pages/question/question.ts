@@ -24,6 +24,7 @@ export class QuestionPage {
   };
 
 	public type;
+  public anArray = [];
 
  	constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController) {
   		this.type = this.navParams.get('type');
@@ -40,22 +41,10 @@ export class QuestionPage {
     this.thisQuestion['message'] = (this.question ? this.question.value : "Missing Question");
 
     if (this.type == 'multipleChoice' || this.type == 'checkbox' || this.type == 'dropdown'){
-      // getting the provided options
-      var cls = (this.type + '_options');
-      var opts = document.getElementsByClassName(cls);
-      var opt = document.getElementById('opt_id');
+      console.log('this.anArray', this.anArray);
 
-      // HOW CAN I GET THE VALUE OF HTML ELEMENT? ------------------
-
-      // console.log(opt);
-      // console.log(opt.value);
-
-      // console.log("opts: "+opts);
-
-      for (var i = 0; i < opts.length; i++) {
-          // console.log(opts[i]);
-          // console.log(opts[i].value);
-          // console.log(i);
+      for( var opt in this.anArray){
+        this.thisQuestion['options'].push(this.anArray[opt]['value']);
       }
 
     }
@@ -63,16 +52,16 @@ export class QuestionPage {
     else if ( this.type == 'date'){}
     else {}
 
-    // HARDCODED VALUES for options ----------------------------
-    this.thisQuestion.options.push('yes');
-    this.thisQuestion.options.push('no');
-
     this.navCtrl.getPrevious().data.question_data = (this.thisQuestion? this.thisQuestion : null);
     this.navCtrl.pop();
   }
     
   closeQuestionModal() {
   	this.view.dismiss();
+  }
+
+  addMoreOption(){
+    this.anArray? this.anArray.push({'value':''}):'';
   }
 
 }

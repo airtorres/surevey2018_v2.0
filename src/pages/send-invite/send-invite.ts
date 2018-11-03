@@ -20,6 +20,8 @@ export class SendInvitePage {
   all_users = [];
   all_users_email = [];
 
+  users;
+
   public selected_users = {};
 
   public s_id;
@@ -38,6 +40,8 @@ export class SendInvitePage {
     });
 
   	this.storage.get("users").then(users => {
+  		this.users = users;
+
   		// getting all users except for self
         for ( var i in users['users']){
 	    	if (users['users'][i]['email'] != this.currUser){
@@ -63,25 +67,23 @@ export class SendInvitePage {
   }
 
   sendInvitation(){
+  	console.log(this.users);
+
   	for ( var u in this.selected_users){
   		if (this.selected_users[u] == true){
-
-  			// send invitation for these users
-  			this.storage.get("users").then(users => {
-		        for ( var i in users['users']){
-			    	if (users['users'][i]['email'] == u){
-			    		this.thisSurvey['s_id'] = this.s_id;
-			    	   users['users'][i]['invitations'].push(this.thisSurvey);
-			    	   break;
-			    	}
-		        }
-
-		        this.storage.set('users', users).then((data) => {
-		        	console.log("Sending invite ...");
-		        });
-		    });
+  			for ( var i in this.users['users']){
+  				if (this.users['users'][i]['email'] == u){
+		    		this.thisSurvey['s_id'] = this.s_id;
+		    		this.users['users'][i]['invitations'].push(this.thisSurvey);
+		    		break;
+		    	}
+  			}
   		}
   	}
+
+  	this.storage.set('users', this.users).then((data) => {
+    	console.log("Sending invite ...");
+    });
 
   	// Edit the alert component later
   	this.showAlert();
