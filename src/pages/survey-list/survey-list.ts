@@ -40,56 +40,78 @@ export class SurveyListPage {
       this.currUser = x;
     });
 
-    this.storage.get("surveys").then(value => {
-      this.surveys = value;
-    
-      this.storage.get('users').then(u =>{
-        for ( var i in u['users']){
-          if (u['users'][i]['email'] == this.currUser){
-            this.mySurveys_ids = u['users'][i]['surveys'];
+    // this.updateList();
+  }
 
-            var invitations = u['users'][i]['invitations'];
-            for ( var inv in invitations){
-              this.survey_invites_ids.push(u['users'][i]['invitations'][inv]['s_id']);
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad SurveyListPage');
+  }
+
+  updateList(){
+    this.storage.ready().then(() => {
+      this.storage.get("surveys").then(value => {
+        this.surveys = value;
+      
+        this.storage.get('users').then(u =>{
+          for ( var i in u['users']){
+            if (u['users'][i]['email'] == this.currUser){
+              this.mySurveys_ids = u['users'][i]['surveys'];
+
+              var invitations = u['users'][i]['invitations'];
+              for ( var inv in invitations){
+                this.survey_invites_ids.push(u['users'][i]['invitations'][inv]['s_id']);
+              }
+
+              console.log(this.mySurveys_ids);
+              console.log(this.survey_invites_ids);
             }
-
-            console.log(this.mySurveys_ids);
-            console.log(this.survey_invites_ids);
           }
-        }
 
-        var id;
-        for( var x in this.mySurveys_ids){
-          // console.log(this.surveys['surveys'][id]);
-          id = this.mySurveys_ids[x];
-          this.surveys['surveys'][id]['id'] = '';
-          this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
-          this.surveys['surveys'][id]['type'] = '';
-          this.surveys['surveys'][id]['type'] = 'mySurvey';
-          this.mySurveys.push(this.surveys['surveys'][id]);
-          this.all_surveys.push(this.surveys['surveys'][id]);
-        }
+          var id;
+          for( var x in this.mySurveys_ids){
+            // console.log(this.surveys['surveys'][id]);
+            id = this.mySurveys_ids[x];
+            this.surveys['surveys'][id]['id'] = '';
+            this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
+            this.surveys['surveys'][id]['type'] = '';
+            this.surveys['surveys'][id]['type'] = 'mySurvey';
+            this.mySurveys.push(this.surveys['surveys'][id]);
+            this.all_surveys.push(this.surveys['surveys'][id]);
+          }
 
-        for ( var y in this.survey_invites_ids){
-          id = this.survey_invites_ids[y];
-          this.surveys['surveys'][id]['id'] = '';
-          this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
-          this.surveys['surveys'][id]['type'] = '';
-          this.surveys['surveys'][id]['type'] = 'invites';
-          this.survey_invites.push(this.surveys['surveys'][id]);
-          this.all_surveys.push(this.surveys['surveys'][id]);
-        }
+          for ( var y in this.survey_invites_ids){
+            id = this.survey_invites_ids[y];
+            this.surveys['surveys'][id]['id'] = '';
+            this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
+            this.surveys['surveys'][id]['type'] = '';
+            this.surveys['surveys'][id]['type'] = 'invites';
+            this.survey_invites.push(this.surveys['surveys'][id]);
+            this.all_surveys.push(this.surveys['surveys'][id]);
+          }
+        });
       });
     });
   }
 
-  ionViewDidLoad() {
-    console.log(this.all_surveys);
-    console.log('ionViewDidLoad SurveyListPage');
-  }
-
   gotoSummary(item){
   	this.navCtrl.push(SurveySummaryPage, {'item' : item});
+  }
+
+  public ionViewWillEnter() {
+    console.log("im coming ...");
+
+    this.surveys = {};
+
+    this.mySurveys = [];
+    this.mySurveys_ids = [];
+
+    this.survey_invites = [];
+    this.survey_invites_ids = [];
+
+    // mySurveys + survey invites
+    this.all_surveys = [];
+
+    this.updateList();
   }
 
 }

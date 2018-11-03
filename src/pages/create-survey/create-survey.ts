@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { QuestionPage } from '../question/question';
-import { SurveyListPage } from '../survey-list/survey-list';
 
 import { Storage } from '@ionic/storage';
 
@@ -110,7 +109,8 @@ export class CreateSurveyPage {
     });
 
     // redirect to survey-list: showing all surveys
-    this.navCtrl.setRoot(SurveyListPage);
+    this.navCtrl.pop();
+    this.navCtrl.parent.select(1);
   }
 
   public ionViewWillEnter() {
