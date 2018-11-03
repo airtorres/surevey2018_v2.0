@@ -50,7 +50,7 @@ export class SurveyListPage {
 
             var invitations = u['users'][i]['invitations'];
             for ( var inv in invitations){
-              this.survey_invites_ids = u['users'][i]['invitations'][inv]['s_id'];
+              this.survey_invites_ids.push(u['users'][i]['invitations'][inv]['s_id']);
             }
 
             console.log(this.mySurveys_ids);
@@ -64,6 +64,8 @@ export class SurveyListPage {
           id = this.mySurveys_ids[x];
           this.surveys['surveys'][id]['id'] = '';
           this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
+          this.surveys['surveys'][id]['type'] = '';
+          this.surveys['surveys'][id]['type'] = 'mySurvey';
           this.mySurveys.push(this.surveys['surveys'][id]);
           this.all_surveys.push(this.surveys['surveys'][id]);
         }
@@ -72,6 +74,8 @@ export class SurveyListPage {
           id = this.survey_invites_ids[y];
           this.surveys['surveys'][id]['id'] = '';
           this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
+          this.surveys['surveys'][id]['type'] = '';
+          this.surveys['surveys'][id]['type'] = 'invites';
           this.survey_invites.push(this.surveys['surveys'][id]);
           this.all_surveys.push(this.surveys['surveys'][id]);
         }
