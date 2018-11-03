@@ -28,6 +28,7 @@ export class SurveyListPage {
   mySurveys_ids = [];
 
   survey_invites = [];
+  survey_invites_ids = [];
 
   // mySurveys + survey invites
   all_surveys = [];
@@ -46,21 +47,40 @@ export class SurveyListPage {
         for ( var i in u['users']){
           if (u['users'][i]['email'] == this.currUser){
             this.mySurveys_ids = u['users'][i]['surveys'];
+
+            var invitations = u['users'][i]['invitations'];
+            for ( var inv in invitations){
+              this.survey_invites_ids = u['users'][i]['invitations'][inv]['s_id'];
+            }
+
             console.log(this.mySurveys_ids);
+            console.log(this.survey_invites_ids);
           }
         }
 
+        var id;
         for( var x in this.mySurveys_ids){
           // console.log(this.surveys['surveys'][id]);
-          var id = this.mySurveys_ids[x];
+          id = this.mySurveys_ids[x];
+          this.surveys['surveys'][id]['id'] = '';
+          this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
           this.mySurveys.push(this.surveys['surveys'][id]);
+          this.all_surveys.push(this.surveys['surveys'][id]);
+        }
+
+        for ( var y in this.survey_invites_ids){
+          id = this.survey_invites_ids[y];
+          this.surveys['surveys'][id]['id'] = '';
+          this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
+          this.survey_invites.push(this.surveys['surveys'][id]);
+          this.all_surveys.push(this.surveys['surveys'][id]);
         }
       });
     });
-
   }
 
   ionViewDidLoad() {
+    console.log(this.all_surveys);
     console.log('ionViewDidLoad SurveyListPage');
   }
 

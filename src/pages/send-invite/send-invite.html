@@ -15,7 +15,7 @@
 
 <ion-content>
 	<ion-searchbar
-	  [(ngModel)]="myInput"
+	  [(ngModel)]="searchInput"
 	  [showCancelButton]="shouldShowCancel"
 	  (ionInput)="onInput($event)"
 	  (ionCancel)="onCancel($event)">
@@ -23,15 +23,15 @@
 
 	<!-- DISPLAY CONTACTS -->
 	<ion-list text-wrap>
-		<ion-item>
+		<ion-item *ngFor="let user_email of all_users_email">
 			<ion-avatar item-start>
-	       		<ion-img src="https://images.unsplash.com/photo-1510227272981-87123e259b17?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=e388ff4b45f7f2dfdcdb6dfe44c97a63&auto=format&fit=crop&w=400&q=60"></ion-img>
+	       		<ion-img src="../assets/imgs/avatar.png"></ion-img>
 	      	</ion-avatar>
-	      	<h3>Dana Mason</h3>
-	      	
+	      	<ion-label>{{ user_email }}</ion-label>
+	      	<ion-checkbox [(ngModel)]="selected_users[user_email]" item-end></ion-checkbox>
 	    </ion-item>
 
-	    <ion-item>
+	    <!-- <ion-item>
 			<ion-avatar item-start>
 	       		<ion-img src="https://images.unsplash.com/photo-1514794749374-fb67509dbb7f?ixlib=rb-0.3.5&s=3c84ff15fa377687de6ccc8161453032&auto=format&fit=crop&w=400&q=60"></ion-img>
 	      	</ion-avatar>
@@ -61,8 +61,11 @@
 	      	</ion-avatar>
 	      	<h3>Dianne Cleveland</h3>
 	      	<ion-checkbox item-end></ion-checkbox>
-	    </ion-item>
+	    </ion-item> -->
 
 	</ion-list>
+
+	<!-- TEMPORARY BTN -->
+	<button (click)="sendInvitation()" ion-button>SEND</button>
 
 </ion-content>

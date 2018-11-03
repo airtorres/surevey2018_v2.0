@@ -43,10 +43,7 @@ export class SignupPage {
     'email': '',
     'password':'',
     'surveys':[],
-    'invitations': [{
-        's_id': '',
-        'status': ''  //status: cancelled/deleted/pending/incomplete/completed
-    }]
+    'invitations': []
   }
 
 

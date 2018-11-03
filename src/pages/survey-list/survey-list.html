@@ -29,14 +29,15 @@
 				No surveys found.
 			</div>
 
-			<!-- <ion-item (click)="gotoSummary()">
-			  	Music for the Brain
+			<ion-item *ngFor="let item of all_surveys" value="item" (click)="gotoSummary(item)">
+			  	{{ item['title'] }}
 				<button item-end clear ion-button>
 					View 
 					<ion-icon name="ios-arrow-forward"></ion-icon>
 				</button>
 			</ion-item>
 			
+			<!-- 
 			<ion-item>
 				How Music Affects Mood of Students
 				<button item-end clear ion-button>
@@ -116,6 +117,14 @@
 			<div *ngIf="survey_invites.length == 0">
 				No survey invitations.
 			</div>
+
+			<ion-item *ngFor="let item of survey_invites" value="item" (click)="gotoSummary(item)">
+			  	{{ item['title'] }}
+				<button item-end clear ion-button>
+					View 
+					<ion-icon name="ios-arrow-forward"></ion-icon>
+				</button>
+			</ion-item>
 
 			<!-- <ion-item>
 				Advantages of Bullet Journaling
