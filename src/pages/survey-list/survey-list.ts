@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { SurveySummaryPage } from '../survey-summary/survey-summary';
+import { AnswerSurveyPage } from '../answer-survey/answer-survey';
 
 import { Storage } from '@ionic/storage';
 
@@ -95,6 +96,10 @@ export class SurveyListPage {
 
   gotoSummary(item){
   	this.navCtrl.push(SurveySummaryPage, {'item' : item});
+  }
+
+  gotoRespondentView(item){
+    this.navCtrl.push(AnswerSurveyPage, {'item' : item});
   }
 
   public ionViewWillEnter() {

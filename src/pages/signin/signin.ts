@@ -29,7 +29,7 @@ export class SigninPage {
     private fire: AngularFireAuth,
     private storage: Storage) {
 
-    let EMAILPATTERN = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?.[a-z0-9](.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+    let EMAILPATTERN = /^[a-z0-9][a-z0-9!#$%&'*+\/=?^_`{|}~.-]*\@[a-z0-9]+\.[a-z0-9]+(\.[a-z0-9]+)*$/i;
 
     this.authSignin = formbuilder.group({
       email : ['', Validators.compose([Validators.required, Validators.pattern(EMAILPATTERN)])],

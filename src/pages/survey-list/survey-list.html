@@ -35,7 +35,7 @@
 					View 
 					<ion-icon name="ios-arrow-forward"></ion-icon>
 				</button>
-				<button *ngIf="item['type'] == 'invites'" item-end round ion-button>
+				<button *ngIf="item['type'] == 'invites'" item-end round ion-button (click)="gotoRespondentView(item)">
 					Respond Now
 				</button>
 			</ion-item>
@@ -125,7 +125,7 @@
 
 			<ion-item *ngFor="let item of survey_invites" value="item">
 			  	{{ item['title'] }}
-				<button item-end round ion-button>
+				<button item-end round ion-button (click)="gotoRespondentView(item)">
 					Respond Now
 				</button>
 			</ion-item>

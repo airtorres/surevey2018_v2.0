@@ -27,7 +27,7 @@ export class SendInvitePage {
   public s_id;
   thisSurvey = {
   	's_id':'',
-  	'status:':'pending' //status: cancelled/deleted/pending/incomplete/completed
+  	'status':'pending' //status: cancelled/deleted/pending/incomplete/completed
   }
 
   constructor(public navCtrl: NavController, public navParams: NavParams,

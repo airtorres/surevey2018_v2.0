@@ -1,0 +1,88 @@
+<!--
+  Generated template for the AnswerSurveyPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>answer-survey</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<h3>{{ title }}</h3>
+	<p>{{ description }}</p>
+
+	<div *ngFor="let question of questions; let idx = index">
+		<ion-label>{{idx+1}}. {{ question['message'] }}</ion-label>
+
+		<!-- MULTIPLE CHOICE -->
+		<div *ngIf="question['type'] == 'multipleChoice'">
+			<ion-list radio-group>
+				<ion-item *ngFor="let opt of question['options']">
+				    <ion-label>{{ opt }}</ion-label>
+				    <ion-radio></ion-radio>
+		  		</ion-item>
+			</ion-list>
+		</div>
+
+		<!-- CHECKBOX -->
+		<div *ngIf="question['type'] == 'checkbox'">
+			<ion-list>
+				<ion-item *ngFor="let opt of question['options']">
+					<ion-checkbox></ion-checkbox>
+				    <ion-label>{{ opt }}</ion-label>
+		  		</ion-item>
+			</ion-list>
+		</div>
+
+		<!-- DROPDOWN -->
+		<div *ngIf="question['type'] == 'dropdown'">
+			<ion-item>
+				<ion-label>Select</ion-label>
+			  	<ion-select>
+				    <ion-option *ngFor="let opt of question['options']">{{ opt }}</ion-option>
+			  	</ion-select>
+			</ion-item>
+		</div>
+
+		<!-- SHORT ANSWER -->
+		<div *ngIf="question['type'] == 'shortAnswer'">
+			<ion-item>
+				<ion-input type="text" placeholder="Short answer text"></ion-input>
+			</ion-item>
+		</div>
+
+		<!-- LONG ANSWER -->
+		<div *ngIf="question['type'] == 'longAnswer'">
+			<ion-item>
+				<ion-textarea placeholder="Long answer text" rows=2></ion-textarea>
+			</ion-item>
+		</div>
+
+		<!-- DATE -->
+		<div *ngIf="question['type'] == 'date'">
+			<ion-item>
+				<ion-label>Select Date</ion-label>
+				<ion-datetime displayFormat="MMM DD, YYYY"></ion-datetime>
+			</ion-item>
+		</div>
+
+		<!-- TIME -->
+		<div *ngIf="question['type'] == 'time'">
+			<ion-item>
+				<ion-label>Select Time</ion-label>
+				<ion-datetime displayFormat="HH:mm"></ion-datetime>
+			</ion-item>
+		</div>
+	</div>
+
+	<div text-center>
+      <button ion-button (click)="submitResponse()">Submit</button>
+    </div>
+	
+</ion-content>
