@@ -11,23 +11,45 @@
       <ion-img width="200" height="200" src="../assets/imgs/logo2.png" style="background: transparent !important;"></ion-img>
     </div>
 
-    <ion-grid>
-      <ion-row style="margin: 5px 0;">
-        <ion-input type="text" placeholder="Username" #username></ion-input>
-      </ion-row>
+    <form [formGroup]="authSignup">
+      <ion-grid>
+        <ion-row style="margin: 5px 0;">
+          <ion-input type="text" placeholder="Username" #username formControlName="username"></ion-input>
+        </ion-row>
 
-      <ion-row style="margin: 5px 0;">
-        <ion-input type="text" #email placeholder="Email"></ion-input>
-      </ion-row>
+        <p class="errorMessage" *ngIf="authSignup.controls.username.hasError('required') && authSignup.controls.username.dirty">
+          Please enter username
+        </p>
 
-      <ion-row style="margin: 5px 0;">
-        <ion-input type="password" #password placeholder="Password"></ion-input>
-      </ion-row>
-    </ion-grid>
+        <ion-row style="margin: 5px 0;">
+          <ion-input type="text" #email placeholder="Email" formControlName="email"></ion-input>
+        </ion-row>
 
-    <div text-center>
-  		<button ion-button round (click)="signup()">Sign up</button>
-  	</div>
+        <p class="errorMessage" *ngIf="!authSignup.controls.email.hasError('required') && authSignup.controls.email.hasError('pattern') && authSignup.controls.email.dirty">
+          Please enter valid email
+        </p>
+
+        <p class="errorMessage" *ngIf="authSignup.controls.email.hasError('required') && authSignup.controls.email.dirty">
+          Please enter email
+        </p>
+
+        <ion-row style="margin: 5px 0;">
+          <ion-input type="password" #password placeholder="Password" formControlName="password"></ion-input>
+        </ion-row>
+
+        <p class="errorMessage" *ngIf="authSignup.controls.password.hasError('required') && authSignup.controls.password.dirty">
+          Please enter password
+        </p>
+
+        <p class="errorMessage" *ngIf="!authSignup.controls.password.hasError('required') && authSignup.controls.password.hasError('minlength') && authSignup.controls.password.dirty ">
+          Password should be at least 6 characters
+        </p>
+      </ion-grid>
+
+      <div text-center>
+        <button ion-button round (click)="signup()">Sign up</button>
+      </div>
+    </form>
 
   	<div text-center>
   		<p>Already have an account?</p>

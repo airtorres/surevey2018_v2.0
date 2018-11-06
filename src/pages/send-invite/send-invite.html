@@ -65,7 +65,18 @@
 
 	</ion-list>
 
-	<!-- TEMPORARY BTN -->
-	<button (click)="sendInvitation()" ion-button>SEND</button>
-
 </ion-content>
+
+<ion-footer>
+	<ion-toolbar>
+		<ion-item no-lines>
+			<button item-start clear ion-button>
+				<ion-icon name="close"></ion-icon>
+			</button>
+			4 selected
+			<button item-end clear ion-button (click)="sendInvitation()">
+				<ion-icon name="send"></ion-icon>
+			</button>
+		</ion-item>
+	</ion-toolbar>
+</ion-footer>

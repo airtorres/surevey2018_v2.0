@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { SignupPage } from '../signup/signup';
 import { WelcomePage } from '../welcome/welcome';
@@ -20,13 +21,20 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'signin.html',
 })
 export class SigninPage {
-
+  authSignin : FormGroup;
   @ViewChild('email') email;
   @ViewChild('password') password;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController, public navParams: NavParams, private formbuilder: FormBuilder,
     private fire: AngularFireAuth,
     private storage: Storage) {
+
+    let EMAILPATTERN = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+
+    this.authSignin = formbuilder.group({
+      email : ['', Validators.compose([Validators.required, Validators.pattern(EMAILPATTERN)])],
+      password : ['', Validators.compose([Validators.required, Validators.minLength(6)]) ]
+    });
   }
 
   ionViewDidLoad() {

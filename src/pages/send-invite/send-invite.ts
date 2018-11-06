@@ -56,16 +56,6 @@ export class SendInvitePage {
     console.log('ionViewDidLoad SendInvitePage');
   }
 
-  showAlert(){
-  	let alert = this.alertCtrl.create({
-  		title: 'Great!',
-  		subTitle: 'Your invitations are successfully sent.',
-  		buttons: ['OK'],
-  		enableBackdropDismiss: false,
-  	});
-  	alert.present();
-  }
-
   sendInvitation(){
   	console.log(this.users);
 
@@ -85,8 +75,12 @@ export class SendInvitePage {
     	console.log("Sending invite ...");
     });
 
-  	// Edit the alert component later
-  	this.showAlert();
+    let alert = this.alertCtrl.create({
+      title: 'Success',
+      message: 'Your invitations are successfully sent.',
+      buttons: ['OK']
+    });
+    alert.present();
 
   	this.navCtrl.pop();
   }

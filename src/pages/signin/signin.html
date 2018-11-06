@@ -12,20 +12,38 @@
       <ion-img width="200" height="200" src="../assets/imgs/logos.png" style="background: transparent !important;"></ion-img>
     </div>
 
-    <ion-grid>
-      <ion-row style="margin: 5px 0;">
-        <ion-input block type="text" placeholder="Email" #email></ion-input>
-      </ion-row>
+    <form [formGroup] = "authSignin">
+      <ion-grid>
+        <ion-row style="margin: 5px 0;">
+          <ion-input block type="text" placeholder="Email" #email formControlName="email"></ion-input>
+        </ion-row>
 
-      <ion-row style="margin: 5px 0;">
-        <ion-input block type="password" placeholder="Password" #password></ion-input>
-      </ion-row>
-    </ion-grid>
+        <p class="errorMessage" *ngIf="!authSignin.controls.email.hasError('required') && authSignin.controls.email.hasError('pattern') && authSignin.controls.email.dirty">
+          Please enter valid email
+        </p>
 
-  	<div text-center>
-  		<button ion-button round (click)="signin()" #signIn_btn>Sign in</button>
-  	</div>
+        <p class="errorMessage" *ngIf="authSignin.controls.email.hasError('required') && authSignin.controls.email.dirty">
+          Please enter email
+        </p>
 
+        <ion-row style="margin: 5px 0;">
+          <ion-input block type="password" placeholder="Password" #password formControlName="password"></ion-input>
+        </ion-row>
+
+        <p class="errorMessage" *ngIf="authSignin.controls.password.hasError('required') && authSignin.controls.password.dirty">
+          Please enter password.
+        </p>
+
+        <p class="errorMessage" *ngIf="!authSignin.controls.password.hasError('required') && authSignin.controls.password.hasError('minlength') && authSignin.controls.password.dirty ">
+          Password should be at least 6 characters
+        </p>
+      </ion-grid>
+
+      <div text-center>
+        <button ion-button round (click)="signin()" #signIn_btn [disabled]="!authSignin.valid">Sign in</button>
+      </div>
+    </form>
+  
   	<div text-center>
   		<p>Don't have an account?</p>
   		<button ion-button clear (click)="navigateToSignUp()">Sign Up</button>
