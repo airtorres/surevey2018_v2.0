@@ -25,9 +25,9 @@
 
   		<!-- ALL -->
   		<ion-list *ngSwitchCase="'all'" text-wrap>
-  			<div *ngIf="all_surveys.length == 0">
-				No surveys found.
-			</div>
+  			<ion-item *ngIf="all_surveys.length == 0" text-center>
+      			<img width="350" height="350" src="../assets/imgs/noSurveyIllustration.png" style="background: transparent !important; vertical-align: middle;">
+			</ion-item>
 
 			<ion-item *ngFor="let item of all_surveys" value="item">
 			  	{{ item['title'] }}
@@ -87,9 +87,10 @@
 
 		<!-- USER OWN CREATED SURVEYS -->
 		<ion-list *ngSwitchCase="'surveys'" text-wrap>
-			<div *ngIf="mySurveys.length == 0">
-				You haven't created any surveys yet.
-			</div>
+			<ion-item *ngIf="mySurveys.length == 0" text-center>
+				<!-- You haven't created any surveys yet. -->
+				<img width="350" height="350" src="../assets/imgs/noSurveyIllustration.png" style="background: transparent !important; vertical-align: middle;">
+			</ion-item>
 
 			<ion-item *ngFor="let item of mySurveys" value="item" (click)="gotoSummary(item)">
 			  	{{ item['title'] }}
@@ -117,9 +118,10 @@
 
 		<!-- SURVEY INVITES -->
 		<ion-list *ngSwitchCase="'invites'" text-wrap>
-			<div *ngIf="survey_invites.length == 0">
-				No survey invitations.
-			</div>
+			<ion-item *ngIf="survey_invites.length == 0" text-center>
+				<!-- No survey invitations. -->
+				<img width="350" height="350" src="../assets/imgs/noSurveyIllustration.png" style="background: transparent !important; vertical-align: middle;">
+			</ion-item>
 
 			<ion-item *ngFor="let item of survey_invites" value="item">
 			  	{{ item['title'] }}
