@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { SignupPage } from '../signup/signup';
-import { WelcomePage } from '../welcome/welcome';
+import { MyAppPage } from '../my-app/my-app';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { Storage } from '@ionic/storage';
@@ -29,7 +29,7 @@ export class SigninPage {
     private fire: AngularFireAuth,
     private storage: Storage) {
 
-    let EMAILPATTERN = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+    let EMAILPATTERN = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?.[a-z0-9](.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
 
     this.authSignin = formbuilder.group({
       email : ['', Validators.compose([Validators.required, Validators.pattern(EMAILPATTERN)])],
@@ -46,7 +46,7 @@ export class SigninPage {
   }
 
   navigateToHome(){
-  	this.navCtrl.setRoot(WelcomePage);
+  	this.navCtrl.setRoot(MyAppPage);
   }
 
   signin(){

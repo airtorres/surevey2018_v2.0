@@ -57,9 +57,10 @@ export class SignupPage {
         this.users = value;
     });
 
-    let EMAILPATTERN = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+    let EMAILPATTERN = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?.[a-z0-9](.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+    let USERNAMEPATTERN = /^[a-z]+[a-z0-9!#$%&'*+\/=?^_`{|}~.-]*/i;
     this.authSignup = formbuilder.group({
-      username : ['', Validators.required],
+      username : ['', Validators.compose([Validators.required, Validators.pattern(USERNAMEPATTERN)])],
       email : ['', Validators.compose([Validators.required, Validators.pattern(EMAILPATTERN)])],
       password : ['', Validators.compose([Validators.required, Validators.minLength(6)]) ]
     });

@@ -17,6 +17,10 @@
           <ion-input type="text" placeholder="Username" #username formControlName="username"></ion-input>
         </ion-row>
 
+        <p class="errorMessage" *ngIf="!authSignup.controls.username.hasError('required') && authSignup.controls.username.hasError('pattern') && authSignup.controls.username.dirty">
+          Please enter valid username
+        </p>
+
         <p class="errorMessage" *ngIf="authSignup.controls.username.hasError('required') && authSignup.controls.username.dirty">
           Please enter username
         </p>
@@ -47,7 +51,7 @@
       </ion-grid>
 
       <div text-center>
-        <button ion-button round (click)="signup()">Sign up</button>
+        <button ion-button round (click)="signup()" [disabled]="!authSignup.valid">Sign up</button>
       </div>
     </form>
 
