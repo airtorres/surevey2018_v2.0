@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { Storage } from '@ionic/storage';
 
@@ -35,7 +35,8 @@ export class AnswerSurveyPage {
   answers = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-  	private storage: Storage) {
+  	private storage: Storage,
+  	private alertCtrl: AlertController) {
   	this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
@@ -47,9 +48,15 @@ export class AnswerSurveyPage {
     this.s_id = this.thisSurvey['id'];
 
     this.questions = this.thisSurvey['questions'];
+    // saving the id of the question to its selfNode
+    for (var q in this.questions){
+    	this.questions[q]['id'] = '';
+    	this.questions[q]['id'] = q;
+    }
   }
 
   ionViewDidLoad() {
+  	console.log(this.questions);
     console.log('ionViewDidLoad AnswerSurveyPage');
   }
 
@@ -91,6 +98,15 @@ export class AnswerSurveyPage {
             }
         });
     });
+
+    let alert = this.alertCtrl.create({
+      title: 'Success',
+      message: 'Answers Submitted!.',
+      buttons: ['OK']
+    });
+    alert.present();
+
+    this.navCtrl.pop();
   }
 
 }

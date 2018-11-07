@@ -31,7 +31,9 @@ export class SurveyListPage {
   survey_invites = [];
   survey_invites_ids = [];
 
-  // mySurveys + survey invites
+  invite_status = {};
+
+  // mySurveys + survey invites: NOT USED IN HTML
   all_surveys = [];
 	
   constructor(public navCtrl: NavController, public navParams: NavParams,
@@ -60,6 +62,10 @@ export class SurveyListPage {
 
               var invitations = u['users'][i]['invitations'];
               for ( var inv in invitations){
+
+                var idx = u['users'][i]['invitations'][inv]['s_id'];
+                this.invite_status[idx] = '';
+                this.invite_status[idx] = u['users'][i]['invitations'][inv]['status'];
                 this.survey_invites_ids.push(u['users'][i]['invitations'][inv]['s_id']);
               }
 

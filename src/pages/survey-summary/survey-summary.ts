@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { SendInvitePage } from '../send-invite/send-invite';
+import { CreateSurveyPage } from '../create-survey/create-survey';
 
 /**
  * Generated class for the SurveySummaryPage page.
@@ -45,6 +46,10 @@ export class SurveySummaryPage {
 
   gotoSendInvitePage(){
   	this.navCtrl.push(SendInvitePage, {s_id: this.s_id});
+  }
+
+  gotoEdit(){
+    this.navCtrl.push(CreateSurveyPage, {thisSurvey: this.thisSurvey});
   }
 
 }

@@ -41,6 +41,14 @@ export class CreateSurveyPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage) {
 
+    if (this.navParams.get('thisSurvey')){
+      this.survey = this.navParams.get('thisSurvey');
+      this.questions = this.survey['questions'];
+
+      console.log("loading this survey for editing ...");
+      console.log(this.survey);
+    }
+
     this.storage.get("surveys").then(value => {
         this.surveys = value;
     });
@@ -114,14 +122,17 @@ export class CreateSurveyPage {
   }
 
   public ionViewWillEnter() {
-    this.question_data = this.navParams.get('question_data') || null;
-    console.log("question_data ff: ");
-    console.log(this.question_data);
+    var push_flag = this.navParams.get('push_flag');
+    if( push_flag){
+      this.question_data = this.navParams.get('question_data') || null;
+      console.log("question_data ff: ");
+      console.log(this.question_data);
 
-    // push the question to this particular survey
-    if (this.question_data != null){
-      this.survey['questions'].push(this.question_data);
-      this.questions.push(this.question_data);
+      // push the question to this particular survey
+      if (this.question_data != null){
+        this.survey['questions'].push(this.question_data);
+        this.questions.push(this.question_data);
+      }
     }
   }
 

@@ -22,8 +22,8 @@
 
 		<!-- MULTIPLE CHOICE -->
 		<div *ngIf="question['type'] == 'multipleChoice'">
-			<ion-list radio-group>
-				<ion-item *ngFor="let opt of question['options']">
+			<ion-list radio-group [(ngModel)]="question['id']">
+				<ion-item *ngFor="let opt of question['options']; let idx = index">
 				    <ion-label>{{ opt }}</ion-label>
 				    <ion-radio></ion-radio>
 		  		</ion-item>

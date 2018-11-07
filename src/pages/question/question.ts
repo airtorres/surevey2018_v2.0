@@ -22,11 +22,13 @@ export class QuestionPage {
   thisQuestion = {
     'type' : '',
     'message': '',
-    'options' : []
+    'options' : [],
+    'isRequired': false
   };
 
 	public type;
   public anArray = [];
+  isRequired;
 
  	constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController) {
   		this.type = this.navParams.get('type');
@@ -41,6 +43,7 @@ export class QuestionPage {
 
     this.thisQuestion['type'] = this.type;
     this.thisQuestion['message'] = (this.question ? this.question.value : "Missing Question");
+    this.thisQuestion['isRequired'] = this.isRequired;
 
     if (this.type == 'multipleChoice' || this.type == 'checkbox' || this.type == 'dropdown'){
       console.log('this.anArray', this.anArray);
@@ -65,10 +68,12 @@ export class QuestionPage {
     else {}
 
     this.navCtrl.getPrevious().data.question_data = (this.thisQuestion? this.thisQuestion : null);
+    this.navCtrl.getPrevious().data.push_flag = true;
     this.navCtrl.pop();
   }
     
   closeQuestionModal() {
+    this.navCtrl.getPrevious().data.push_flag = false;
   	this.view.dismiss();
   }
 
