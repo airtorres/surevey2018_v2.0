@@ -7,12 +7,29 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>template-list</ion-title>
+    <ion-title>Templates</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+
+	<ion-list text-wrap>
+		<button ion-item (click)="edit_templates()">
+			Customer Satisfaction Survey Templates
+			<!-- <button item-end clear ion-button> -->
+			<ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
+			<!-- </button> -->
+		</button >
+
+		<button ion-item>
+			Marketing Survey Templates
+			<!-- <button item-end clear ion-button> -->
+			<ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
+			<!-- </button> -->
+		</button >
+
+	</ion-list>
 
 </ion-content>

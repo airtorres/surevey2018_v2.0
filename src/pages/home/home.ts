@@ -5,6 +5,7 @@ import { SigninPage } from '../signin/signin';
 import { CreateSurveyPage } from '../create-survey/create-survey';
 import { ProfilePage } from '../profile/profile';
 import { SettingPage } from '../setting/setting';
+import { TemplateListPage } from '../template-list/template-list';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Storage } from '@ionic/storage';
@@ -50,6 +51,10 @@ export class HomePage {
 
   create_survey(){
   	this.navCtrl.push(CreateSurveyPage, {});
+  }
+
+  browse_templates(){
+    this.navCtrl.push(TemplateListPage, {})
   }
 
 }

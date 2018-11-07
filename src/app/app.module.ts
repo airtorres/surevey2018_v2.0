@@ -22,6 +22,8 @@ import { SendInvitePage } from '../pages/send-invite/send-invite';
 import { ChatPage } from '../pages/chat/chat';
 import { NewMsgPage } from '../pages/new-msg/new-msg';
 import { AnswerSurveyPage } from '../pages/answer-survey/answer-survey';
+import { TemplateListPage } from '../pages/template-list/template-list';
+import { TemplatesPage } from '../pages/templates/templates';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -59,7 +61,9 @@ import { IonicStorageModule } from '@ionic/storage';
     SendInvitePage,
     ChatPage,
     NewMsgPage,
-    AnswerSurveyPage
+    AnswerSurveyPage,
+    TemplateListPage,
+    TemplatesPage
   ],
   imports: [
     BrowserModule,
@@ -89,7 +93,9 @@ import { IonicStorageModule } from '@ionic/storage';
     SendInvitePage,
     ChatPage,
     NewMsgPage,
-    AnswerSurveyPage
+    AnswerSurveyPage,
+    TemplateListPage,
+    TemplatesPage
   ],
   providers: [
     StatusBar,
