@@ -17,10 +17,10 @@
 
 <ion-content style="margin-top: 10px;">
 	<ion-item>
-		<ion-input type="text" placeholder="Untitled survey" id="survey-title-input" #surveyTitle></ion-input>
+		<ion-input type="text" placeholder="Untitled survey" id="survey-title-input" value="{{ initial_title }}" #surveyTitle></ion-input>
 	</ion-item>
 	<ion-item>
-		<ion-input type="text" placeholder="Description" style="font-size: 16px;" #surveyDescription></ion-input>
+		<ion-input type="text" placeholder="Description" value="{{ intial_desc }}" style="font-size: 16px;" #surveyDescription></ion-input>
 	</ion-item>
 
 	<ion-fab bottom right #fab>
@@ -66,18 +66,18 @@
 	  	<ion-item *ngIf="question['type'] == 'dropdown'">
 			<ion-label>Select</ion-label>
 		  	<ion-select>
-			    <ion-option *ngFor="let opt of question['options']" disable>{{ opt }}</ion-option>
+			    <ion-option *ngFor="let opt of question['options']" disabled>{{ opt }}</ion-option>
 		  	</ion-select>
 		</ion-item>
 
 		<!-- SHORT ANSWER -->
 		<ion-item *ngIf="question['type'] == 'shortAnswer'">
- 			<ion-input type="text" placeholder="Short answer text" disabled #answer></ion-input>
+ 			<ion-input type="text" placeholder="Short answer text" disabled></ion-input>
  		</ion-item>
 
  		<!-- LONG ANSWER -->
  		<ion-item *ngIf="question['type'] == 'longAnswer'">
- 			<ion-input type="text" placeholder="Long answer text" disabled #answer></ion-input>
+ 			<ion-input type="text" placeholder="Long answer text" disabled></ion-input>
  		</ion-item>
 
  		<!-- DATE -->

@@ -22,6 +22,10 @@ export class CreateSurveyPage {
   @ViewChild('surveyTitle') surveyTitle;
   @ViewChild('surveyDescription') surveyDescription;
 
+  intial_desc = '';
+  initial_title = '';
+  s_id;// for locating survey to edit
+
   surveys = {};
   survey = {
     'title':'untitled survey',
@@ -41,12 +45,18 @@ export class CreateSurveyPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage) {
 
+    // getting the survey to edit: from survey-summary
     if (this.navParams.get('thisSurvey')){
       this.survey = this.navParams.get('thisSurvey');
-      this.questions = this.survey['questions'];
 
-      console.log("loading this survey for editing ...");
-      console.log(this.survey);
+      this.s_id = this.navParams.get('s_id');
+
+      this.initial_title = this.survey['title'];
+      this.intial_desc = this.survey['description'];
+    }
+
+    if( this.survey){
+        this.questions = this.survey['questions'];
     }
 
     this.storage.get("surveys").then(value => {
@@ -80,41 +90,56 @@ export class CreateSurveyPage {
     this.survey['author'] = this.currUser;
     this.survey['isActive'] = true;//the survey is active upon creation
 
+    var push_flag_for_survey = true;
+
     if(this.surveys){
-      JSON.parse(this.surveys['surveys'].push(this.survey));
+      for( var surv_id in this.surveys['surveys'] ){
+        var author = this.surveys['surveys'][surv_id]['author'];
+        if( surv_id == this.s_id && this.survey['author'] == author){
+          // replacing the survey: @editing
+          this.survey['updated_at'] = new Date();
+
+          this.surveys['surveys'][surv_id] = this.survey;
+
+          push_flag_for_survey = false;
+          break;
+        }
+      }
+
+      if (push_flag_for_survey){
+        JSON.parse(this.surveys['surveys'].push(this.survey));
+      }
     }
     else{
       this.surveys = {'surveys': ''};
       this.surveys['surveys'] = [this.survey];
     }
-    this.storage.set('surveys', this.surveys).then((val) =>{
-      // getting this survey's id
-      this.storage.get('surveys').then((s) => {
-        if (s){
-           for ( var surv_id in s['surveys']){
-              // console.log(s['surveys'][surv]);
 
-              // find the currently added survey and add to currentUser
-              if( JSON.stringify(this.survey) == JSON.stringify(s['surveys'][surv_id])){
-                // console.log(surv_id);                
+    if(push_flag_for_survey){
+      var this_id;
+      for ( var this_surv_id in this.surveys['surveys']){
+        if( JSON.stringify(this.survey) == JSON.stringify(this.surveys['surveys'][this_surv_id])){
+          this_id = this_surv_id;
+          break;
+        }
+      }
 
-                this.storage.get('users').then((u) => {
-                  for ( var i in u['users']){
-                    if (u['users'][i]['email'] == this.currUser){
-                        u['users'][i]['surveys'].push(surv_id);
-                        // update users
-                        this.storage.set('users', u).then((data) => {
-                          return
-                        });
-                      }
-                  }
-                });
-                break;
-              }
-           }
+      // saving survey id to user's surveys list
+      this.storage.get('users').then((u) => {
+        for ( var i in u['users']){
+          if (u['users'][i]['email'] == this.currUser){
+            u['users'][i]['surveys'].push(this_id);
+            // update users
+            this.storage.set('users', u).then((data) => {
+              return
+            });
           }
+        }
       });
-    });
+    }
+
+    this.storage.set('surveys', this.surveys).then((val) =>{});
+
 
     // redirect to survey-list: showing all surveys
     this.navCtrl.pop();
@@ -131,7 +156,6 @@ export class CreateSurveyPage {
       // push the question to this particular survey
       if (this.question_data != null){
         this.survey['questions'].push(this.question_data);
-        this.questions.push(this.question_data);
       }
     }
   }

@@ -78,22 +78,26 @@ export class SurveyListPage {
           for( var x in this.mySurveys_ids){
             // console.log(this.surveys['surveys'][id]);
             id = this.mySurveys_ids[x];
-            this.surveys['surveys'][id]['id'] = '';
-            this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
-            this.surveys['surveys'][id]['type'] = '';
-            this.surveys['surveys'][id]['type'] = 'mySurvey';
-            this.mySurveys.push(this.surveys['surveys'][id]);
-            this.all_surveys.push(this.surveys['surveys'][id]);
+            if(this.surveys['surveys'][id]){
+              this.surveys['surveys'][id]['id'] = '';
+              this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
+              this.surveys['surveys'][id]['type'] = '';
+              this.surveys['surveys'][id]['type'] = 'mySurvey';
+              this.mySurveys.push(this.surveys['surveys'][id]);
+              this.all_surveys.push(this.surveys['surveys'][id]);
+            }
           }
 
           for ( var y in this.survey_invites_ids){
             id = this.survey_invites_ids[y];
-            this.surveys['surveys'][id]['id'] = '';
-            this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
-            this.surveys['surveys'][id]['type'] = '';
-            this.surveys['surveys'][id]['type'] = 'invites';
-            this.survey_invites.push(this.surveys['surveys'][id]);
-            this.all_surveys.push(this.surveys['surveys'][id]);
+            if(this.surveys['surveys'][id]){
+              this.surveys['surveys'][id]['id'] = '';
+              this.surveys['surveys'][id]['id'] = id; // id is needed to be passed later
+              this.surveys['surveys'][id]['type'] = '';
+              this.surveys['surveys'][id]['type'] = 'invites';
+              this.survey_invites.push(this.surveys['surveys'][id]);
+              this.all_surveys.push(this.surveys['surveys'][id]);
+            }
           }
         });
       });
