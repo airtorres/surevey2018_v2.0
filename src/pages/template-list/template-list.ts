@@ -24,8 +24,11 @@ export class TemplateListPage {
     console.log('ionViewDidLoad TemplateListPage');
   }
 
-  edit_templates() {
-  	this.navCtrl.push(TemplatesPage, {});
+  edit_templates(title) {
+    let data = {
+      surveyTitle: title
+    }
+  	this.navCtrl.push(TemplatesPage, data);
   }
 
 }

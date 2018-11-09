@@ -25,7 +25,7 @@
 			<ion-list radio-group [(ngModel)]="question['id']">
 				<ion-item *ngFor="let opt of question['options']; let idx = index">
 				    <ion-label>{{ opt }}</ion-label>
-				    <ion-radio></ion-radio>
+				    <ion-radio value="{{ opt }}"></ion-radio>
 		  		</ion-item>
 			</ion-list>
 		</div>
@@ -53,14 +53,14 @@
 		<!-- SHORT ANSWER -->
 		<div *ngIf="question['type'] == 'shortAnswer'">
 			<ion-item>
-				<ion-input type="text" placeholder="Short answer text"></ion-input>
+				<ion-input type="text" placeholder="Short answer text" [(ngModel)]="shortAnswer"></ion-input>
 			</ion-item>
 		</div>
 
 		<!-- LONG ANSWER -->
 		<div *ngIf="question['type'] == 'longAnswer'">
 			<ion-item>
-				<ion-textarea placeholder="Long answer text" rows=2></ion-textarea>
+				<ion-textarea placeholder="Long answer text" rows=2 [(ngModel)]="longAnswer"></ion-textarea>
 			</ion-item>
 		</div>
 
@@ -68,7 +68,7 @@
 		<div *ngIf="question['type'] == 'date'">
 			<ion-item>
 				<ion-label>Select Date</ion-label>
-				<ion-datetime displayFormat="MMM DD, YYYY"></ion-datetime>
+				<ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="date"></ion-datetime>
 			</ion-item>
 		</div>
 
@@ -76,7 +76,7 @@
 		<div *ngIf="question['type'] == 'time'">
 			<ion-item>
 				<ion-label>Select Time</ion-label>
-				<ion-datetime displayFormat="HH:mm"></ion-datetime>
+				<ion-datetime displayFormat="HH:mm" [(ngModel)]="time"></ion-datetime>
 			</ion-item>
 		</div>
 	</div>

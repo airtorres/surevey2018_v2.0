@@ -25,6 +25,7 @@ export class AnswerSurveyPage {
   currUser;
 
   responses;
+
   response = {
   	'respondent': '',
   	'survey_id': null,
@@ -32,6 +33,9 @@ export class AnswerSurveyPage {
   	'submitted_at': new Date()
   };
 
+  public shortAnswer: any;
+  public date: Date;
+  public time: Date;
   answers = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
@@ -61,50 +65,52 @@ export class AnswerSurveyPage {
   }
 
   submitResponse(){
-    console.log("submitting response ...")
+   //  console.log("submitting response ...")
 
-  	// save responses to ionic localStorage
-  	this.response['respondent'] = this.currUser;
-  	this.response['survey_id'] = this.s_id;
-  	this.response['submitted_at'] = new Date();
+  	// // save responses to ionic localStorage
+  	// this.response['respondent'] = this.currUser;
+  	// this.response['survey_id'] = this.s_id;
+  	// this.response['submitted_at'] = new Date();
 
-  	if(this.responses){
-      JSON.parse(this.responses['responses'].push(this.response));
-    }
-    else{
-      this.responses = {'responses': ''};
-      this.responses['responses'] = [this.response];
-    }
+  	// if(this.responses){
+   //    JSON.parse(this.responses['responses'].push(this.response));
+   //  }
+   //  else{
+   //    this.responses = {'responses': ''};
+   //    this.responses['responses'] = [this.response];
+   //  }
 
-    this.storage.set('responses', this.responses).then((val) =>{
-    	this.storage.get('users').then((u) => {
-          	for ( var i in u['users']){
-              if (u['users'][i]['email'] == this.currUser){
-                var invitations = u['users'][i]['invitations'];
+   //  this.storage.set('responses', this.responses).then((val) =>{
+   //  	this.storage.get('users').then((u) => {
+   //        	for ( var i in u['users']){
+   //            if (u['users'][i]['email'] == this.currUser){
+   //              var invitations = u['users'][i]['invitations'];
 
-                for (var invi in invitations){
-                	if(invitations[invi]['s_id'] == this.s_id){
-                		invitations[invi]['status'] = 'completed';
-                		u['users'][i]['invitations'] = invitations;
-                		break;
-                	}
-                }
+   //              for (var invi in invitations){
+   //              	if(invitations[invi]['s_id'] == this.s_id){
+   //              		invitations[invi]['status'] = 'completed';
+   //              		u['users'][i]['invitations'] = invitations;
+   //              		break;
+   //              	}
+   //              }
 
-                // update users
-                this.storage.set('users', u).then((data) => {
-                  return
-                });
-              }
-            }
-        });
-    });
+   //              // update users
+   //              this.storage.set('users', u).then((data) => {
+   //                return
+   //              });
+   //            }
+   //          }
+   //      });
+   //  });
 
-    let alert = this.alertCtrl.create({
-      title: 'Success',
-      message: 'Answers Submitted!.',
-      buttons: ['OK']
-    });
-    alert.present();
+   //  let alert = this.alertCtrl.create({
+   //    title: 'Success',
+   //    message: 'Answers Submitted!.',
+   //    buttons: ['OK']
+   //  });
+   //  alert.present();
+
+    alert(this.shortAnswer + " " + this.date + " " + this.time + " ");
 
     this.navCtrl.pop();
   }

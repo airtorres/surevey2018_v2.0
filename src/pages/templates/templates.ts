@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
@@ -14,12 +14,24 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'templates.html',
 })
 export class TemplatesPage {
+	@ViewChild('fab') fab;
+	public surveyTitle;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+	constructor(public navCtrl: NavController, public navParams: NavParams) {
+		this.surveyTitle = this.navParams.get('surveyTitle');
+	}
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad TemplatesPage');
-  }
+	ionViewDidLoad() {
+	    console.log('ionViewDidLoad TemplatesPage');
+	}
+
+  	addQuestion(questionType) {
+  		let data = {
+  			type: questionType
+  		}
+  		console.log(data);
+
+	  	this.fab.close();
+	}
 
 }
