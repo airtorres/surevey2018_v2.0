@@ -32,6 +32,24 @@ export class QuestionPage {
 
  	constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController) {
   		this.type = this.navParams.get('type');
+
+      if(this.navParams.get('question_data')){
+        console.log(this.navParams.get('question_data'));
+        this.thisQuestion = this.navParams.get('question_data');
+        this.type = this.thisQuestion['type'];
+
+        console.log(this.thisQuestion['options'].length);
+
+        for ( var opt = 0; opt < this.thisQuestion['options'].length; opt++ ){
+          if( opt != 0){
+            var val = {'value': this.thisQuestion['options'][opt]};
+            this.anArray.push(val);
+          }
+        }
+
+        console.log(this.anArray);
+      }
+      
   }
 
 	ionViewDidLoad() {
@@ -69,6 +87,10 @@ export class QuestionPage {
 
     this.navCtrl.getPrevious().data.question_data = (this.thisQuestion? this.thisQuestion : null);
     this.navCtrl.getPrevious().data.push_flag = true;
+    if(this.navParams.get('question_data')){
+      this.navCtrl.getPrevious().data.replace_flag = true;
+      this.navCtrl.getPrevious().data.qID = this.navParams.get('qID_fromEdit');
+    }
     this.navCtrl.pop();
   }
     
@@ -78,7 +100,21 @@ export class QuestionPage {
   }
 
   addMoreOption(){
+    // somethings wrong sa pagpush
     this.anArray? this.anArray.push({'value':''}):'';
+  }
+
+  public ionViewWillLeave() {
+    console.log("leaving question page ...");
+
+    this.anArray = [];
+
+    this.thisQuestion = {
+      'type' : '',
+      'message': '',
+      'options' : [],
+      'isRequired': false
+    };
   }
 
 }

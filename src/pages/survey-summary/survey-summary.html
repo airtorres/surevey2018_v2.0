@@ -7,9 +7,12 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>Summary
-        <ion-icon name="trash" (click)="deleteSurvey()"></ion-icon>
-    </ion-title>
+    <ion-title>Summary</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="deleteSurvey()">
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>

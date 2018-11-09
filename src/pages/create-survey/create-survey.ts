@@ -146,8 +146,19 @@ export class CreateSurveyPage {
     this.navCtrl.parent.select(1);
   }
 
+  deleteQuestion(q_id){
+    this.survey['questions'] = this.survey['questions'].splice(q_id,1);
+  }
+
+  editQuestion(q_id){
+    this.navCtrl.push(QuestionPage, {question_data: this.survey['questions'][q_id], qID_fromEdit: q_id});
+  }
+
   public ionViewWillEnter() {
     var push_flag = this.navParams.get('push_flag');
+    var replace_flag = this.navParams.get('replace_flag');
+    var qID = this.navParams.get('qID');// qID from question.ts
+
     if( push_flag){
       this.question_data = this.navParams.get('question_data') || null;
       console.log("question_data ff: ");
@@ -155,9 +166,26 @@ export class CreateSurveyPage {
 
       // push the question to this particular survey
       if (this.question_data != null){
-        this.survey['questions'].push(this.question_data);
+        var q_id = this.survey['questions'].length;
+        this.question_data['q_id'] = '';
+        this.question_data['q_id'] = q_id;
+
+        if(replace_flag){
+          this.survey['questions'].splice(qID, 1, this.question_data);
+        }
+        else{
+          this.survey['questions'].push(this.question_data);
+        }
       }
     }
+
+    // this.question_data = {};
+  }
+
+  public ionViewWillLeave() {
+    console.log("leaving create-survey page ...");
+
+    this.question_data = {};
   }
 
 }

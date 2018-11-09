@@ -16,7 +16,7 @@
 <ion-content padding>
 	<ion-item>
 	   <ion-label color="primary" stacked>Question</ion-label>
-	   <ion-input type="text" placeholder="Enter question" #question></ion-input>
+	   <ion-input type="text" placeholder="Enter question" value="{{ thisQuestion['message'] }}" #question></ion-input>
 	</ion-item>
 
 <!-- SHORT ANSWER  -->
@@ -33,7 +33,7 @@
     <ion-list radio-group *ngIf="type == 'multipleChoice'">
       <ion-item>
         <ion-radio disabled></ion-radio>
-        <ion-input type="text" placeholder="Option" id="firstOpt_multipleChoice" class="multipleChoice_options" #firstOpt_multipleChoice></ion-input>
+        <ion-input type="text" placeholder="Option" id="firstOpt_multipleChoice" class="multipleChoice_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_multipleChoice></ion-input>
       </ion-item>
 
 	    <ion-item *ngFor="let att of anArray; let idx = index">
@@ -41,13 +41,16 @@
 	    	<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="multipleChoice_options" #answer></ion-input>
 	    </ion-item>
 
-      <button ion-button (click)="addMoreOption()">Add Option</button>
+      <button ion-button (click)="addMoreOption()">
+        <ion-icon name="add"></ion-icon>
+        Add option
+      </button>
     </ion-list>
 
 <!-- CHECKBOX -->
   	<ion-list *ngIf="type == 'checkbox'">
       <ion-item>
-          <ion-input type="text" placeholder="Option" id="firstOpt_checkbox" class="checkbox_options" #firstOpt_checkbox></ion-input>
+          <ion-input type="text" placeholder="Option" id="firstOpt_checkbox" class="checkbox_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_checkbox></ion-input>
           <ion-checkbox disabled></ion-checkbox>
       </ion-item>
 
@@ -56,14 +59,17 @@
       		<ion-checkbox disabled></ion-checkbox>
    		</ion-item>
 
-      <button ion-button (click)="addMoreOption()">Add Option</button>
+      <button ion-button (click)="addMoreOption()">
+        <ion-icon name="add"></ion-icon>
+        Add option
+      </button>
   	</ion-list>
 
 <!-- DROPDOWN -->
 	<ion-list radio-group *ngIf="type == 'dropdown'">
       <ion-item>
         <ion-label>1. </ion-label>
-        <ion-input type="text" placeholder="Option" id="firstOpt_dropdown" class="dropdown_options" #firstOpt_dropdown></ion-input>
+        <ion-input type="text" placeholder="Option" id="firstOpt_dropdown" class="dropdown_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_dropdown></ion-input>
       </ion-item>
 
       <ion-item *ngFor="let att of anArray; let idx = index">
@@ -71,7 +77,10 @@
         <ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="dropdown_options" #answer></ion-input>
       </ion-item>
 
-      <button ion-button (click)="addMoreOption()">Add Option</button>
+      <button ion-button (click)="addMoreOption()">
+        <ion-icon name="add"></ion-icon>
+        Add option
+      </button>
     </ion-list>
 
 <!-- DATE -->

@@ -93,12 +93,15 @@
  		</ion-item>
 
 		<ion-buttons end>
-			<button ion-button clear>
+			<button ion-button clear (click)="deleteQuestion(question['q_id'])">
 				<ion-icon name="trash"></ion-icon>
 			</button>
 			<button ion-button clear>
-				<ion-icon name="create"></ion-icon>
+				<ion-icon name="create" (click)="editQuestion(question['q_id'])"></ion-icon>
 			</button>
 		</ion-buttons>
  	</ion-card>
+
+ 	<!-- giving a space to click edit-button for the last card -->
+ 	<div style="margin-bottom: 80px"></div>
 </ion-content>
