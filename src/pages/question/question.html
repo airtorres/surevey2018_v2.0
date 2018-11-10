@@ -38,7 +38,7 @@
 
 	    <ion-item *ngFor="let att of anArray; let idx = index">
 	    	<ion-radio disabled></ion-radio>
-	    	<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="multipleChoice_options" #answer></ion-input>
+	    	<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="multipleChoice_options"></ion-input>
 	    </ion-item>
 
       <button ion-button (click)="addMoreOption()">
@@ -55,7 +55,7 @@
       </ion-item>
 
     	<ion-item *ngFor="let att of anArray; let idx = index">
-       		<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="checkbox_options" #answer></ion-input>
+       		<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="checkbox_options"></ion-input>
       		<ion-checkbox disabled></ion-checkbox>
    		</ion-item>
 
@@ -74,7 +74,7 @@
 
       <ion-item *ngFor="let att of anArray; let idx = index">
         <ion-label>{{ idx+2 }}</ion-label>
-        <ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="dropdown_options" #answer></ion-input>
+        <ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="dropdown_options"></ion-input>
       </ion-item>
 
       <button ion-button (click)="addMoreOption()">

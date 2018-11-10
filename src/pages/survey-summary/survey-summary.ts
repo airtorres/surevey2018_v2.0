@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { SendInvitePage } from '../send-invite/send-invite';
 import { CreateSurveyPage } from '../create-survey/create-survey';
+import { ResultsPage } from '../results/results';
 
 import { Storage } from '@ionic/storage';
 
@@ -59,6 +60,10 @@ export class SurveySummaryPage {
 
   gotoEdit(){
     this.navCtrl.push(CreateSurveyPage, {thisSurvey: this.thisSurvey, s_id: this.s_id});
+  }
+
+  gotoResultsPage(){
+    this.navCtrl.push(ResultsPage, {s_id: this.s_id});
   }
 
   deleteSurvey(){

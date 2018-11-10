@@ -24,8 +24,7 @@ export class AnswerSurveyPage {
 
   currUser;
 
-  responses;
-
+  responses = {};
   response = {
   	'respondent': '',
   	'survey_id': null,
@@ -33,16 +32,17 @@ export class AnswerSurveyPage {
   	'submitted_at': new Date()
   };
 
-  public shortAnswer: any;
-  public date: Date;
-  public time: Date;
-  answers = [];
+  public answers = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	private storage: Storage,
   	private alertCtrl: AlertController) {
   	this.storage.get('currentUser').then(x =>{
       this.currUser = x;
+    });
+
+    this.storage.get("responses").then(res => {
+        this.responses = res;
     });
 
   	this.thisSurvey = navParams.get('item');
@@ -56,6 +56,19 @@ export class AnswerSurveyPage {
     for (var q in this.questions){
     	this.questions[q]['id'] = '';
     	this.questions[q]['id'] = q;
+
+    	if ( this.questions[q]['type'] == "checkbox"){
+    		this.answers[q] = [];
+
+    		// initializing the checkboxes to false
+    		for (var o in this.questions[q]['options']){
+    			console.log(o);
+    			this.answers[q][o] = false;
+    		}
+    	}
+    	else{
+    		this.answers[q] = '';
+    	}
     }
   }
 
@@ -65,52 +78,52 @@ export class AnswerSurveyPage {
   }
 
   submitResponse(){
-   //  console.log("submitting response ...")
+    console.log("submitting response ...")
+    console.log(this.answers);
 
-  	// // save responses to ionic localStorage
-  	// this.response['respondent'] = this.currUser;
-  	// this.response['survey_id'] = this.s_id;
-  	// this.response['submitted_at'] = new Date();
+  	// save responses to ionic localStorage
+  	this.response['respondent'] = this.currUser;
+  	this.response['survey_id'] = this.s_id;
+  	this.response['submitted_at'] = new Date();
+  	this.response['answers'] = this.answers;
 
-  	// if(this.responses){
-   //    JSON.parse(this.responses['responses'].push(this.response));
-   //  }
-   //  else{
-   //    this.responses = {'responses': ''};
-   //    this.responses['responses'] = [this.response];
-   //  }
+  	if(this.responses){
+      JSON.parse(this.responses['responses'].push(this.response));
+    }
+    else{
+      this.responses = {'responses': ''};
+      this.responses['responses'] = [this.response];
+    }
 
-   //  this.storage.set('responses', this.responses).then((val) =>{
-   //  	this.storage.get('users').then((u) => {
-   //        	for ( var i in u['users']){
-   //            if (u['users'][i]['email'] == this.currUser){
-   //              var invitations = u['users'][i]['invitations'];
+    this.storage.set('responses', this.responses).then((val) =>{
+    	this.storage.get('users').then((u) => {
+          	for ( var i in u['users']){
+              if (u['users'][i]['email'] == this.currUser){
+                var invitations = u['users'][i]['invitations'];
 
-   //              for (var invi in invitations){
-   //              	if(invitations[invi]['s_id'] == this.s_id){
-   //              		invitations[invi]['status'] = 'completed';
-   //              		u['users'][i]['invitations'] = invitations;
-   //              		break;
-   //              	}
-   //              }
+                for (var invi in invitations){
+                	if(invitations[invi]['s_id'] == this.s_id){
+                		invitations[invi]['status'] = 'completed';
+                		u['users'][i]['invitations'] = invitations;
+                		break;
+                	}
+                }
 
-   //              // update users
-   //              this.storage.set('users', u).then((data) => {
-   //                return
-   //              });
-   //            }
-   //          }
-   //      });
-   //  });
+                // update users
+                this.storage.set('users', u).then((data) => {
+                  return
+                });
+              }
+            }
+        });
+    });
 
-   //  let alert = this.alertCtrl.create({
-   //    title: 'Success',
-   //    message: 'Answers Submitted!.',
-   //    buttons: ['OK']
-   //  });
-   //  alert.present();
-
-    alert(this.shortAnswer + " " + this.date + " " + this.time + " ");
+    let alert = this.alertCtrl.create({
+      title: 'Success',
+      message: 'Answers Submitted!.',
+      buttons: ['OK']
+    });
+    alert.present();
 
     this.navCtrl.pop();
   }

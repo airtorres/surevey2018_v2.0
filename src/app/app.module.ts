@@ -24,6 +24,7 @@ import { NewMsgPage } from '../pages/new-msg/new-msg';
 import { AnswerSurveyPage } from '../pages/answer-survey/answer-survey';
 import { TemplateListPage } from '../pages/template-list/template-list';
 import { TemplatesPage } from '../pages/templates/templates';
+import { ResultsPage } from '../pages/results/results';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -63,7 +64,8 @@ import { IonicStorageModule } from '@ionic/storage';
     NewMsgPage,
     AnswerSurveyPage,
     TemplateListPage,
-    TemplatesPage
+    TemplatesPage,
+    ResultsPage
   ],
   imports: [
     BrowserModule,
@@ -95,7 +97,8 @@ import { IonicStorageModule } from '@ionic/storage';
     NewMsgPage,
     AnswerSurveyPage,
     TemplateListPage,
-    TemplatesPage
+    TemplatesPage,
+    ResultsPage
   ],
   providers: [
     StatusBar,

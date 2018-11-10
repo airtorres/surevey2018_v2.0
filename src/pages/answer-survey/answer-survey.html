@@ -22,7 +22,7 @@
 
 		<!-- MULTIPLE CHOICE -->
 		<div *ngIf="question['type'] == 'multipleChoice'">
-			<ion-list radio-group [(ngModel)]="question['id']">
+			<ion-list radio-group [(ngModel)]="answers[idx]">
 				<ion-item *ngFor="let opt of question['options']; let idx = index">
 				    <ion-label>{{ opt }}</ion-label>
 				    <ion-radio value="{{ opt }}"></ion-radio>
@@ -33,8 +33,8 @@
 		<!-- CHECKBOX -->
 		<div *ngIf="question['type'] == 'checkbox'">
 			<ion-list>
-				<ion-item *ngFor="let opt of question['options']">
-					<ion-checkbox></ion-checkbox>
+				<ion-item *ngFor="let opt of question['options']; let opt_idx = index">
+					<ion-checkbox [(ngModel)]="answers[idx][opt_idx]"></ion-checkbox>
 				    <ion-label>{{ opt }}</ion-label>
 		  		</ion-item>
 			</ion-list>
@@ -44,7 +44,7 @@
 		<div *ngIf="question['type'] == 'dropdown'">
 			<ion-item>
 				<ion-label>Select</ion-label>
-			  	<ion-select>
+			  	<ion-select [(ngModel)]="answers[idx]">
 				    <ion-option *ngFor="let opt of question['options']">{{ opt }}</ion-option>
 			  	</ion-select>
 			</ion-item>
@@ -53,14 +53,14 @@
 		<!-- SHORT ANSWER -->
 		<div *ngIf="question['type'] == 'shortAnswer'">
 			<ion-item>
-				<ion-input type="text" placeholder="Short answer text" [(ngModel)]="shortAnswer"></ion-input>
+				<ion-input type="text" placeholder="Short answer text" [(ngModel)]="answers[idx]"></ion-input>
 			</ion-item>
 		</div>
 
 		<!-- LONG ANSWER -->
 		<div *ngIf="question['type'] == 'longAnswer'">
 			<ion-item>
-				<ion-textarea placeholder="Long answer text" rows=2 [(ngModel)]="longAnswer"></ion-textarea>
+				<ion-textarea placeholder="Long answer text" rows=2 [(ngModel)]="answers[idx]"></ion-textarea>
 			</ion-item>
 		</div>
 
@@ -68,7 +68,7 @@
 		<div *ngIf="question['type'] == 'date'">
 			<ion-item>
 				<ion-label>Select Date</ion-label>
-				<ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="date"></ion-datetime>
+				<ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="answers[idx]"></ion-datetime>
 			</ion-item>
 		</div>
 
@@ -76,7 +76,7 @@
 		<div *ngIf="question['type'] == 'time'">
 			<ion-item>
 				<ion-label>Select Time</ion-label>
-				<ion-datetime displayFormat="HH:mm" [(ngModel)]="time"></ion-datetime>
+				<ion-datetime displayFormat="HH:mm" [(ngModel)]="answers[idx]"></ion-datetime>
 			</ion-item>
 		</div>
 	</div>
