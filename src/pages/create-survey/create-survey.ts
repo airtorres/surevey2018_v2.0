@@ -116,6 +116,8 @@ export class CreateSurveyPage {
     }
 
     if(push_flag_for_survey){
+
+      // getting the survey id
       var this_id;
       for ( var this_surv_id in this.surveys['surveys']){
         if( JSON.stringify(this.survey) == JSON.stringify(this.surveys['surveys'][this_surv_id])){
@@ -163,6 +165,10 @@ export class CreateSurveyPage {
       this.question_data = this.navParams.get('question_data') || null;
       console.log("question_data ff: ");
       console.log(this.question_data);
+
+      //*** NOTE:
+      //*** Adding q_id property for a question is not a good way
+      //*** .splice() method automatically adjusts the ids
 
       // push the question to this particular survey
       if (this.question_data != null){
