@@ -40,9 +40,13 @@
 
  	<ion-card padding style="border-radius: 12px;" *ngFor="let question of questions">
  		<div text-right>
- 			<!-- Pwede ni ma-edit for Appearance :) -->
- 			<!-- ngIf lang tas ibutang ang hard-coded display -->
- 			<ion-note>{{ question['type'] }}</ion-note>
+ 			<ion-note *ngIf="question['type'] == 'multipleChoice'">Multiple Choice</ion-note>
+ 			<ion-note *ngIf="question['type'] == 'shortAnswer'">Short Answer</ion-note>
+ 			<ion-note *ngIf="question['type'] == 'longAnswer'">Long Answer</ion-note>
+ 			<ion-note *ngIf="question['type'] == 'checkbox'">Check Box</ion-note>
+ 			<ion-note *ngIf="question['type'] == 'dropdown'">Dropdown</ion-note>
+ 			<ion-note *ngIf="question['type'] == 'date'">Date</ion-note>
+ 			<ion-note *ngIf="question['type'] == 'time'">Time</ion-note>
  		</div>
  		<ion-card-title id="question-title">{{ question['message'] }}</ion-card-title>
 
