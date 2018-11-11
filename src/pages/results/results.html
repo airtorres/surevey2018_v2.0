@@ -7,12 +7,20 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>results</ion-title>
+    <ion-title>Analyze</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+	<h3>Music For Brain</h3>
+	<p>Some descripton here</p>
 
+	<!-- TEMPORARY BUTTONS -->
+	<button ion-button (click)="showPieChart()">Show Pie chart</button>
+	<button ion-button (click)="showBarChart()">Show Bar chart</button>
+
+	<div id="pie_chart_div"></div>
+	<div id="bar_chartdiv"></div>
 </ion-content>
