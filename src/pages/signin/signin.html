@@ -37,6 +37,10 @@
         <p class="errorMessage" *ngIf="!authSignin.controls.password.hasError('required') && authSignin.controls.password.hasError('minlength') && authSignin.controls.password.dirty ">
           Password should be at least 6 characters
         </p>
+
+        <p class="errorMessage" *ngIf="isInvalidLogin">
+          Email and password does not match!
+        </p>
       </ion-grid>
 
       <div text-center>

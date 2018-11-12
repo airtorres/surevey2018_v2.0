@@ -23,6 +23,7 @@ export class AnswerSurveyPage {
   questions;
 
   currUser;
+  users = {};
 
   responses = {};
   response = {
@@ -43,6 +44,11 @@ export class AnswerSurveyPage {
 
     this.storage.get("responses").then(res => {
         this.responses = res;
+    });
+
+    this.storage.get("users").then(usr => {
+        this.users = usr;
+        console.log(usr);
     });
 
   	this.thisSurvey = navParams.get('item');
@@ -95,28 +101,35 @@ export class AnswerSurveyPage {
       this.responses['responses'] = [this.response];
     }
 
-    this.storage.set('responses', this.responses).then((val) =>{
-    	this.storage.get('users').then((u) => {
-          	for ( var i in u['users']){
-              if (u['users'][i]['email'] == this.currUser){
-                var invitations = u['users'][i]['invitations'];
+    this.storage.set('responses', this.responses).then((val) =>{});
 
-                for (var invi in invitations){
-                	if(invitations[invi]['s_id'] == this.s_id){
-                		invitations[invi]['status'] = 'completed';
-                		u['users'][i]['invitations'] = invitations;
-                		break;
-                	}
-                }
+    var usr = this.users['users'];
 
-                // update users
-                this.storage.set('users', u).then((data) => {
-                  return
-                });
-              }
+    for ( var i in usr){
+      if (usr[i]['email'] == this.currUser){
+        for (var x in usr[i]['invitations']){
+
+          var invi = usr[i]['invitations'][x];
+
+          if( invi['s_id'] == this.s_id){
+            var temp = {
+              's_id': this.s_id,
+              'status': 'completed'
             }
-        });
-    });
+
+            invi = temp;
+            usr[i]['invitations'][x] = invi;
+
+          }
+        }
+        break;
+      }
+    }
+
+    this.users['users'] = usr;
+    console.log(this.users);
+    // update users
+    this.storage.set('users', this.users).then((data) => {});
 
     let alert = this.alertCtrl.create({
       title: 'Success',

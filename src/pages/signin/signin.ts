@@ -25,6 +25,8 @@ export class SigninPage {
   @ViewChild('email') email;
   @ViewChild('password') password;
 
+  isInvalidLogin = false;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, private formbuilder: FormBuilder,
     private fire: AngularFireAuth,
     private storage: Storage) {
@@ -75,11 +77,11 @@ export class SigninPage {
         }
 
         // if no valid users that match
-        alert("Not a valid user!");
+        this.isInvalidLogin = true;
       });
     }
     else{
-      alert("Error Login!");
+      this.isInvalidLogin = true;
     }
 
     // TEMP: currentUser from local: uncomment for auto-login

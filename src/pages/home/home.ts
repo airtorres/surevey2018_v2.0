@@ -367,6 +367,123 @@ export class HomePage {
           },
         ]
       },
+      '5': {
+        'title': 'Employee Satisfaction Survey',
+        'description': '',
+        'questions': [
+          {
+            'q_id' : 0,
+            'type' : 'multipleChoice',
+            'message': 'How meaningful is your work?',
+            'options' : ['Extremely meaningful', 'Very meaningful', 'Moderately meaningful', 'Slightly meaningful', 'Not at all meaningful' ],
+            'isRequired': false
+          },
+          {
+            'q_id' : 1,
+            'type' : 'multipleChoice',
+            'message': 'How challenging is your job?',
+            'options' : ['Extremely challenging', 'Very challenging', 'Moderately challenging', 'Slightly challenging', 'Not at all challenging' ],
+            'isRequired': false
+          },
+          {
+            'q_id' : 2,
+            'type' : 'multipleChoice',
+            'message': 'In a typical week, how often do you feel stresses at work?',
+            'options' : ['Extremely often', 'Very often', 'Moderately often', 'Slightly often', 'Not at all often' ],
+            'isRequired': false
+          },
+          {
+            'q_id' : 3,
+            'type' : 'multipleChoice',
+            'message': 'How well are you paid for the work you do?',
+            'options' : ['Extremely well', 'Very well', 'Moderately well', 'Slightly well', 'Not at all well' ],
+            'isRequired': false
+          },
+          {
+            'q_id' : 4,
+            'type' : 'multipleChoice',
+            'message': 'How realistic are the expectations of your supervisors?',
+            'options' : ['Extremely realistic', 'Very realistic', 'Moderately realistic', 'Slightly realistic', 'Not at all realistic' ],
+            'isRequired': false
+          },
+          {
+            'q_id' : 5,
+            'type' : 'multipleChoice',
+            'message': 'How often do the tasks assigned to you by your supervisor help you grow professionally?',
+            'options' : ['Extremely often', 'Very often', 'Moderately often', 'Slightly often', 'Not at all often' ],
+            'isRequired': false
+          },
+          {
+            'q_id' : 6,
+            'type' : 'multipleChoice',
+            'message': 'Are you satisfied with the employee benefits, neither satisfied nor dissatisfied with them, or dissatisfied with them?',
+            'options' : ['Extremely satisfied', 'Very satisfied', 'Moderately satisfied', 'Slightly satisfied', 'Neither satisfied nor satisfied','Slightly dissatisfied','Moderately dissatisfied','Extremely dissatisfied' ],
+            'isRequired': false
+          },
+          {
+            'q_id' : 7,
+            'type' : 'multipleChoice',
+            'message': 'Are you satisfied with your job, neither satisfied nor dissatisfied with them, or dissatisfied with them?',
+            'options' : ['Extremely satisfied', 'Very satisfied', 'Moderately satisfied', 'Slightly satisfied', 'Neither satisfied nor satisfied','Slightly dissatisfied','Moderately dissatisfied','Extremely dissatisfied' ],
+            'isRequired': false
+          },
+          {
+            'q_id' : 8,
+            'type' : 'multipleChoice',
+            'message': 'How likely are you to look for another job outside the company?',
+            'options' : ['Extremely likely', 'Very likely', 'Moderately likely', 'Slightly likely', 'Not at all likely' ],
+            'isRequired': false
+          },
+        ]
+      },
+      '6': {
+        'title': 'Online Cosmetics Shopping Survey Template',
+        'description': 'As our customer, your opinions are very valuable to us. Please take a fw minute and answer the following questions. Thank you.',
+        'questions': [
+          {
+            'q_id' : 0,
+            'type' : 'multipleChoice',
+            'message': 'Have you ever brought cosmetic producs?',
+            'options' : ['Yes', 'No'],
+            'isRequired': false
+          },
+          {
+            'q_id' : 1,
+            'type' : 'checkbox',
+            'message': 'Where do you usually buy cosmetics product(make-up,cream,shower gel, etc) most often? (Several answers possible)',
+            'options' : ['In a specialized store for cosmetics and well being products', 'At an organic store', 'On the manufacturer\'s website', 'At the market','At fairs, shows, exhibitions', 'I don\'t buy them'],
+            'isRequired': false
+          },
+          {
+            'q_id' : 2,
+            'type' : 'multipleChoice',
+            'message': 'How often do you buy cosmetics products?',
+            'options' : ['Once a week or more often', 'Around once a month', 'Twice or thrice a month', 'Around twice a year','Around once a year or less often'],
+            'isRequired': false
+          },
+          {
+            'q_id' : 3,
+            'type' : 'multipleChoice',
+            'message': 'On average, how much do you spend every month on cosmetics products?',
+            'options' : ['Less than P460', 'P461 - P900', 'P901 - P1380', 'More than P1381',],
+            'isRequired': false
+          },
+          {
+            'q_id' : 4,
+            'type' : 'checkbox',
+            'message': 'Regarding organic cosmetics products, which of the following would you tend to buy?(Several answers possible)',
+            'options' : ['Bar of soap', 'Shampoo', 'Shower gel', 'Cream, lotion(body and face)','Make-up', 'Perfume','Hair dye', 'Waxing products', 'Essential oil', 'Herbal tea blends', 'Baby care products'],
+            'isRequired': false
+          },
+          {
+            'q_id' : 5,
+            'type' : 'multipleChoice',
+            'message': 'Will you be ready to buy cosmetic products online?',
+            'options' : ['Yes', 'No'],
+            'isRequired': false
+          }
+        ]
+      }
     }
 
     // store templates to local storage

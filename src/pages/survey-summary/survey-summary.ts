@@ -111,4 +111,9 @@ export class SurveySummaryPage {
     this.navCtrl.pop();
   }
 
+  public ionViewWillLeave(){
+    console.log("leaving survey-summary page ...");
+    // this.navCtrl.pop();
+  }
+
 }
