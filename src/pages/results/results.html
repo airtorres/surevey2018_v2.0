@@ -14,13 +14,41 @@
 
 
 <ion-content padding>
-	<h3>Music For Brain</h3>
-	<p>Some descripton here</p>
+	<h4>{{ survey_title }}</h4>
+	<p>{{ description }}</p>
+
+	<div *ngFor="let question of questions; let idx = index">
+		<ion-item text-wrap>
+			<ion-label>{{idx+1}}. {{ question['message'] }}</ion-label>
+			<button item-end clear ion-button (click)="showResult(idx)">
+				View 
+				<ion-icon name="ios-arrow-forward"></ion-icon>
+			</button>
+		</ion-item>
+
+		<div id="opt_{{idx}}">
+		
+		</div>
+
+		<div id="results_div_{{idx}}"></div>
+
+		<div *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' " id="openAnsDiv_{{idx}}">
+			List of Answers:
+			<ul style="display: none;">
+				<li *ngFor="let ans of openAnswers">{{ ans }}</li>
+			</ul>
+		</div>
+	</div>
 
 	<!-- TEMPORARY BUTTONS -->
-	<button ion-button (click)="showPieChart()">Show Pie chart</button>
-	<button ion-button (click)="showBarChart()">Show Bar chart</button>
+	<button ion-button small (click)="showTable()">Show Table</button>
+	<!-- <button ion-button small (click)="showPieChart()">Show Pie chart</button> -->
+	<button ion-button small (click)="showBarChart()">Show Bar chart</button>
+	<button ion-button small (click)="showDonutChart()">Show Donut chart</button>
 
-	<div id="pie_chart_div"></div>
+	<div id="table_div" text-center></div>
+	<!-- <div id="pie_chart_div" text-center style="width: 400px; height: 500px;margin-left: auto; margin-right: auto; "></div> -->
+	<div id="pie_chart_div" style = "width: 400px; height: 400px; margin: 0 auto"></div>
 	<div id="bar_chartdiv"></div>
+	<div id="donut_chart_div"></div>
 </ion-content>

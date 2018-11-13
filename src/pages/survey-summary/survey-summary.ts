@@ -28,6 +28,8 @@ export class SurveySummaryPage {
   updated_date;
 
   currUser;
+  responses;
+  thisResponses = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage) {
@@ -48,6 +50,10 @@ export class SurveySummaryPage {
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
+
+    this.storage.get('responses').then(res => {
+      this.responses = res;
+    });
   }
 
   ionViewDidLoad() {
@@ -63,7 +69,16 @@ export class SurveySummaryPage {
   }
 
   gotoResultsPage(){
-    this.navCtrl.push(ResultsPage, {s_id: this.s_id});
+    // generate results from local responses
+    for( var r in this.responses['responses']){
+      if (this.responses['responses'][r]['survey_id'] == this.s_id) {
+        this.thisResponses.push(this.responses['responses'][r]);
+      }
+    }
+
+    console.log(this.thisResponses);
+
+    this.navCtrl.push(ResultsPage, {s_id: this.s_id, responses: this.thisResponses});
   }
 
   deleteSurvey(){
