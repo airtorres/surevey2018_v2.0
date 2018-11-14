@@ -32,9 +32,9 @@
 
 		<div id="results_div_{{idx}}"></div>
 
-		<div *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' " id="openAnsDiv_{{idx}}">
+		<div *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' " id="openAnsDiv_{{idx}}" style="display: none;">
 			List of Answers:
-			<ul style="display: none;">
+			<ul>
 				<li *ngFor="let ans of openAnswers">{{ ans }}</li>
 			</ul>
 		</div>

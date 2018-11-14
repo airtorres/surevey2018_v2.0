@@ -30,7 +30,7 @@ export class ResultsPage {
   responses = [];
   openAnswers = [];
 
-  tables = [];
+  results = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	private storage: Storage) {
@@ -57,6 +57,39 @@ export class ResultsPage {
   		this.survey_title = this.survey['title'];
   		this.description = this.survey['description'];
   		this.questions = this.survey['questions'];
+
+  		var q_to_opt = [];
+  		for ( var q in this.questions){
+  			var opt_to_res = [];
+  			for( var opt in this.questions[q]['options']){
+  				var option = this.questions[q]['options'][opt];
+
+  				// only if a question has options
+  				if(option){
+	  				opt_to_res[option] = [];
+
+	  				for (var rr in this.responses){
+	  					// getting the users whose answer is this particular option
+						if(this.responses[rr]['answers'][q] && this.responses[rr]['answers'][q] == option){
+							opt_to_res[option].push(this.responses[rr]['respondent']);
+						}
+					}
+				}
+  			}
+  			q_to_opt.push(opt_to_res);
+  		}
+  		// results with the respondent email attached, can be found here
+  		console.log(q_to_opt);
+
+  		// tabulating the votes
+  		for (var item in q_to_opt){
+  			for( var optn in q_to_opt[item]){
+  				q_to_opt[item][optn] = q_to_opt[item][optn].length;
+  			}
+  		}
+
+  		this.results = q_to_opt;
+  		console.log(this.results);
   	});
   }
 
@@ -79,31 +112,30 @@ export class ResultsPage {
   			}
   		}
 
+  		console.log("OpenEndedAnswers: "+this.openAnswers);
   		var el = document.getElementById('openAnsDiv_'+idx);
   		el.style.display = 'block';
   	}
   }
 
-  loadOpenEndedAnswers(){
-
-  }
-
   showPieChart(idx){
+  	var question_res = [];
+
+  	var count = 0;
+  	for( var opt in this.results[idx]){
+  		question_res[count] = [];
+  		question_res[count].push(opt);
+  		question_res[count].push(this.results[idx][opt]);
+  		count++;
+  	}
+
+  	console.log(question_res);
+
   	// Create the data table.
     var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Topping');
-    data.addColumn('number', 'Slices');
-    data.addRows([
-      ['Mushrooms', 3],
-      ['Onions', 1],
-      ['Olives', 1],
-      ['Zucchini', 1],
-      ['Pepperoni', 2],
-      ['Pineapple', 1],
-      ['Ham', 1],
-      ['Cheese', 1],
-      ['Pepper', 2]
-    ]);
+    data.addColumn('string', this.questions[idx]['message']);
+    data.addColumn('number', 'No. of Votes');
+    data.addRows(question_res);
 
     // Set chart options
     var options = {
