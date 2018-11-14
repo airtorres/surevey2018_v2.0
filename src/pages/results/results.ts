@@ -19,7 +19,7 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'results.html',
 })
 export class ResultsPage {
-
+  chartOptions: string = "pie";
   survey = [];
   s_id;
   survey_title;
@@ -139,18 +139,14 @@ export class ResultsPage {
 
     // Set chart options
     var options = {
-   	  'title':'',
-      ' width':500,
+   	  // 'title':'',
+      'width':600,
       'height':400,
-      'chartArea':{
-          left:25,top:100
-        },
       'legend': {
-        position: 'top', alignment: 'left', maxLines: 4
+        position: 'bottom', alignment: 'end', maxLines: 10,
+        textStyle: { fontSize: 16 }
       },
-      'titleTextStyle': {
-        fontSize: 16
-      }
+      'chartArea': {left:15,top:10,width:'50%',height:'75%'}
 	};
 
     // Instantiate and draw our chart, passing in some options.
@@ -200,18 +196,14 @@ export class ResultsPage {
     // Set chart options
     var options = {
       'title':'1. How Much Pizza I Ate Last Night?',
-      'width':500,
+      'width':600,
       'height':400,
       'pieHole':0.4,
-      'chartArea':{
-          left:25, top:100
-        },
       'legend': {
-        position: 'top', alignment: 'left', maxLines: 4
+        position: 'bottom', alignment: 'end', maxLines: 10,
+        textStyle: { fontSize: 16 }
       },
-      'titleTextStyle': {
-        fontSize: 16
-      }
+      'chartArea': {left:15,top:10,width:'50%',height:'75%'}
     };
 
     // Instantiate and draw our chart, passing in some options.
