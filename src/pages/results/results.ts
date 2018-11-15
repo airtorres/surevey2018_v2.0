@@ -19,7 +19,9 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'results.html',
 })
 export class ResultsPage {
-  chartOptions: string = "pie";
+  // chartOptions: string = "pie";
+  public chartOptions = [];
+
   survey = [];
   s_id;
   survey_title;
@@ -60,6 +62,10 @@ export class ResultsPage {
 
   		var q_to_opt = [];
   		for ( var q in this.questions){
+  			// setting default chart
+  			this.chartOptions[q] = '';
+  			this.chartOptions[q] = 'pie';
+
   			var opt_to_res = [];
   			for( var opt in this.questions[q]['options']){
   				var option = this.questions[q]['options'][opt];
@@ -94,6 +100,7 @@ export class ResultsPage {
   }
 
   ionViewDidLoad() {
+  	console.log(this.chartOptions);
     console.log('ionViewDidLoad ResultsPage');
   }
 
@@ -139,7 +146,7 @@ export class ResultsPage {
 
     // Set chart options
     var options = {
-   	  // 'title':'',
+   	  'title':'',
       'width':600,
       'height':400,
       'legend': {
@@ -154,48 +161,60 @@ export class ResultsPage {
     chart.draw(data, options);
   }
 
-  showBarChart(){
+  showBarChart(idx){
+  	var question_res = [];
+
+  	var count = 0;
+  	for( var opt in this.results[idx]){
+  		question_res[count] = [];
+  		question_res[count].push(opt);
+  		question_res[count].push(this.results[idx][opt]);
+  		count++;
+  	}
+
+  	console.log(question_res);
+
   	// Create the data table.
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Topping');
     data.addColumn('number', 'Slices');
-    data.addRows([
-      ['Mushrooms', 3],
-      ['Onions', 1],
-      ['Olives', 1],
-      ['Zucchini', 1],
-      ['Pepperoni', 2]
-    ]);
+    data.addRows(question_res);
 
     // Set chart options
     var options = {
-    	'title':'1. How Much Pizza I Ate Last Night?',
+    	'title':'',
         'width':400,
         'height':300,
         'legend':'bottom',
 	};
 
     // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.BarChart(document.getElementById('bar_chartdiv'));
+    var chart = new google.visualization.BarChart(document.getElementById('results_div_'+idx));
     chart.draw(data, options);
   }
 
-  showDonutChart(){
+  showDonutChart(idx){
+  	var question_res = [];
+
+  	var count = 0;
+  	for( var opt in this.results[idx]){
+  		question_res[count] = [];
+  		question_res[count].push(opt);
+  		question_res[count].push(this.results[idx][opt]);
+  		count++;
+  	}
+
+  	console.log(question_res);
+
     // Create the data table.
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Topping');
     data.addColumn('number', 'Slices');
-    data.addRows([
-      ['Mushrooms', 3],
-      ['Onions', 1],
-      ['Olives', 1],
-      ['Zucchini', 1],
-      ['Pepperoni', 2]
-    ]);
+    data.addRows(question_res);
 
     // Set chart options
     var options = {
-      'title':'1. How Much Pizza I Ate Last Night?',
+      'title':'',
       'width':600,
       'height':400,
       'pieHole':0.4,
@@ -207,7 +226,7 @@ export class ResultsPage {
     };
 
     // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.PieChart(document.getElementById('donut_chart_div'));
+    var chart = new google.visualization.PieChart(document.getElementById('results_div_'+idx));
     chart.draw(data, options);
   }
 

@@ -26,12 +26,12 @@
 			</button>
 		</ion-item>
 
-		<div id="opt_{{idx}}">
-			<ion-toolbar style="padding: 0 30px;">
-				<ion-segment mode="ios" [(ngModel)]="chartOptions">
-				    <ion-segment-button value="pie">Pie</ion-segment-button>
-				    <ion-segment-button value="donut">Donut</ion-segment-button>
-				    <ion-segment-button value="bar">Bar</ion-segment-button>
+		<div *ngIf="question['type'] == 'multipleChoice' || question['type'] == 'checkbox' || question['type'] == 'date' || question['type'] == 'dropdown' ">
+			<ion-toolbar style="padding: 0 30px; display: none;" id="opt_{{idx}}">
+				<ion-segment mode="ios" [(ngModel)]="chartOptions[idx]">
+				    <ion-segment-button value="pie" (click)="showPieChart(idx)">Pie</ion-segment-button>
+				    <ion-segment-button value="donut" (click)="showDonutChart(idx)">Donut</ion-segment-button>
+				    <ion-segment-button value="bar" (click)="showBarChart(idx)">Bar</ion-segment-button>
 				</ion-segment>
 			</ion-toolbar>
 		</div>
@@ -49,13 +49,5 @@
 
 	<!-- TEMPORARY BUTTONS -->
 	<button ion-button small (click)="showTable()">Show Table</button>
-	<!-- <button ion-button small (click)="showPieChart()">Show Pie chart</button> -->
-	<button ion-button small (click)="showBarChart()">Show Bar chart</button>
-	<button ion-button small (click)="showDonutChart()">Show Donut chart</button>
-
 	<div id="table_div" text-center></div>
-	<!-- <div id="pie_chart_div" text-center style="width: 400px; height: 500px;margin-left: auto; margin-right: auto; "></div> -->
-	<div id="pie_chart_div" style = "width: 500px; height: 400px; margin: 0 auto"></div>
-	<div id="bar_chartdiv"></div>
-	<div id="donut_chart_div"  style = "width: 500px; height: 400px; margin: 0 auto"></div>
 </ion-content>
