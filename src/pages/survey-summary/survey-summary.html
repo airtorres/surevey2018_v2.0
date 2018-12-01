@@ -9,7 +9,7 @@
   <ion-navbar color="primary">
     <ion-title>Summary</ion-title>
     <ion-buttons end>
-      <button ion-button (click)="deleteSurvey()">
+      <button ion-button (click)="deleteSurvey()" style="margin-right: 10px;">
         <ion-icon name="trash"></ion-icon>
       </button>
     </ion-buttons>
@@ -55,6 +55,11 @@
     <button ion-item (click)="gotoResultsPage()">
       <ion-icon item-left name="analytics" color="blue" style="font-size: 25px;"></ion-icon>
       Analyze
+    </button>
+
+    <button ion-item (click)="gotoRespondentView()">
+      <ion-icon item-left name="checkbox-outline" color="blue" style="font-size: 25px;"></ion-icon>
+      Answer
     </button>
   </ion-list>
 

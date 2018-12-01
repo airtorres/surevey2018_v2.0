@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { Storage } from '@ionic/storage';
@@ -16,6 +16,8 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'answer-survey.html',
 })
 export class AnswerSurveyPage {
+  @ViewChild('respondent_name') respondent_name;
+
   thisSurvey;
   title;
   s_id;
@@ -52,6 +54,10 @@ export class AnswerSurveyPage {
     });
 
   	this.thisSurvey = navParams.get('item');
+
+    if (this.navParams.get('diff_respondent_flag')){
+      this.currUser = this.respondent_name? this.respondent_name: 'no name available';
+    }
 
   	this.title = this.thisSurvey['title'];
   	this.description = this.thisSurvey['description'];
