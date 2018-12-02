@@ -55,10 +55,6 @@ export class AnswerSurveyPage {
 
   	this.thisSurvey = navParams.get('item');
 
-    if (this.navParams.get('diff_respondent_flag')){
-      this.currUser = this.respondent_name? this.respondent_name: 'no name available';
-    }
-
   	this.title = this.thisSurvey['title'];
   	this.description = this.thisSurvey['description'];
     this.s_id = this.thisSurvey['id'];
@@ -85,13 +81,19 @@ export class AnswerSurveyPage {
   }
 
   ionViewDidLoad() {
-  	console.log(this.questions);
+    console.log(this.currUser);
+  	console.log(this.thisSurvey['author']);
     console.log('ionViewDidLoad AnswerSurveyPage');
   }
 
   submitResponse(){
     console.log("submitting response ...")
     console.log(this.answers);
+
+    // setting the respondents name through 'manual' input
+    if (this.navParams.get('diff_respondent_flag')){
+      this.currUser = this.respondent_name? this.respondent_name.value: 'no name available';
+    }
 
   	// save responses to ionic localStorage
   	this.response['respondent'] = this.currUser;

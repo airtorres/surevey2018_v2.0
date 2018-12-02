@@ -149,7 +149,10 @@ export class CreateSurveyPage {
   }
 
   deleteQuestion(q_id){
-    this.survey['questions'] = this.survey['questions'].splice(q_id,1);
+    // this.survey['questions'] = this.survey['questions'].splice(q_id,1);//MAY MALI SA SPLICE!!!!
+    console.log(q_id);
+    console.log(this.survey['questions'].splice(q_id,1));
+    console.log(this.survey);
   }
 
   editQuestion(q_id){

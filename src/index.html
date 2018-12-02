@@ -22,7 +22,12 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
    <!-- Load the Visualization API and the corechart package. -->
    <script>
-    google.charts.load('current', {'packages':['corechart']});
+    try{
+      google.charts.load('current', {'packages':['corechart']});
+    }
+    catch (e){
+      console.log("Cannot load Google Charts. No Internet Connection.");
+    }
    </script>
 
   <!-- un-comment this code to enable service worker

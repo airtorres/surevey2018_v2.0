@@ -33,6 +33,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { IonicStorageModule } from '@ionic/storage';
 
+import { HttpModule } from '@angular/http';
+
  const firebaseAuth = {
     apiKey: "AIzaSyDllAkdkwDHAifL7d_1aGkCFcXMT_zY09s",
     authDomain: "surevey2018.firebaseapp.com",
@@ -69,6 +71,7 @@ import { IonicStorageModule } from '@ionic/storage';
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseAuth),
     AngularFireAuthModule,

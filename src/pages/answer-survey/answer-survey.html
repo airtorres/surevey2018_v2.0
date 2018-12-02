@@ -18,7 +18,7 @@
 	<p>{{ description }}</p>
 
 	<!-- show this only if you know -->
-	<ion-input placeholder="Name of Respondent" style="border-bottom: 1px solid gray;" #respondent_name></ion-input>
+	<ion-input *ngIf="thisSurvey['author'] == currUser" placeholder="Name of Respondent" style="border-bottom: 1px solid gray;" #respondent_name></ion-input>
 	<!-- <ion-input placeholder="Enter text" style="border-bottom: 1px solid gray;"></ion-input> -->
 
 	<div *ngFor="let question of questions; let idx = index">

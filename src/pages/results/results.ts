@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { Storage } from '@ionic/storage';
+import { Http } from '@angular/http';
+import * as papa from 'papaparse';
 
 /**
  * Generated class for the ResultsPage page.
@@ -35,7 +37,9 @@ export class ResultsPage {
   results = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-  	private storage: Storage) {
+  	private alertCtrl: AlertController,
+  	private storage: Storage,
+  	private http: Http) {
 
   	if(this.navParams.get('responses')){
   		this.responses = this.navParams.get('responses');
@@ -109,8 +113,12 @@ export class ResultsPage {
 
   	// for questions with options
   	if (this.questions[idx]['type'] == 'multipleChoice' || this.questions[idx]['type'] == 'checkbox' || this.questions[idx]['type'] == 'dropdown'){
-  		document.getElementById('opt_'+idx).style.display = "block";
-  		this.showPieChart(idx);
+  		try{
+	  		this.showPieChart(idx);
+	  	}
+	  	catch (e){
+	  		this.showInternetConnectionError();
+	  	}
   	}
   	else{
   		for (var ans in this.responses){
@@ -126,132 +134,154 @@ export class ResultsPage {
   }
 
   showPieChart(idx){
-  	var question_res = [];
+  	try{
+	  	var question_res = [];
 
-  	var count = 0;
-  	for( var opt in this.results[idx]){
-  		question_res[count] = [];
-  		question_res[count].push(opt);
-  		question_res[count].push(this.results[idx][opt]);
-  		count++;
-  	}
+	  	var count = 0;
+	  	for( var opt in this.results[idx]){
+	  		question_res[count] = [];
+	  		question_res[count].push(opt);
+	  		question_res[count].push(this.results[idx][opt]);
+	  		count++;
+	  	}
 
-  	console.log(question_res);
+	  	console.log(question_res);
 
-  	// Create the data table.
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', this.questions[idx]['message']);
-    data.addColumn('number', 'No. of Votes');
-    data.addRows(question_res);
+	  	// Create the data table.
+	    var data = new google.visualization.DataTable();
+	    data.addColumn('string', this.questions[idx]['message']);
+	    data.addColumn('number', 'No. of Votes');
+	    data.addRows(question_res);
 
-    // Set chart options
-    var options = {
-   	  'title':'',
-      'width':600,
-      'height':400,
-      'legend': {
-        position: 'bottom', alignment: 'end', maxLines: 10,
-        textStyle: { fontSize: 16 }
-      },
-      'chartArea': {left:15,top:10,width:'50%',height:'75%'}
-	};
+	    // Set chart options
+	    var options = {
+	   	  'title':'',
+	      'width':600,
+	      'height':400,
+	      'legend': {
+	        position: 'bottom', alignment: 'end', maxLines: 10,
+	        textStyle: { fontSize: 16 }
+	      },
+	      'chartArea': {left:15,top:10,width:'50%',height:'75%'}
+		};
 
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.PieChart(document.getElementById('results_div_'+idx));
-    chart.draw(data, options);
+	  	document.getElementById('opt_'+idx).style.display = "block";
+
+	    // Instantiate and draw our chart, passing in some options.
+	    var chart = new google.visualization.PieChart(document.getElementById('results_div_'+idx));
+	    chart.draw(data, options);
+	}
+	catch (e){
+		this.showInternetConnectionError();
+	}
   }
 
   showBarChart(idx){
-  	var question_res = [];
+  	try{
+	  	var question_res = [];
 
-  	var count = 0;
-  	for( var opt in this.results[idx]){
-  		question_res[count] = [];
-  		question_res[count].push(opt);
-  		question_res[count].push(this.results[idx][opt]);
-  		count++;
-  	}
+	  	var count = 0;
+	  	for( var opt in this.results[idx]){
+	  		question_res[count] = [];
+	  		question_res[count].push(opt);
+	  		question_res[count].push(this.results[idx][opt]);
+	  		count++;
+	  	}
 
-  	console.log(question_res);
+	  	console.log(question_res);
 
-  	// Create the data table.
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Topping');
-    data.addColumn('number', 'Slices');
-    data.addRows(question_res);
+	  	// Create the data table.
+	    var data = new google.visualization.DataTable();
+	    data.addColumn('string', 'Topping');
+	    data.addColumn('number', 'Slices');
+	    data.addRows(question_res);
 
-    // Set chart options
-    var options = {
-    	'title':'',
-        'width':400,
-        'height':300,
-        'legend':'bottom',
-	};
+	    // Set chart options
+	    var options = {
+	    	'title':'',
+	        'width':400,
+	        'height':300,
+	        'legend':'bottom',
+		};
 
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.BarChart(document.getElementById('results_div_'+idx));
-    chart.draw(data, options);
+	    // Instantiate and draw our chart, passing in some options.
+	    var chart = new google.visualization.BarChart(document.getElementById('results_div_'+idx));
+	    chart.draw(data, options);
+	}
+	catch (e){
+		this.showInternetConnectionError();
+	}
   }
 
   showDonutChart(idx){
-  	var question_res = [];
+  	try{
+	  	var question_res = [];
 
-  	var count = 0;
-  	for( var opt in this.results[idx]){
-  		question_res[count] = [];
-  		question_res[count].push(opt);
-  		question_res[count].push(this.results[idx][opt]);
-  		count++;
-  	}
+	  	var count = 0;
+	  	for( var opt in this.results[idx]){
+	  		question_res[count] = [];
+	  		question_res[count].push(opt);
+	  		question_res[count].push(this.results[idx][opt]);
+	  		count++;
+	  	}
 
-  	console.log(question_res);
+	  	console.log(question_res);
 
-    // Create the data table.
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Topping');
-    data.addColumn('number', 'Slices');
-    data.addRows(question_res);
+	    // Create the data table.
+	    var data = new google.visualization.DataTable();
+	    data.addColumn('string', 'Topping');
+	    data.addColumn('number', 'Slices');
+	    data.addRows(question_res);
 
-    // Set chart options
-    var options = {
-      'title':'',
-      'width':600,
-      'height':400,
-      'pieHole':0.4,
-      'legend': {
-        position: 'bottom', alignment: 'end', maxLines: 10,
-        textStyle: { fontSize: 16 }
-      },
-      'chartArea': {left:15,top:10,width:'50%',height:'75%'}
-    };
+	    // Set chart options
+	    var options = {
+	      'title':'',
+	      'width':600,
+	      'height':400,
+	      'pieHole':0.4,
+	      'legend': {
+	        position: 'bottom', alignment: 'end', maxLines: 10,
+	        textStyle: { fontSize: 16 }
+	      },
+	      'chartArea': {left:15,top:10,width:'50%',height:'75%'}
+	    };
 
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.PieChart(document.getElementById('results_div_'+idx));
-    chart.draw(data, options);
+	    // Instantiate and draw our chart, passing in some options.
+	    var chart = new google.visualization.PieChart(document.getElementById('results_div_'+idx));
+	    chart.draw(data, options);
+	}
+	catch (e){
+		this.showInternetConnectionError();
+	}
   }
 
   showTable() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Pizza Toppings');
-    data.addColumn('number', 'Number');
-    data.addRows([
-      ['Mushrooms',  {v: 3, f: '3'}],
-      ['Onions',   {v:1,   f: '1'}],
-      ['Olives', {v: 1, f: '1'}],
-      ['Zucchini',   {v: 1,  f: '1'}],
-      ['Pepperoni',   {v: 2,  f: '2'}]
-    ]);
+  	try{
+	    var data = new google.visualization.DataTable();
+	    data.addColumn('string', 'Pizza Toppings');
+	    data.addColumn('number', 'Number');
+	    data.addRows([
+	      ['Mushrooms',  {v: 3, f: '3'}],
+	      ['Onions',   {v:1,   f: '1'}],
+	      ['Olives', {v: 1, f: '1'}],
+	      ['Zucchini',   {v: 1,  f: '1'}],
+	      ['Pepperoni',   {v: 2,  f: '2'}]
+	    ]);
 
-    var options = {
-      'title':'1. How Much Pizza I Ate Last Night?',
-      'width':'90%',
-      'height':'100%',
-      showRowNumber: true
-    }
+	    var options = {
+	      'title':'1. How Much Pizza I Ate Last Night?',
+	      'width':'90%',
+	      'height':'100%',
+	      showRowNumber: true
+	    }
 
-    var table = new google.visualization.Table(document.getElementById('table_div'));
+	    var table = new google.visualization.Table(document.getElementById('table_div'));
 
-    table.draw(data, options);
+	    table.draw(data, options);
+	}
+	catch (e){
+		this.showInternetConnectionError();
+	}
   }
 
   public ionViewWillEnter(){
@@ -260,6 +290,51 @@ export class ResultsPage {
 
   public ionViewWillLeave(){
   	console.log("leaving results page ...");
+  }
+
+  downloadCSV(){
+  	// SAMPLE ONLY - But I'd already deleted the sample.csv file.
+  	// this.http.get('assets/sample.csv').subscribe(
+  	// 	data => this.extractData(data),
+  	// 	err => this.handleError(err)
+  	// );
+  	// let csvData = data['_body'] || '';
+  	// let parseData = papa.parse(csvData).data;
+
+  	var csvHeader = [];
+  	for ( var q in this.questions){
+  		csvHeader.push(this.questions[q]['message']);
+  	}
+
+  	// getting rows of results
+  	var resultsData = [];
+  	for ( var r in this.responses){
+  		resultsData.push(this.responses[r]['answers']);
+  	}
+
+  	let csv = papa.unparse({
+  		fields: csvHeader,
+  		data: resultsData
+  	});
+
+  	// generating CSV file using Blob
+  	var blob = new Blob([csv]);
+  	var a = window.document.createElement("a");
+  	a.href = window.URL.createObjectURL(blob);
+  	var fileTitle = this.survey_title + " - RESULTS.csv";
+  	a.download = fileTitle;
+  	document.body.appendChild(a);
+  	a.click();
+  	document.body.removeChild(a);
+  }
+
+  showInternetConnectionError(){
+  	let alert = this.alertCtrl.create({
+      title: 'Oppss!',
+      message: 'You must be connected to the internet.',
+      buttons: ['OK']
+    });
+    alert.present();
   }
 
 }
