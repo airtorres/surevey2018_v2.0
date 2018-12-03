@@ -22,7 +22,7 @@
 	<!-- <ion-input placeholder="Enter text" style="border-bottom: 1px solid gray;"></ion-input> -->
 
 	<div *ngFor="let question of questions; let idx = index">
-		<ion-label>{{idx+1}}. {{ question['message'] }}</ion-label>
+		<ion-label text-wrap>{{idx+1}}. {{ question['message'] }}</ion-label>
 
 		<!-- MULTIPLE CHOICE -->
 		<div *ngIf="question['type'] == 'multipleChoice'">

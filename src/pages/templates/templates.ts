@@ -132,7 +132,7 @@ export class TemplatesPage {
 	}
 
 	deleteQuestion(q_id){
-		this.survey['questions'] = this.survey['questions'].splice(q_id,1);
+		this.survey['questions'].splice(q_id,1);
 	}
 
     editQuestion(q_id){
