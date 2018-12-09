@@ -34,6 +34,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { HttpModule } from '@angular/http';
+import { File } from '@ionic-native/file';
 
  const firebaseAuth = {
     apiKey: "AIzaSyDllAkdkwDHAifL7d_1aGkCFcXMT_zY09s",
@@ -106,6 +107,7 @@ import { HttpModule } from '@angular/http';
   providers: [
     StatusBar,
     SplashScreen,
+    File,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

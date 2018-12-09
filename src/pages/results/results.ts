@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 
 import { Storage } from '@ionic/storage';
 import { Http } from '@angular/http';
+import { File } from '@ionic-native/file';
 import * as papa from 'papaparse';
 
 /**
@@ -39,6 +40,7 @@ export class ResultsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	private alertCtrl: AlertController,
   	private storage: Storage,
+  	private file: File,
   	private http: Http) {
 
   	if(this.navParams.get('responses')){
@@ -317,12 +319,22 @@ export class ResultsPage {
   		data: resultsData
   	});
 
+  	// this.file.checkDir(this.file.dataDirectory, 'mydir').then(_ =>
+  	// 	console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist');
+  	// );
+  	// cordova.file.externalRootDirectory + '/Download/'
+
   	// generating CSV file using Blob
   	var blob = new Blob([csv]);
+  	var filename = this.survey_title + " - RESULTS.csv";
+
+  	// this.file.createFile(cordova.file.externalRootDirectory + '/Download/', filename, false);
+  	// BELOW: use to download CSV on mobile
+  	// this.file.writeFile(this.file.externalRootDirectory + '/Download/', filename, blob, {replace: true});
+
   	var a = window.document.createElement("a");
   	a.href = window.URL.createObjectURL(blob);
-  	var fileTitle = this.survey_title + " - RESULTS.csv";
-  	a.download = fileTitle;
+  	a.download = filename;
   	document.body.appendChild(a);
   	a.click();
   	document.body.removeChild(a);

@@ -75,9 +75,11 @@ export class SurveySummaryPage {
 
   gotoResultsPage(){
     // generate results from local responses
-    for( var r in this.responses['responses']){
-      if (this.responses['responses'][r]['survey_id'] == this.s_id) {
-        this.thisResponses.push(this.responses['responses'][r]);
+    if (this.responses){
+      for( var r in this.responses['responses']){
+        if (this.responses['responses'][r]['survey_id'] == this.s_id) {
+          this.thisResponses.push(this.responses['responses'][r]);
+        }
       }
     }
 
