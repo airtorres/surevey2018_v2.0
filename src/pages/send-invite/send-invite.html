@@ -21,6 +21,57 @@
 	  (ionCancel)="onCancel($event)">
 	</ion-searchbar>
 
+	<ion-toolbar padding class="filter">
+		Filter by 
+		
+		<ion-list>
+			<ion-item-sliding>
+				<ion-item>
+					<ion-label>Age</ion-label>
+					<ion-checkbox></ion-checkbox>
+				</ion-item>
+
+				<ion-item>
+					<ion-label>Gender</ion-label>
+					<ion-checkbox></ion-checkbox>
+				</ion-item>
+
+				<ion-item>
+					<ion-label>Location</ion-label>
+					<ion-checkbox></ion-checkbox>
+				</ion-item>
+				
+				<ion-item>
+					<ion-label>Profession</ion-label>
+					<ion-checkbox></ion-checkbox>
+				</ion-item>
+			</ion-item-sliding>
+		</ion-list>
+
+
+		<ion-list class="age">
+			<ion-label>Age range</ion-label>
+			<ion-grid>
+				<ion-row>
+					<ion-col>
+						<ion-item>
+							<ion-label stacked>MIN</ion-label>
+							<ion-input type="number" min="0" placeholder="MIN" [(ngModel)]="min"></ion-input>
+						</ion-item>
+					</ion-col>
+
+					<ion-col>
+						<ion-item>
+							<ion-label stacked>MAX</ion-label>
+							<ion-input type="number" placeholder="MAX" min={{min}}></ion-input>
+						</ion-item>
+					</ion-col>
+				</ion-row>
+			</ion-grid>
+		</ion-list>
+		
+	</ion-toolbar>
+
 	<!-- DISPLAY CONTACTS -->
 	<ion-list text-wrap>
 		<ion-item *ngFor="let user_email of all_users_email">
