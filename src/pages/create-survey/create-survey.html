@@ -38,7 +38,7 @@
 
  	<!-- CARDS -->
 
- 	<ion-card padding style="border-radius: 12px;" *ngFor="let question of questions">
+ 	<ion-card padding style="border-radius: 12px;" *ngFor="let question of questions_with_IDs">
  		<div text-right>
  			<ion-note *ngIf="question['type'] == 'multipleChoice'">Multiple Choice</ion-note>
  			<ion-note *ngIf="question['type'] == 'shortAnswer'">Short Answer</ion-note>

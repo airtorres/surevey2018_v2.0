@@ -95,8 +95,11 @@ export class SurveySummaryPage {
             // console.log(s['surveys'][surv]);
 
             if( surv_id == this.s_id){
-              s['surveys'].splice(surv_id, 1);
-              this.storage.set('surveys', s).then((val) =>{});
+
+              // DO NOT DELETE SURVEY on surveys? The ids affecting on the surveys listed on the user
+              // TRADEOFFS: Storage VS Speed (of updating IDs on ALL 'surveys' and 'invitations' array)
+              // s['surveys'].splice(surv_id, 1);
+              // this.storage.set('surveys', s).then((val) =>{});
 
               // removing survey_ids in users
               this.storage.get('users').then((u) => {

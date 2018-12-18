@@ -16,41 +16,10 @@
 <ion-content>
 
 	<ion-list text-wrap>
-		<button ion-item (click)="edit_templates('Customer Satisfaction Survey Template')">
-			Customer Satisfaction Survey Template
+		<button *ngFor="let item of built_in_templates" ion-item (click)="edit_templates(item['title'])">
+			{{ item['title'] }}
 			<ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
 		</button >
-
-		<button ion-item (click)="edit_templates('Demographic Survey Template')">
-			Demographic Survey Template
-			<ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
-		</button >
-
-		<button ion-item (click)="edit_templates('Graduation Exit Survey for CAS Students Template')">
-			Graduation Exit Survey for CAS Students Template
-			<ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
-		</button >
-
-		<button ion-item (click)="edit_templates('Neighborhood Feedback Template')">
-			Neighborhood Feedback Template
-			<ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
-		</button >
-
-		<button ion-item (click)="edit_templates('Dine In Restaurant Survey')">
-			Dine In Restaurant Survey
-			<ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
-		</button >
-
-		<button ion-item (click)="edit_templates('Employee Satisfaction Survey')">
-			Employee Satisfaction Survey
-			<ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
-		</button >
-
-		<button ion-item (click)="edit_templates('Online Cosmetics Shopping Survey Template')">
-			Online Cosmetics Shopping Survey Template
-			<ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
-		</button >
-
 	</ion-list>
 
 </ion-content>

@@ -38,6 +38,7 @@ export class CreateSurveyPage {
     'questions': []
   };
   questions = [];
+  questions_with_IDs = [];
   question_data;
 
   currUser;
@@ -54,9 +55,21 @@ export class CreateSurveyPage {
       this.initial_title = this.survey['title'];
       this.intial_desc = this.survey['description'];
     }
+    else if(this.navParams.get('surveyFromTemplate')){
+      var survTemplate = this.navParams.get('surveyFromTemplate');
+
+      this.initial_title = survTemplate['title'];
+      this.intial_desc = survTemplate['description'];
+
+      // these 3 properties came from the built-in template
+      this.survey['title'] = survTemplate['title'];
+      this.survey['description'] = survTemplate['description'];
+      this.survey['questions'] = survTemplate['questions'];
+    }
 
     if( this.survey){
         this.questions = this.survey['questions'];
+        this.reloadQuestionIDs();
     }
 
     this.storage.get("surveys").then(value => {
@@ -130,6 +143,7 @@ export class CreateSurveyPage {
       this.storage.get('users').then((u) => {
         for ( var i in u['users']){
           if (u['users'][i]['email'] == this.currUser){
+            console.log("pushing survey id = "+this_id+" to user = "+ this.currUser +" ...");
             u['users'][i]['surveys'].push(this_id);
             // update users
             this.storage.set('users', u).then((data) => {
@@ -150,10 +164,25 @@ export class CreateSurveyPage {
 
   deleteQuestion(q_id){
     this.survey['questions'].splice(q_id,1);
+    this.reloadQuestionIDs();
   }
 
   editQuestion(q_id){
     this.navCtrl.push(QuestionPage, {question_data: this.survey['questions'][q_id], qID_fromEdit: q_id});
+  }
+
+  reloadQuestionIDs(){
+    console.log("reloading question IDs ...");
+
+    this.questions_with_IDs = [];
+    for ( var q in this.questions){
+      var temp = this.questions[q];
+      temp['q_id'] = '';
+      temp['q_id'] = q;
+      this.questions_with_IDs.push(temp);
+    }
+
+    console.log(this.questions_with_IDs);
   }
 
   public ionViewWillEnter() {
@@ -166,16 +195,8 @@ export class CreateSurveyPage {
       console.log("question_data ff: ");
       console.log(this.question_data);
 
-      //*** NOTE:
-      //*** Adding q_id property for a question is not a good way
-      //*** .splice() method automatically adjusts the ids
-
       // push the question to this particular survey
       if (this.question_data != null){
-        var q_id = this.survey['questions'].length;
-        this.question_data['q_id'] = '';
-        this.question_data['q_id'] = q_id;
-
         if(replace_flag){
           this.survey['questions'].splice(qID, 1, this.question_data);
         }
@@ -183,6 +204,7 @@ export class CreateSurveyPage {
           this.survey['questions'].push(this.question_data);
         }
       }
+      this.reloadQuestionIDs();
     }
 
     // this.question_data = {};

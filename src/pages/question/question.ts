@@ -76,6 +76,7 @@ export class QuestionPage {
         this.thisQuestion['options'][0] = this.firstOpt_dropdown.value;
       }
 
+      this.thisQuestion['options'] = this.thisQuestion['options'].splice(0, 1);
       for( var opt in this.anArray){
         this.thisQuestion['options'].push(this.anArray[opt]['value']);
       }
@@ -100,7 +101,6 @@ export class QuestionPage {
   }
 
   addMoreOption(){
-    // somethings wrong sa pagpush
     this.anArray? this.anArray.push({'value':''}):'';
   }
 

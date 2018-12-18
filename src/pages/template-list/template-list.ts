@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { TemplatesPage } from '../templates/templates';
+import { CreateSurveyPage } from '../create-survey/create-survey';
+import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the TemplateListPage page.
@@ -17,7 +18,18 @@ import { TemplatesPage } from '../templates/templates';
 })
 export class TemplateListPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  built_in_templates = [];
+
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    private storage: Storage) {
+
+    // load the built-in survey templates
+    this.storage.get("built_in_templates").then( templates => {
+      this.built_in_templates = [];
+      for ( var temp in templates){
+        this.built_in_templates.push(templates[temp]);
+      }
+    });
   }
 
   ionViewDidLoad() {
@@ -25,10 +37,14 @@ export class TemplateListPage {
   }
 
   edit_templates(title) {
-    let data = {
-      surveyTitle: title
-    }
-  	this.navCtrl.push(TemplatesPage, data);
+    for( var temp in this.built_in_templates){
+      if( this.built_in_templates[temp]['title'] == title){
+        this.navCtrl.push(CreateSurveyPage, {surveyFromTemplate: this.built_in_templates[temp]});
+      }
+    }  	
+  }
+
+  public ionViewWillEnter() {
   }
 
 }
