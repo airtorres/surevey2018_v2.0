@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { SendInvitePage } from '../send-invite/send-invite';
 import { CreateSurveyPage } from '../create-survey/create-survey';
@@ -33,7 +33,8 @@ export class SurveySummaryPage {
   thisResponses = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private storage: Storage) {
+    private storage: Storage,
+    private alertCtrl: AlertController) {
     this.thisSurvey = navParams.get('item');
 
     this.title = this.thisSurvey['title'];
@@ -88,7 +89,7 @@ export class SurveySummaryPage {
     this.navCtrl.push(ResultsPage, {s_id: this.s_id, responses: this.thisResponses});
   }
 
-  deleteSurvey(){
+  confirmDeleteSurvey(){
     this.storage.get('surveys').then((s) => {
       if (s){
          for ( var surv_id in s['surveys']){
@@ -134,6 +135,30 @@ export class SurveySummaryPage {
     });
 
     this.navCtrl.pop();
+  }
+
+  deleteSurvey(){
+    let alert = this.alertCtrl.create({
+      title: 'Warning',
+      message: 'Are you sure to delete this survey?',
+      buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked. Do not delete survey.');
+        }
+      },
+      {
+        text: 'Delete',
+        handler: () => {
+          console.log('deleting survey ...');
+          this.confirmDeleteSurvey();
+        }
+      }
+    ]
+    });
+    alert.present();
   }
 
   public ionViewWillLeave(){
