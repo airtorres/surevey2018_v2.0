@@ -31,15 +31,25 @@
 
 <!-- MULTIPLE CHOICE -->
     <ion-list radio-group *ngIf="type == 'multipleChoice'">
-      <ion-item>
-        <ion-radio disabled></ion-radio>
-        <ion-input type="text" placeholder="Option" id="firstOpt_multipleChoice" class="multipleChoice_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_multipleChoice></ion-input>
-      </ion-item>
+      <ion-item-group inline-block>
+        <ion-item style="width: 85%;" float-left>
+          <ion-radio item-left disabled></ion-radio>
+          <ion-input type="text" placeholder="Option" id="firstOpt_multipleChoice" class="multipleChoice_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_multipleChoice></ion-input>
+        </ion-item>
+        <button ion-button float-right icon-only clear>
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-item-group>
 
-	    <ion-item *ngFor="let att of anArray; let idx = index">
-	    	<ion-radio disabled></ion-radio>
-	    	<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="multipleChoice_options"></ion-input>
-	    </ion-item>
+      <ion-item-group inline-block *ngFor="let att of anArray; let idx = index" >
+  	    <ion-item style="width: 85%;" float-left>
+  	    	<ion-radio item-left disabled></ion-radio>
+  	    	<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="multipleChoice_options"></ion-input>
+  	    </ion-item>
+        <button ion-button float-right icon-only clear>
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-item-group>
 
       <button ion-button (click)="addMoreOption()">
         <ion-icon name="add"></ion-icon>
@@ -49,15 +59,25 @@
 
 <!-- CHECKBOX -->
   	<ion-list *ngIf="type == 'checkbox'">
-      <ion-item>
+      <ion-item-group inline-block>
+        <ion-item style="width: 85%;" float-left>
           <ion-input type="text" placeholder="Option" id="firstOpt_checkbox" class="checkbox_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_checkbox></ion-input>
           <ion-checkbox disabled></ion-checkbox>
-      </ion-item>
+        </ion-item>
+        <button ion-button float-right icon-only clear>
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-item-group>
 
-    	<ion-item *ngFor="let att of anArray; let idx = index">
+      <ion-item-group inline-block *ngFor="let att of anArray; let idx = index">
+      	<ion-item style="width: 85%;" float-left>
        		<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="checkbox_options"></ion-input>
       		<ion-checkbox disabled></ion-checkbox>
-   		</ion-item>
+     		</ion-item>
+        <button ion-button float-right icon-only clear>
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-item-group>
 
       <button ion-button (click)="addMoreOption()">
         <ion-icon name="add"></ion-icon>
@@ -67,15 +87,25 @@
 
 <!-- DROPDOWN -->
 	<ion-list radio-group *ngIf="type == 'dropdown'">
-      <ion-item>
-        <ion-label>1. </ion-label>
-        <ion-input type="text" placeholder="Option" id="firstOpt_dropdown" class="dropdown_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_dropdown></ion-input>
-      </ion-item>
+      <ion-item-group inline-block>
+        <ion-item style="width: 85%;" float-left>
+          <ion-label>1. </ion-label>
+          <ion-input type="text" placeholder="Option" id="firstOpt_dropdown" class="dropdown_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_dropdown></ion-input>
+        </ion-item>
+        <button ion-button float-right icon-only clear>
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-item-group>
 
-      <ion-item *ngFor="let att of anArray; let idx = index">
-        <ion-label>{{ idx+2 }}</ion-label>
-        <ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="dropdown_options"></ion-input>
-      </ion-item>
+      <ion-item-group inlint-block *ngFor="let att of anArray; let idx = index">
+        <ion-item style="width: 85%;" float-left>
+          <ion-label>{{ idx+2 }}</ion-label>
+          <ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="dropdown_options"></ion-input>
+        </ion-item>
+        <button ion-button float-right icon-only clear>
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-item-group>
 
       <button ion-button (click)="addMoreOption()">
         <ion-icon name="add"></ion-icon>
