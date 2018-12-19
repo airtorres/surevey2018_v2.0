@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { QuestionPage } from '../question/question';
 
@@ -43,7 +43,7 @@ export class CreateSurveyPage {
 
   currUser;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, 
     private storage: Storage) {
 
     // getting the survey to edit: from survey-summary
@@ -215,5 +215,49 @@ export class CreateSurveyPage {
 
     this.question_data = {};
   }
+
+  userCanLeave = false;
+  ionViewCanLeave() {
+  // here you can use other vars to see if there are reasons we want to keep user in this page:
+    if (!this.userCanLeave) {
+        return new Promise((resolve, reject) => {
+          let alert = this.alertCtrl.create({
+            title: 'Changes made',
+            message: 'Do you want to save?',
+            buttons: [
+              {
+                text: "Don't Save",
+                handler: () => {
+                  console.log("User didn't saved data");
+                  // do saving logic
+                  this.userCanLeave = true;
+                  resolve();
+                }
+              },
+              {
+                text: 'Save',
+                handler: () => {
+                  console.log('User saved data');
+                  // do saving logic
+                  this.saveChanges();
+                  this.userCanLeave = true;
+                  resolve();
+                }
+              },
+              {
+                text: 'Cancel',
+                role: 'cancel',
+                handler: () => {
+                  console.log('User stayed');
+                  this.userCanLeave = false;
+                  reject();
+                }
+              },
+            ]
+          });
+          alert.present();
+        });
+      } else { return true }
+    }
 
 }
