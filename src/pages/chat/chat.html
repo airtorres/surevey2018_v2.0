@@ -15,7 +15,15 @@
 <!-- CHAT -->
 <ion-content #content padding id="chatPage">
 	<ion-list text-wrap>
-		<ion-item class="chat">
+		<!-- sent messages -->
+		<ion-item class="sent-msg" text-wrap>
+			<ion-label>This is the message you sent.</ion-label>
+		</ion-item>
+
+
+		<!-- received messages -->
+		<ion-item class="received-msg" text-wrap>
+			<ion-label>This is the message you received.</ion-label>
 		</ion-item>
 	</ion-list>
 </ion-content>

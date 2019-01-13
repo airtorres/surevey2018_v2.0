@@ -30,7 +30,7 @@
 		</ion-item>
 
 <!-- MULTIPLE CHOICE -->
-    <ion-list radio-group *ngIf="type == 'multipleChoice'">
+    <ion-list radio-group *ngIf="type == 'multipleChoice'" style="margin-top: 5px;">
       <ion-item-group inline-block>
         <ion-item style="width: 85%;" float-left>
           <ion-radio item-left disabled></ion-radio>
@@ -51,14 +51,16 @@
         </button>
       </ion-item-group>
 
-      <button ion-button (click)="addMoreOption()">
-        <ion-icon name="add"></ion-icon>
-        Add option
-      </button>
+      <div padding>
+        <button ion-button (click)="addMoreOption()" block style="border-radius: 20px; margin-top: 20px;">
+          + Add option
+        </button>
+      </div>
+      
     </ion-list>
 
 <!-- CHECKBOX -->
-  	<ion-list *ngIf="type == 'checkbox'">
+  	<ion-list *ngIf="type == 'checkbox'" style="margin-top: 5px;">
       <ion-item-group inline-block>
         <ion-item style="width: 85%;" float-left>
           <ion-input type="text" placeholder="Option" id="firstOpt_checkbox" class="checkbox_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_checkbox></ion-input>
@@ -79,14 +81,16 @@
         </button>
       </ion-item-group>
 
-      <button ion-button (click)="addMoreOption()">
-        <ion-icon name="add"></ion-icon>
-        Add option
-      </button>
+      <div padding>
+        <button ion-button (click)="addMoreOption()" block style="border-radius: 20px; margin-top: 20px;">
+          + Add option
+        </button>
+      </div>
+
   	</ion-list>
 
 <!-- DROPDOWN -->
-	<ion-list radio-group *ngIf="type == 'dropdown'">
+	<ion-list radio-group *ngIf="type == 'dropdown'" style="margin-top: 5px;">
       <ion-item-group inline-block>
         <ion-item style="width: 85%;" float-left>
           <ion-label>1. </ion-label>
@@ -107,10 +111,12 @@
         </button>
       </ion-item-group>
 
-      <button ion-button (click)="addMoreOption()">
-        <ion-icon name="add"></ion-icon>
-        Add option
-      </button>
+      <div padding>
+        <button ion-button (click)="addMoreOption()" block style="border-radius: 20px; margin-top: 20px;">
+          + Add option
+        </button>
+      </div>
+      
     </ion-list>
 
 <!-- DATE -->

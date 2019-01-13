@@ -14,9 +14,14 @@
 
 
 <ion-content padding>
-	<ion-avatar style="margin-left: 100px;margin-top: 10px;">
-		<img src="../assets/imgs/avatar.png">
+	<ion-avatar>
+		<img class="avatar" src="../assets/imgs/avatar.png">
 	</ion-avatar>
+
+	<ion-buttons text-center>
+		<button ion-button clear class="btn-profImg">Change Profile Photo</button>
+	</ion-buttons>
+
 	<ion-item>
 		<ion-label color="primary">First Name</ion-label>
 		<ion-input placeholder="Maxx"></ion-input>
@@ -28,16 +33,44 @@
 	</ion-item>
 
 	<ion-item>
-		<ion-label color="primary">Location</ion-label>
-		<ion-input placeholder=""></ion-input>
+		<ion-label color="primary">Username</ion-label>
+		<ion-input placeholder="your username"></ion-input>
 	</ion-item>
 
 	<ion-item>
-	  	<ion-label>User Type</ion-label>
+	  	<ion-label color="primary">Profession</ion-label>
 	  	<ion-select [(ngModel)]="userType">
-		    <ion-option>Student</ion-option>
-		    <ion-option>Teacher</ion-option>
-		    <ion-option>Businessmen/women</ion-option>
+	  		<ion-option>Student</ion-option>
+			<ion-option>Teacher</ion-option>
+			<ion-option>Engineer</ion-option>
+			<ion-option>Lawyer</ion-option>
+			<ion-option>Technician</ion-option>
+			<ion-option>Architect</ion-option>
+			<ion-option>Musician</ion-option>
+			<ion-option>Athlete</ion-option>
 	  	</ion-select>
 	</ion-item>
+
+	<ion-item>
+		<ion-label color="primary">location</ion-label>
+		<ion-input placeholder=""></ion-input>
+	</ion-item>
+
+
+	<ion-item>
+		<ion-label color="primary">Birth Date</ion-label>
+		<ion-datetime displayFormat="MMM DD, YYYY" placeholder="Select Date"></ion-datetime>
+	</ion-item>
+
+	<ion-item>
+	  	<ion-label color="primary">Gender</ion-label>
+	  	<ion-select [(ngModel)]="userType">
+		    <ion-option>Not Specified</ion-option>
+		    <ion-option>Female</ion-option>
+		    <ion-option>Male</ion-option>
+	  	</ion-select>
+	</ion-item>
+
+	
+
 </ion-content>
