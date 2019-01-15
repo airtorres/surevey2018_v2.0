@@ -26,6 +26,8 @@ export class CreateSurveyPage {
   initial_title = '';
   s_id;// for locating survey to edit
 
+  userCanLeave = true;
+
   surveys = {};
   survey = {
     'title':'untitled survey',
@@ -216,48 +218,47 @@ export class CreateSurveyPage {
     this.question_data = {};
   }
 
-  userCanLeave = false;
   ionViewCanLeave() {
-  // here you can use other vars to see if there are reasons we want to keep user in this page:
+    // here you can use other vars to see if there are reasons we want to keep user in this page:
     if (!this.userCanLeave) {
-        return new Promise((resolve, reject) => {
-          let alert = this.alertCtrl.create({
-            title: 'Changes made',
-            message: 'Do you want to save?',
-            buttons: [
-              {
-                text: "Don't Save",
-                handler: () => {
-                  console.log("User didn't saved data");
-                  // do saving logic
-                  this.userCanLeave = true;
-                  resolve();
-                }
-              },
-              {
-                text: 'Save',
-                handler: () => {
-                  console.log('User saved data');
-                  // do saving logic
-                  this.saveChanges();
-                  this.userCanLeave = true;
-                  resolve();
-                }
-              },
-              {
-                text: 'Cancel',
-                role: 'cancel',
-                handler: () => {
-                  console.log('User stayed');
-                  this.userCanLeave = false;
-                  reject();
-                }
-              },
-            ]
-          });
-          alert.present();
+      return new Promise((resolve, reject) => {
+        let alert = this.alertCtrl.create({
+          title: 'Changes made',
+          message: 'Do you want to save?',
+          buttons: [
+            {
+              text: "Don't Save",
+              handler: () => {
+                console.log("User didn't saved data");
+                // do saving logic
+                this.userCanLeave = true;
+                resolve();
+              }
+            },
+            {
+              text: 'Save',
+              handler: () => {
+                console.log('User saved data');
+                // do saving logic
+                this.saveChanges();
+                this.userCanLeave = true;
+                resolve();
+              }
+            },
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+                console.log('User stayed');
+                this.userCanLeave = false;
+                reject();
+              }
+            },
+          ]
         });
-      } else { return true }
-    }
+        alert.present();
+      });
+    } else { return true }
+  }
 
 }
