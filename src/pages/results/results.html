@@ -31,17 +31,24 @@
 			</button>
 		</ion-item>
 
-		<div *ngIf="question['type'] == 'multipleChoice' || question['type'] == 'checkbox' || question['type'] == 'date' || question['type'] == 'dropdown' ">
+		<div *ngIf="question['type'] == 'multipleChoice' || question['type'] == 'checkbox' || question['type'] == 'date' || question['type'] == 'dropdown' " id="graphResult_{{idx}}">
+		
 			<ion-toolbar style="padding: 0 30px; display: none;" id="opt_{{idx}}">
+				<ion-buttons end>
+					<button item-end clear ion-button large (click)="closeResult(idx)">
+						<ion-icon name="close"></ion-icon>
+					</button>
+				</ion-buttons>
+
 				<ion-segment mode="ios" [(ngModel)]="chartOptions[idx]">
 				    <ion-segment-button value="pie" (click)="showPieChart(idx)">Pie</ion-segment-button>
 				    <ion-segment-button value="donut" (click)="showDonutChart(idx)">Donut</ion-segment-button>
 				    <ion-segment-button value="bar" (click)="showBarChart(idx)">Bar</ion-segment-button>
 				</ion-segment>
 			</ion-toolbar>
-		</div>
 
-		<div id="results_div_{{idx}}">
+			<div id="results_div_{{idx}}">
+			</div>
 		</div>
 
 		<div *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' " id="openAnsDiv_{{idx}}" style="display: none;">

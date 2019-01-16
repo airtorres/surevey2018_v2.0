@@ -117,6 +117,8 @@ export class ResultsPage {
   	if (this.questions[idx]['type'] == 'multipleChoice' || this.questions[idx]['type'] == 'checkbox' || this.questions[idx]['type'] == 'dropdown'){
   		try{
 	  		this.showPieChart(idx);
+        var resultsDiv = document.getElementById('graphResult_'+idx);
+        resultsDiv.style.display = 'block';
 	  	}
 	  	catch (e){
 	  		this.showInternetConnectionError();
@@ -133,6 +135,11 @@ export class ResultsPage {
   		var el = document.getElementById('openAnsDiv_'+idx);
   		el.style.display = 'block';
   	}
+  }
+
+  closeResult(idx) {
+    var resultsDiv = document.getElementById('graphResult_'+idx);
+    resultsDiv.style.display = 'none';
   }
 
   showPieChart(idx){
