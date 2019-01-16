@@ -22,8 +22,7 @@
 	</ion-searchbar>
 
 	<ion-card padding class="filterOpt" >
-		Filter by 
-		
+		<ion-label id="filterTitle">Filter by</ion-label>		
 		<ion-list>
 
 			<ion-item no-lines>
@@ -31,7 +30,7 @@
 				<ion-checkbox [(ngModel)]="age" (click)="showAge()"></ion-checkbox>
 			</ion-item>
 
-			<ion-list class="age" style="display: none;">
+			<ion-list id="age" style="display: none;">
 				<!-- <ion-label>Age range</ion-label> -->
 				<ion-grid>
 					<ion-row>
@@ -55,10 +54,10 @@
 
 			<ion-item no-lines>
 				<ion-label>Gender</ion-label>
-				<ion-checkbox [(ngModel)]="gender"></ion-checkbox>
+				<ion-checkbox [(ngModel)]="gender" (click)="showGender()"></ion-checkbox>
 			</ion-item>
 
-			<ion-list class="gender" radio-group style="display: none;">
+			<ion-list id="gender" radio-group style="display: none;">
 				<!-- <ion-label>Gender</ion-label> -->
 				<ion-row>
 					<ion-col>
@@ -80,10 +79,10 @@
 
 			<ion-item no-lines>
 				<ion-label>Location</ion-label>
-				<ion-checkbox [(ngModel)]="location"></ion-checkbox>
+				<ion-checkbox [(ngModel)]="location" (click)="showLocation()"></ion-checkbox>
 			</ion-item>
 
-			<ion-list class="location" style="display: none;">
+			<ion-list id="location" style="display: none;">
 				<!-- <ion-label>Location</ion-label> -->
 				<ion-item>
 					<!-- <ion-label stacked>Location</ion-label> -->
@@ -94,10 +93,10 @@
 			
 			<ion-item no-lines>
 				<ion-label>Profession</ion-label>
-				<ion-checkbox [(ngModel)]="profession"></ion-checkbox>
+				<ion-checkbox [(ngModel)]="profession" (click)="showProfession()"></ion-checkbox>
 			</ion-item>
 
-			<ion-list class="profession" style="display: none;">
+			<ion-list id="profession" style="display: none;">
 				<!-- <ion-label>Profession</ion-label> -->
 				<ion-item>
 					<ion-label>Profession</ion-label>

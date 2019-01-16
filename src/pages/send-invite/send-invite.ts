@@ -85,4 +85,44 @@ export class SendInvitePage {
   	this.navCtrl.pop();
   }
 
+  showAge() {
+    var ageDiv = document.getElementById('age');
+    if (ageDiv.style.display === 'none') {
+      ageDiv.style.display = '';
+    }
+    else {
+      ageDiv.style.display = 'none';
+    }
+  }
+
+  showGender() {
+    var genderDiv = document.getElementById('gender');
+    if (genderDiv.style.display === 'none') {
+      genderDiv.style.display = '';
+    }
+    else {
+      genderDiv.style.display = 'none';
+    }
+  }
+
+  showLocation() {
+    var locationDiv = document.getElementById('location');
+    if (locationDiv.style.display === 'none') {
+      locationDiv.style.display = '';
+    }
+    else {
+      locationDiv.style.display = 'none';
+    }
+  }
+
+  showProfession() {
+    var professionDiv = document.getElementById('profession');
+    if (professionDiv.style.display === 'none') {
+      professionDiv.style.display = '';
+    }
+    else {
+      professionDiv.style.display = 'none';
+    }
+  }
+
 }
