@@ -26,7 +26,13 @@ export class CreateSurveyPage {
   initial_title = '';
   s_id;// for locating survey to edit
 
+  prev_survey;
+  prev_questions;
+  prev_title;
+  prev_description;
+
   userCanLeave = true;
+  enteringQuestionPage = false;
 
   surveys = {};
   survey = {
@@ -56,6 +62,9 @@ export class CreateSurveyPage {
 
       this.initial_title = this.survey['title'];
       this.intial_desc = this.survey['description'];
+
+      this.prev_title = JSON.stringify(this.survey['title']);
+      this.prev_description = JSON.stringify(this.survey['description']);
     }
     else if(this.navParams.get('surveyFromTemplate')){
       var survTemplate = this.navParams.get('surveyFromTemplate');
@@ -67,6 +76,13 @@ export class CreateSurveyPage {
       this.survey['title'] = survTemplate['title'];
       this.survey['description'] = survTemplate['description'];
       this.survey['questions'] = survTemplate['questions'];
+
+      this.prev_title = JSON.stringify(this.survey['title']);
+      this.prev_description = JSON.stringify(this.survey['description']);
+    }
+    else{
+      this.prev_title = '';
+      this.prev_description = '';
     }
 
     if( this.survey){
@@ -81,6 +97,10 @@ export class CreateSurveyPage {
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
+
+    // storing the previous values to check the changes
+    this.prev_survey = JSON.stringify(this.survey);
+    this.prev_questions = JSON.stringify(this.survey['questions']);
   }
 
   ionViewDidLoad() {
@@ -93,6 +113,7 @@ export class CreateSurveyPage {
   	}
   	console.log(data);
 
+    this.enteringQuestionPage = true;
   	this.fab.close();
   	this.navCtrl.push(QuestionPage, data);
   }
@@ -212,6 +233,30 @@ export class CreateSurveyPage {
     // this.question_data = {};
   }
 
+  checkAllChanges(){
+    if (this.navParams.get('surveyFromTemplate') || this.navParams.get('thisSurvey')){
+      if (this.prev_survey == JSON.stringify(this.survey) && this.prev_questions == JSON.stringify(this.questions)
+        // && this.prev_description == this.surveyDescription.value && this.prev_title == this.surveyTitle.value){
+          && '"'+this.surveyDescription.value+'"' == this.prev_description && '"'+this.surveyTitle.value+'"' == this.prev_title){
+        console.log("NO CHANGES MADE.");
+        this.userCanLeave = true;
+      }else{
+        console.log("THERE ARE UNSAVED CHANGES.");
+        this.userCanLeave = false;
+      }
+    }
+    else{
+      if (this.prev_survey == JSON.stringify(this.survey) && this.prev_questions == JSON.stringify(this.questions)
+        && this.prev_description == this.surveyDescription.value && this.prev_title== this.surveyTitle.value){
+        console.log("NO CHANGES MADE.");
+        this.userCanLeave = true;
+      }else{
+        console.log("THERE ARE UNSAVED CHANGES.");
+        this.userCanLeave = false;
+      }
+    }
+  }
+
   public ionViewWillLeave() {
     console.log("leaving create-survey page ...");
 
@@ -219,8 +264,11 @@ export class CreateSurveyPage {
   }
 
   ionViewCanLeave() {
+    console.log("checking the page if allowed to leave ...");
+    this.checkAllChanges();
+
     // here you can use other vars to see if there are reasons we want to keep user in this page:
-    if (!this.userCanLeave) {
+    if (!this.userCanLeave && !this.enteringQuestionPage) {
       return new Promise((resolve, reject) => {
         let alert = this.alertCtrl.create({
           title: 'Changes made',
