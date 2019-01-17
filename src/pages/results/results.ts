@@ -264,35 +264,6 @@ export class ResultsPage {
 	}
   }
 
-  showTable() {
-  	try{
-	    var data = new google.visualization.DataTable();
-	    data.addColumn('string', 'Pizza Toppings');
-	    data.addColumn('number', 'Number');
-	    data.addRows([
-	      ['Mushrooms',  {v: 3, f: '3'}],
-	      ['Onions',   {v:1,   f: '1'}],
-	      ['Olives', {v: 1, f: '1'}],
-	      ['Zucchini',   {v: 1,  f: '1'}],
-	      ['Pepperoni',   {v: 2,  f: '2'}]
-	    ]);
-
-	    var options = {
-	      'title':'1. How Much Pizza I Ate Last Night?',
-	      'width':'90%',
-	      'height':'100%',
-	      showRowNumber: true
-	    }
-
-	    var table = new google.visualization.Table(document.getElementById('table_div'));
-
-	    table.draw(data, options);
-	}
-	catch (e){
-		this.showInternetConnectionError();
-	}
-  }
-
   public ionViewWillEnter(){
   	console.log("loading charts ...");
   }
