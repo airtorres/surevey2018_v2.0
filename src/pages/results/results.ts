@@ -125,6 +125,7 @@ export class ResultsPage {
 	  	}
   	}
   	else{
+  		this.openAnswers = [];
   		for (var ans in this.responses){
   			if(this.responses[ans]['answers'][idx]){
   				this.openAnswers.push(this.responses[ans]['answers'][idx]);
