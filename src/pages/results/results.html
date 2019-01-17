@@ -23,7 +23,7 @@
 	<p>{{ description }}</p>
 
 	<div *ngFor="let question of questions; let idx = index">
-		<ion-item text-wrap>
+		<ion-item text-wrap style="padding-left: 0px;">
 			<ion-label>{{idx+1}}. {{ question['message'] }}</ion-label>
 			<button item-end clear ion-button (click)="showResult(idx)">
 				View 
@@ -51,7 +51,7 @@
 			</div>
 		</div>
 
-		<div *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' " id="openAnsDiv_{{idx}}" style="display: none;">
+		<div *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' " id="openAnsDiv_{{idx}}" style="display: none; padding-left: 16px;">
 			List of Answers:
 			<ul>
 				<li *ngFor="let ans of openAnswers">{{ ans }}</li>
