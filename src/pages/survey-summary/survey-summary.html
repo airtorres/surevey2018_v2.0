@@ -20,20 +20,20 @@
 
 <ion-content padding>
   <div text-center>
-    <ion-label text-wrap style="font-size: 25px; margin: 13px 8px 0 0;">
+    <ion-label text-wrap style="font-size: 25px;">
       {{ title }}
     </ion-label>
-
+    
     <ion-grid>
       <ion-row>
         <ion-col>
-          <p> <span class="num-title">15</span> 
-          TOTAL RESPONSES</p>
+          <ion-label class="num-title" text-center>15</ion-label>
+          <p>TOTAL <br> RESPONSES</p>
         </ion-col>
 
         <ion-col>
-          <p> <span class="num-title">15</span>
-          COMPLETE RESPONSES</p>
+          <ion-label class="num-title" text-center>15</ion-label>
+          <p>COMPLETE RESPONSES</p>
         </ion-col>
     </ion-row>
     </ion-grid>
@@ -42,30 +42,30 @@
   <!-- MAIN BUTTONS -->
 
   <ion-list>
-    <button ion-item (click)="gotoEdit()">
+    <button ion-item (click)="gotoEdit()" style="padding-left: 0px;">
       <ion-icon item-left name="create" color="blue" style="font-size: 25px;"></ion-icon>
       Edit
     </button>
 
-    <button ion-item (click)="gotoSendInvitePage()">
+    <button ion-item (click)="gotoSendInvitePage()" style="padding-left: 0px;">
       <ion-icon item-left name="send" color="blue" style="font-size: 25px;"></ion-icon>
       Send Invites
     </button>
 
-    <button ion-item (click)="gotoResultsPage()">
+    <button ion-item (click)="gotoResultsPage()" style="padding-left: 0px;">
       <ion-icon item-left name="analytics" color="blue" style="font-size: 25px;"></ion-icon>
       Analyze
     </button>
 
-    <button ion-item (click)="gotoRespondentView()">
+    <button ion-item (click)="gotoRespondentView()" style="padding-left: 0px;">
       <ion-icon item-left name="checkbox-outline" color="blue" style="font-size: 25px;"></ion-icon>
       Answer
     </button>
   </ion-list>
 
   <!-- SETTINGS -->
-  <ion-item-divider style="color: #12608A; font-size: 16px;" no-lines>SETTINGS</ion-item-divider>	
-  <ion-item>
+  <ion-item-divider style="color: #12608A; font-size: 16px;padding-left: 0px;" no-lines>SETTINGS</ion-item-divider>	
+  <ion-item style="padding-left: 0px;">
     <ion-label>Survey Status:
       <span style="color: #73CA5F;" *ngIf="isActive">OPEN</span>
       <span style="color: #FF675C;" *ngIf="!isActive">CLOSED</span> 
@@ -74,20 +74,20 @@
   </ion-item>
 
   <!-- DETAILS -->
-  <ion-item-divider style="color: #12608A; font-size: 16px;" no-lines>DETAILS</ion-item-divider> 
+  <ion-item-divider style="color: #12608A; font-size: 16px;padding-left: 0px;" no-lines>DETAILS</ion-item-divider> 
 
   <ion-list>
-    <ion-item>
+    <ion-item style="padding-left: 0px;">
       <ion-label>Respondents</ion-label>
       <ion-note item-end color="blue" style="font-size: 1.6rem;">15</ion-note>
     </ion-item>
 
-    <ion-item>
+    <ion-item style="padding-left: 0px;">
       <ion-label>Created</ion-label>
       <ion-note item-end style="font-size: 1.6rem;">{{ created_date }}</ion-note>
     </ion-item>
 
-    <ion-item>
+    <ion-item style="padding-left: 0px;">
       <ion-label>Modified</ion-label>
       <ion-note item-end style="font-size: 1.6rem;">{{ updated_date }}</ion-note>
     </ion-item>
