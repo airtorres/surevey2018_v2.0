@@ -25,9 +25,9 @@
 	<div *ngFor="let question of questions; let idx = index">
 		<ion-item text-wrap style="padding-left: 0px;">
 			<ion-label>{{idx+1}}. {{ question['message'] }}</ion-label>
-			<button item-end clear ion-button (click)="showResult(idx)">
+			<button icon-end item-end clear ion-button (click)="showResult(idx)" id="view-btn">
 				View 
-				<ion-icon name="ios-arrow-forward"></ion-icon>
+				<ion-icon icon-end name="ios-arrow-down"></ion-icon>
 			</button>
 		</ion-item>
 
@@ -35,8 +35,8 @@
 		
 			<ion-toolbar style="padding: 0 30px; display: none;" id="opt_{{idx}}">
 				<ion-buttons end>
-					<button item-end clear ion-button large (click)="closeResult(idx)">
-						<ion-icon name="close"></ion-icon>
+					<button icon-start item-end clear ion-button large (click)="closeResult(idx)">
+						<ion-icon name="close"></ion-icon> Close
 					</button>
 				</ion-buttons>
 

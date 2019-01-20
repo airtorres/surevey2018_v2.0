@@ -118,7 +118,9 @@ export class ResultsPage {
   		try{
 	  		this.showPieChart(idx);
         var resultsDiv = document.getElementById('graphResult_'+idx);
+        var btn = document.getElementById('view-btn');
         resultsDiv.style.display = 'block';
+        btn.style.display = 'none';
 	  	}
 	  	catch (e){
 	  		this.showInternetConnectionError();
@@ -140,6 +142,8 @@ export class ResultsPage {
 
   closeResult(idx) {
     var resultsDiv = document.getElementById('graphResult_'+idx);
+    var btn = document.getElementById('view-btn');
+    btn.style.display = 'block';
     resultsDiv.style.display = 'none';
   }
 
