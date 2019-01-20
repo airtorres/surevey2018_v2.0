@@ -118,7 +118,7 @@ export class ResultsPage {
   		try{
 	  		this.showPieChart(idx);
         var resultsDiv = document.getElementById('graphResult_'+idx);
-        var btn = document.getElementById('view-btn');
+        var btn = document.getElementById('view_btn_'+idx);
         resultsDiv.style.display = 'block';
         btn.style.display = 'none';
 	  	}
@@ -142,7 +142,7 @@ export class ResultsPage {
 
   closeResult(idx) {
     var resultsDiv = document.getElementById('graphResult_'+idx);
-    var btn = document.getElementById('view-btn');
+    var btn = document.getElementById('view_btn_'+idx);
     btn.style.display = 'block';
     resultsDiv.style.display = 'none';
   }
