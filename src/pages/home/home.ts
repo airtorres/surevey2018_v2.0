@@ -433,6 +433,8 @@ export class HomePage {
 
     // store templates to local storage
     this.storage.set('built_in_templates', this.built_in_templates).then(() => {});
+
+    // sample commit
   }
 
 }
