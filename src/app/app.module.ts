@@ -36,12 +36,12 @@ import { HttpModule } from '@angular/http';
 import { File } from '@ionic-native/file';
 
  const firebaseAuth = {
-    apiKey: "AIzaSyDllAkdkwDHAifL7d_1aGkCFcXMT_zY09s",
-    authDomain: "surevey2018.firebaseapp.com",
-    databaseURL: "https://surevey2018.firebaseio.com",
-    projectId: "surevey2018",
-    storageBucket: "surevey2018.appspot.com",
-    messagingSenderId: "1031322702252"
+    apiKey: "AIzaSyCVS6S7r9Fzou64HzePqZ9JSVZKG0-_LAU",
+    authDomain: "sureveydb.firebaseapp.com",
+    databaseURL: "https://sureveydb.firebaseio.com",
+    projectId: "sureveydb",
+    storageBucket: "sureveydb.appspot.com",
+    messagingSenderId: "356066623007"
   };
 
 @NgModule({

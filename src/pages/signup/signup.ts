@@ -7,8 +7,6 @@ import { WelcomePage } from '../welcome/welcome';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 
-import { Storage } from '@ionic/storage';
-
 /**
  * Generated class for the SignupPage page.
  *
@@ -27,35 +25,10 @@ export class SignupPage {
   @ViewChild('email') email;
   @ViewChild('password') password;
 
-  // for firebaseDB
-  arrayUsers = []
-
-  // for local storage
-  users = {}
-  user = {
-    'username':'',
-    'first name': '',
-    'last name': '',
-    'age':'',
-    'birthdate': '',
-    'address': '',
-    'sex':'',
-    'gender':'',
-    'email': '',
-    'password':'',
-    'surveys':[],
-    'invitations': []
-  }
-
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, private formbuilder: FormBuilder,
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    private formbuilder: FormBuilder,
     private fire: AngularFireAuth,
-    private fireDB: AngularFireDatabase,
-    private storage: Storage) {
-
-    this.storage.get("users").then(value => {
-        this.users = value;
-    });
+    private fireDB: AngularFireDatabase) {
 
     let EMAILPATTERN = /^[a-z0-9][a-z0-9!#$%&'*+\/=?^_`{|}~.-]*\@[a-z0-9]+\.[a-z0-9]+(\.[a-z0-9]+)*$/i;
     let USERNAMEPATTERN = /^[a-z]+[a-z0-9!#$%&'*+\/=?^_`{|}~.-]*/i;
@@ -77,41 +50,41 @@ export class SignupPage {
   signup(){
     console.log(this.email.value);
 
-    // PARA SA ANO JA? UPDATE? -------------------------------------------------
-    // this.fireDB.list("/users/").valueChanges().subscribe(_data => {
-    //   this.arrayUsers = _data;
-    //   console.log(this.arrayUsers);
-    // });
+    // SIGNING UP TO FIREBASE -----------------------------------------
+    this.fire.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
+    .then(data => {
+      console.log("Data got:\n", data);
 
-    // SIGNING UP TO FIREBASE AUTH -----------------------------------------
-    // this.fire.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
-    // .then(data => {
-    //   console.log("Data got:\n", data);
-    //   this.navigateToHome();
-    // })
-    // .catch( function(error) {
-    //   console.log("got an error:", error);
-    //   // only temporary alert. Show error later.
-    //   alert(error.message);
-    // });
+      var user = {
+        'username': this.username.value,
+        'email': this.email.value,
+        'password': this.password.value,
+        'first_name': '',
+        'last_name': '',
+        'profession': '',
+        'location': '',
+        'birthdate': '',
+        'gender': '',
+        'sex': '',
+        'age': ''
+      }
 
-    // SIGNING UP TO IONIC LOCAL STORAGE --------------------------------------
-    this.user['username'] = this.username.value;
-    this.user['email'] = this.email.value;
-    this.user['password'] = this.password.value;
+      var user_survey = {
+        'email': this.email.value,
+        'surveys':[],
+        'invitations': []
+      }
 
-    if(this.users){
-      JSON.parse(this.users['users'].push(this.user));
-    }
-    else{
-      this.users = {'users': ''};
-      this.users['users'] = [this.user];
-    }
-    this.storage.set('users', this.users);
-    this.storage.set('currentUser', this.email.value);
-    this.navigateToHome();
-    // ENDOF SIGNUP-LOCAL -----------------------------------------------------
+      this.fireDB.list("/users").push(user);
+      this.fireDB.list("/user_surveys").push(user_survey);
 
+      this.navigateToHome();
+    })
+    .catch( function(error) {
+      console.log("got an error:", error);
+      // only temporary alert. Show error later.
+      alert(error.message);
+    });
   }
 
   navigateToHome(){
