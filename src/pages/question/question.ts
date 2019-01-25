@@ -28,7 +28,7 @@ export class QuestionPage {
 
 	public type;
   public anArray = [];
-  isRequired;
+  isRequired = false;
 
  	constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController) {
   		this.type = this.navParams.get('type');

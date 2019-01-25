@@ -2,6 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { QuestionPage } from '../question/question';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireDatabase } from '@angular/fire/database';
+import * as firebase from 'firebase/app';
+import 'firebase/database';
 
 import { Storage } from '@ionic/storage';
 
@@ -39,11 +43,12 @@ export class CreateSurveyPage {
     'title':'untitled survey',
     'description':'No Description to show.',
     'author': '',
-    'created_at': new Date(),
-    'updated_at': null,
-    'end_date': null,
+    'created_at': '',
+    'updated_at': '',
+    'end_date': '',
     'isActive': true, //true/false
-    'questions': []
+    'questions': [],
+    'key':''
   };
   questions = [];
   questions_with_IDs = [];
@@ -51,7 +56,10 @@ export class CreateSurveyPage {
 
   currUser;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, 
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    private alertCtrl: AlertController,
+    private fire: AngularFireAuth,
+    private fireDB: AngularFireDatabase,
     private storage: Storage) {
 
     // getting the survey to edit: from survey-summary
@@ -122,7 +130,8 @@ export class CreateSurveyPage {
     // save changes to ionic localStorage
     this.survey['title'] = this.surveyTitle.value || "untitled survey";
     this.survey['description'] = this.surveyDescription.value || "No Description to show.";
-    this.survey['updated_at'] = new Date();
+    var date = new Date();
+    this.survey['updated_at'] = date.toString();
     this.survey['author'] = this.currUser;
     this.survey['isActive'] = true;//the survey is active upon creation
 
@@ -133,7 +142,8 @@ export class CreateSurveyPage {
         var author = this.surveys['surveys'][surv_id]['author'];
         if( surv_id == this.s_id && this.survey['author'] == author){
           // replacing the survey: @editing
-          this.survey['updated_at'] = new Date();
+          var update = new Date();
+          this.survey['updated_at'] = update.toString();
 
           this.surveys['surveys'][surv_id] = this.survey;
 
@@ -143,7 +153,17 @@ export class CreateSurveyPage {
       }
 
       if (push_flag_for_survey){
-        JSON.parse(this.surveys['surveys'].push(this.survey));
+        // JSON.parse(this.surveys['surveys'].push(this.survey));
+        try{
+          var newPostKey = firebase.database().ref().child('surveys').push().key;
+          this.survey['key'] = '';
+          this.survey['key'] = newPostKey;
+
+          console.log(this.survey);
+          this.fireDB.list("/surveys").push(this.survey);
+        }catch(e){
+          alert("There's a problem pushing the survey.");
+        }
       }
     }
     else{
@@ -153,31 +173,65 @@ export class CreateSurveyPage {
 
     if(push_flag_for_survey){
 
-      // getting the survey id
-      var this_id;
-      for ( var this_surv_id in this.surveys['surveys']){
-        if( JSON.stringify(this.survey) == JSON.stringify(this.surveys['surveys'][this_surv_id])){
-          this_id = this_surv_id;
-          break;
-        }
-      }
+      // // getting the survey id
+      // var this_id;
+      // for ( var this_surv_id in this.surveys['surveys']){
+      //   if( JSON.stringify(this.survey) == JSON.stringify(this.surveys['surveys'][this_surv_id])){
+      //     this_id = this_surv_id;
+      //     break;
+      //   }
+      // }
 
-      // saving survey id to user's surveys list
-      this.storage.get('users').then((u) => {
-        for ( var i in u['users']){
-          if (u['users'][i]['email'] == this.currUser){
-            console.log("pushing survey id = "+this_id+" to user = "+ this.currUser +" ...");
-            u['users'][i]['surveys'].push(this_id);
-            // update users
-            this.storage.set('users', u).then((data) => {
-              return
-            });
+      // // saving survey id to user's surveys list
+      // this.storage.get('users').then((u) => {
+      //   for ( var i in u['users']){
+      //     if (u['users'][i]['email'] == this.currUser){
+      //       console.log("pushing survey id = "+this_id+" to user = "+ this.currUser +" ...");
+      //       u['users'][i]['surveys'].push(this_id);
+      //       // update users
+      //       this.storage.set('users', u).then((data) => {
+      //         return
+      //       });
+      //     }
+      //   }
+      // });
+
+      // load surveys from firebase
+      try{
+        var thisSurveyId;
+
+        // getting the survey id
+        const allSurveysRef:firebase.database.Reference = firebase.database().ref('/surveys');
+        allSurveysRef.on('value', allSurveysSnapshot => {
+          var all = allSurveysSnapshot.val();
+          for ( var surv in all){
+            if( this.survey['key'] == all[surv]['key']){
+              thisSurveyId = surv;
+              break;
+            }
           }
-        }
-      });
+        });
+
+        // saving survey id to user's survey list
+        const userToSurveyRef:firebase.database.Reference = firebase.database().ref('/user_surveys');
+        userToSurveyRef.on('value', userToSurveySnapshot => {
+          var users = userToSurveySnapshot.val();
+          for ( var u in users){
+            if (this.fire.auth.currentUser.email == users[u]['email']){
+
+              // this.fireDB.list("/user_surveys/"+u+'/surveylist').push(thisSurveyId);
+
+              break;
+            }
+          }
+        });
+      }catch(err){
+        console.log("Unable to load data. No Internet Connection. OR there is a problem.");
+      }
     }
 
-    this.storage.set('surveys', this.surveys).then((val) =>{});
+    // SAVING ENTIRE SURVEY ON LOCAL DB
+    // this.storage.set('surveys', this.surveys).then((val) =>{});
 
 
     // redirect to survey-list: showing all surveys
