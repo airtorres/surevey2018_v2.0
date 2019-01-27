@@ -37,6 +37,8 @@ export class CreateSurveyPage {
 
   userCanLeave = true;
   enteringQuestionPage = false;
+  savingFlag = false;
+  push_flag_for_survey = true;
 
   surveys = {};
   survey = {
@@ -135,7 +137,7 @@ export class CreateSurveyPage {
     this.survey['author'] = this.currUser;
     this.survey['isActive'] = true;//the survey is active upon creation
 
-    var push_flag_for_survey = true;
+    this.push_flag_for_survey = true;
 
     if(this.surveys){
       for( var surv_id in this.surveys['surveys'] ){
@@ -147,12 +149,12 @@ export class CreateSurveyPage {
 
           this.surveys['surveys'][surv_id] = this.survey;
 
-          push_flag_for_survey = false;
+          this.push_flag_for_survey = false;
           break;
         }
       }
 
-      if (push_flag_for_survey){
+      if (this.push_flag_for_survey){
         // JSON.parse(this.surveys['surveys'].push(this.survey));
         try{
           var newPostKey = firebase.database().ref().child('surveys').push().key;
@@ -162,7 +164,8 @@ export class CreateSurveyPage {
           console.log(this.survey);
           this.fireDB.list("/surveys").push(this.survey);
         }catch(e){
-          alert("There's a problem pushing the survey.");
+          console.log("There's a problem pushing the survey.");
+          this.showSavingPrompt(true);
         }
       }
     }
@@ -171,34 +174,15 @@ export class CreateSurveyPage {
       this.surveys['surveys'] = [this.survey];
     }
 
-    if(push_flag_for_survey){
+    this.saveToUserSurveyList();
+  }
 
-      // // getting the survey id
-      // var this_id;
-      // for ( var this_surv_id in this.surveys['surveys']){
-      //   if( JSON.stringify(this.survey) == JSON.stringify(this.surveys['surveys'][this_surv_id])){
-      //     this_id = this_surv_id;
-      //     break;
-      //   }
-      // }
-
-      // // saving survey id to user's surveys list
-      // this.storage.get('users').then((u) => {
-      //   for ( var i in u['users']){
-      //     if (u['users'][i]['email'] == this.currUser){
-      //       console.log("pushing survey id = "+this_id+" to user = "+ this.currUser +" ...");
-      //       u['users'][i]['surveys'].push(this_id);
-      //       // update users
-      //       this.storage.set('users', u).then((data) => {
-      //         return
-      //       });
-      //     }
-      //   }
-      // });
-
+  saveToUserSurveyList(){
+    if(this.push_flag_for_survey){
       // load surveys from firebase
       try{
         var thisSurveyId;
+        var users = [];
 
         // getting the survey id
         const allSurveysRef:firebase.database.Reference = firebase.database().ref('/surveys');
@@ -215,28 +199,69 @@ export class CreateSurveyPage {
         // saving survey id to user's survey list
         const userToSurveyRef:firebase.database.Reference = firebase.database().ref('/user_surveys');
         userToSurveyRef.on('value', userToSurveySnapshot => {
-          var users = userToSurveySnapshot.val();
-          for ( var u in users){
-            if (this.fire.auth.currentUser.email == users[u]['email']){
-
-              // this.fireDB.list("/user_surveys/"+u+'/surveylist').push(thisSurveyId);
-
-              break;
-            }
-          }
+          users = userToSurveySnapshot.val();  
         });
+
+        if(users.length != 0){
+          for ( var u in users){
+              if (this.fire.auth.currentUser.email == users[u]['email']){
+                var newArray = [];
+                if(users[u]['surveylist']){
+                  const temp:firebase.database.Reference = firebase.database().ref("/user_surveys/"+u).child('surveylist');
+                  temp.on('value', tempSnap => {
+                    var arr = tempSnap.val();
+                    for ( var a in arr ){
+                      newArray.push(arr[a]);
+                    }
+                    newArray[arr.length] = thisSurveyId;
+                  });
+
+                  firebase.database().ref("/user_surveys/"+u).set({
+                    'email': users[u]['email'],
+                    'surveylist': newArray
+                  }, function(error) {
+                    if (error) {
+                      alert("Data was not saved!");
+                    } else {
+                      console.log("Data saved successfully");
+                    }
+                  });
+                }else{
+                  newArray = [thisSurveyId];
+                  firebase.database().ref("/user_surveys/"+u).set({
+                    'email': users[u]['email'],
+                    'surveylist': newArray
+                  }, function(error) {
+                    if (error) {
+                      alert("Data was not saved!");
+                    } else {
+                      console.log("Data saved successfully");
+                    }
+                  });
+                }
+                break;
+              }
+            }
+
+            // assume successful saving at this point
+            this.savingFlag = true;
+            this.navCtrl.pop();
+
+             // pop the templates-list page
+            if(this.navParams.get('surveyFromTemplate')){
+              this.navCtrl.pop();
+            }
+
+            // redirect to survey-list: showing all surveys
+            this.navCtrl.parent.select(1);
+          }else{
+            this.showSavingPrompt(false);
+          }
       }catch(err){
         console.log("Unable to load data. No Internet Connection. OR there is a problem.");
+        this.showSavingPrompt(false);
       }
     }
-
-    // SAVING ENTIRE SURVEY ON LOCAL DB
-    // this.storage.set('surveys', this.surveys).then((val) =>{});
-
-
-    // redirect to survey-list: showing all surveys
-    this.navCtrl.pop();
-    this.navCtrl.parent.select(1);
   }
 
   deleteQuestion(q_id){
@@ -322,7 +347,7 @@ export class CreateSurveyPage {
     this.checkAllChanges();
 
     // here you can use other vars to see if there are reasons we want to keep user in this page:
-    if (!this.userCanLeave && !this.enteringQuestionPage) {
+    if (!this.userCanLeave && !this.enteringQuestionPage && !this.savingFlag) {
       return new Promise((resolve, reject) => {
         let alert = this.alertCtrl.create({
           title: 'Changes made',
@@ -332,7 +357,6 @@ export class CreateSurveyPage {
               text: "Don't Save",
               handler: () => {
                 console.log("User didn't saved data");
-                // do saving logic
                 this.userCanLeave = true;
                 resolve();
               }
@@ -361,6 +385,49 @@ export class CreateSurveyPage {
         alert.present();
       });
     } else { return true }
+  }
+
+  saveAsDraft(){
+    this.navCtrl.pop();
+  }
+
+  showSavingPrompt(saveFromTop){
+    return new Promise((resolve, reject) => {
+      let alert = this.alertCtrl.create({
+        title: 'Error saving survey',
+        message: 'Connection timeout.',
+        buttons: [
+          {
+            text: "Try again",
+            handler: () => {
+              if(saveFromTop){
+                this.saveChanges();
+              }else{
+                this.saveToUserSurveyList();
+              }
+              resolve();
+            }
+          },
+          {
+            text: 'Save as Draft',
+            handler: () => {
+              this.userCanLeave = true;
+              this.saveAsDraft();
+              resolve();
+            }
+          },
+          {
+            text: "Do'nt Save",
+            role: 'cancel',
+            handler: () => {
+              this.userCanLeave = true;
+              reject();
+            }
+          },
+        ]
+      });
+      alert.present();
+    });
   }
 
 }
