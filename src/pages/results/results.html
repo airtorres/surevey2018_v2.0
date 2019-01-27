@@ -33,7 +33,7 @@
 
 		<div *ngIf="question['type'] == 'multipleChoice' || question['type'] == 'checkbox' || question['type'] == 'date' || question['type'] == 'dropdown' " id="graphResult_{{idx}}">
 		
-			<ion-toolbar style="padding: 0 30px; display: none;" id="opt_{{idx}}">
+			<ion-toolbar style="display: none;" id="opt_{{idx}}">
 				<ion-buttons end>
 					<button icon-start item-end clear ion-button large (click)="closeResult(idx)">
 						<ion-icon name="close"></ion-icon> Close
