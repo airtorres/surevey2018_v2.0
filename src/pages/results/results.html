@@ -54,7 +54,7 @@
 		<div *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' " id="openAnsDiv_{{idx}}" style="display: none; padding-left: 16px;">
 			List of Answers:
 			<ul>
-				<li *ngFor="let ans of openAnswers">{{ ans }}</li>
+				<li *ngFor="let ans of openAnswers[idx]">{{ ans }}</li>
 			</ul>
 		</div>
 	</div>

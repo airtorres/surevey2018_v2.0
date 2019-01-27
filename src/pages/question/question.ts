@@ -23,12 +23,14 @@ export class QuestionPage {
     'type' : '',
     'message': '',
     'options' : [],
-    'isRequired': false
+    'isRequired': true
   };
+
+  deleteFirstOptFlag = false;
 
 	public type;
   public anArray = [];
-  isRequired = false;
+  isRequired = true;
 
  	constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController) {
   		this.type = this.navParams.get('type');
@@ -66,13 +68,13 @@ export class QuestionPage {
     if (this.type == 'multipleChoice' || this.type == 'checkbox' || this.type == 'dropdown'){
       console.log('this.anArray', this.anArray);
 
-      if (this.type == 'multipleChoice'){
+      if (this.type == 'multipleChoice' && !this.deleteFirstOptFlag){
         this.thisQuestion['options'][0] = this.firstOpt_multipleChoice.value;
       }
-      else if (this.type == 'checkbox'){
+      else if (this.type == 'checkbox' && !this.deleteFirstOptFlag){
         this.thisQuestion['options'][0] = this.firstOpt_checkbox.value;
       }
-      else if (this.type == 'dropdown'){
+      else if (this.type == 'dropdown' && !this.deleteFirstOptFlag){
         this.thisQuestion['options'][0] = this.firstOpt_dropdown.value;
       }
 
@@ -102,6 +104,15 @@ export class QuestionPage {
 
   addMoreOption(){
     this.anArray? this.anArray.push({'value':''}):'';
+  }
+
+  removeOption(idx){
+    if (idx == 'firstOpt_dropdown' || idx == 'firstOpt_checkbox' || idx == 'firstOpt_multipleChoice'){
+      this.deleteFirstOptFlag = true;
+      document.getElementById(idx+'_div').style.display = 'none';
+    }else{
+      this.anArray.splice(idx,1);
+    }
   }
 
   public ionViewWillLeave() {

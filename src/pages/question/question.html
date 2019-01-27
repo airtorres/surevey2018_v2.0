@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{type}}</ion-title>
+    <ion-title>Edit Question</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -30,43 +30,36 @@
 		</ion-item>
 
 <!-- MULTIPLE CHOICE -->
-    <ion-list radio-group *ngIf="type == 'multipleChoice'" style="margin-top: 5px;">
-      <ion-item-group inline-block>
+    <ion-list radio-group *ngIf="type == 'multipleChoice'" style="margin-top: 5px;margin-bottom: 10px;">
+      <ion-item-group inline-block id="firstOpt_multipleChoice_div">
         <ion-item style="width: 85%;" float-left>
           <ion-radio item-left disabled></ion-radio>
           <ion-input type="text" placeholder="Option" id="firstOpt_multipleChoice" class="multipleChoice_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_multipleChoice></ion-input>
         </ion-item>
-        <button ion-button float-right icon-only clear>
+        <button ion-button float-right icon-only clear (click)="removeOption('firstOpt_multipleChoice')">
           <ion-icon name="close"></ion-icon>
         </button>
       </ion-item-group>
 
-      <ion-item-group inline-block *ngFor="let att of anArray; let idx = index" >
+      <ion-item-group inline-block *ngFor="let att of anArray; let idx = index">
   	    <ion-item style="width: 85%;" float-left>
   	    	<ion-radio item-left disabled></ion-radio>
   	    	<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="multipleChoice_options"></ion-input>
   	    </ion-item>
-        <button ion-button float-right icon-only clear>
+        <button ion-button float-right icon-only clear (click)="removeOption(idx)">
           <ion-icon name="close"></ion-icon>
         </button>
-      </ion-item-group>
-
-      <div padding>
-        <button ion-button (click)="addMoreOption()" block style="border-radius: 20px; margin-top: 20px;">
-          + Add option
-        </button>
-      </div>
-      
+      </ion-item-group>      
     </ion-list>
 
 <!-- CHECKBOX -->
-  	<ion-list *ngIf="type == 'checkbox'" style="margin-top: 5px;">
-      <ion-item-group inline-block>
+  	<ion-list *ngIf="type == 'checkbox'" style="margin-top: 5px;margin-bottom: 10px;">
+      <ion-item-group inline-block id="firstOpt_checkbox_div">
         <ion-item style="width: 85%;" float-left>
           <ion-input type="text" placeholder="Option" id="firstOpt_checkbox" class="checkbox_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_checkbox></ion-input>
           <ion-checkbox disabled></ion-checkbox>
         </ion-item>
-        <button ion-button float-right icon-only clear>
+        <button ion-button float-right icon-only clear (click)="removeOption('firstOpt_checkbox')">
           <ion-icon name="close"></ion-icon>
         </button>
       </ion-item-group>
@@ -76,27 +69,20 @@
        		<ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="checkbox_options"></ion-input>
       		<ion-checkbox disabled></ion-checkbox>
      		</ion-item>
-        <button ion-button float-right icon-only clear>
+        <button ion-button float-right icon-only clear (click)="removeOption(idx)">
           <ion-icon name="close"></ion-icon>
         </button>
       </ion-item-group>
-
-      <div padding>
-        <button ion-button (click)="addMoreOption()" block style="border-radius: 20px; margin-top: 20px;">
-          + Add option
-        </button>
-      </div>
-
   	</ion-list>
 
 <!-- DROPDOWN -->
-	<ion-list radio-group *ngIf="type == 'dropdown'" style="margin-top: 5px;">
-      <ion-item-group inline-block>
+	<ion-list radio-group *ngIf="type == 'dropdown'" style="margin-top: 5px;margin-bottom: 10px;">
+      <ion-item-group inline-block id="firstOpt_dropdown_div">
         <ion-item style="width: 85%;" float-left>
           <ion-label>1. </ion-label>
           <ion-input type="text" placeholder="Option" id="firstOpt_dropdown" class="dropdown_options" value="{{ thisQuestion['options'][0] }}" #firstOpt_dropdown></ion-input>
         </ion-item>
-        <button ion-button float-right icon-only clear>
+        <button ion-button float-right icon-only clear (click)="removeOption('firstOpt_dropdown')">
           <ion-icon name="close"></ion-icon>
         </button>
       </ion-item-group>
@@ -106,17 +92,10 @@
           <ion-label>{{ idx+2 }}</ion-label>
           <ion-input type="text" placeholder="Option" [(ngModel)]="anArray[idx].value" class="dropdown_options"></ion-input>
         </ion-item>
-        <button ion-button float-right icon-only clear>
+        <button ion-button float-right icon-only clear (click)="removeOption(idx)">
           <ion-icon name="close"></ion-icon>
         </button>
-      </ion-item-group>
-
-      <div padding>
-        <button ion-button (click)="addMoreOption()" block style="border-radius: 20px; margin-top: 20px;">
-          + Add option
-        </button>
-      </div>
-      
+      </ion-item-group>      
     </ion-list>
 
 <!-- DATE -->
@@ -131,13 +110,19 @@
 		<ion-datetime displayFormat= "HH:mm" disabled #answerTime></ion-datetime>
 	</ion-item>
 
-  	<ion-item>
-    	<ion-label>Required</ion-label>
-    	<ion-toggle [(ngModel)]="isRequired"></ion-toggle>
-  	</ion-item>
+  <div padding *ngIf="type == 'dropdown' || type == 'multipleChoice' || type == 'checkbox'" >
+    <button ion-button (click)="addMoreOption()" block style="border-radius: 20px; margin-top: 30px;">
+      + Add option
+    </button>
+  </div>
 
-  	<ion-buttons color="gray" end>
-     	<button ion-button clear (click)="closeQuestionModal()">Cancel</button>
-      	<button ion-button primary (click)="addQuestion()">Add</button>
-  	</ion-buttons>
+	<ion-item>
+  	<ion-label>Required</ion-label>
+  	<ion-toggle [(ngModel)]="isRequired"></ion-toggle>
+	</ion-item>
+
+	<ion-buttons color="gray" end>
+   	<button ion-button clear (click)="closeQuestionModal()">Cancel</button>
+    	<button ion-button primary (click)="addQuestion()" [disabled]="!(question? ((question.value.length<3)? false: true):false)">Add</button>
+	</ion-buttons>
 </ion-content>

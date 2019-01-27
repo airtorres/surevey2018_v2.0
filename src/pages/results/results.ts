@@ -33,7 +33,7 @@ export class ResultsPage {
   questions = [];
   
   responses = [];
-  openAnswers = [];
+  openAnswers = {};
 
   results = [];
 
@@ -127,10 +127,10 @@ export class ResultsPage {
 	  	}
   	}
   	else{
-  		this.openAnswers = [];
+  		this.openAnswers[idx] = [];
   		for (var ans in this.responses){
   			if(this.responses[ans]['answers'][idx]){
-  				this.openAnswers.push(this.responses[ans]['answers'][idx]);
+  				this.openAnswers[idx].push(this.responses[ans]['answers'][idx]);
   			}
   		}
 
