@@ -82,8 +82,7 @@ export class SignupPage {
     })
     .catch( function(error) {
       console.log("got an error:", error);
-      // only temporary alert. Show error later.
-      alert(error.message);
+      document.getElementById('unAbleSignup_div').style.display = "block";
     });
   }
 

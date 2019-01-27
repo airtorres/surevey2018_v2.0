@@ -3,8 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { CreateSurveyPage } from '../create-survey/create-survey';
 
-import * as firebase from 'firebase/app';
-import 'firebase/database';
 import { Storage } from '@ionic/storage';
 
 @IonicPage()
@@ -19,34 +17,20 @@ export class TemplateListPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage) {
 
-    // load built-in surveys from firebase
+    // load the built-in survey templates from local DB
     try{
-      const templateRef:firebase.database.Reference = firebase.database().ref('/built_in_templates');
-      templateRef.on('value', templateSnapshot => {
+      this.storage.get("built_in_templates").then( templates => {
         this.built_in_templates = [];
-        var tempRef = templateSnapshot.val();
-        for ( var temp in tempRef){
-          this.built_in_templates.push(tempRef[temp]);
+        for ( var temp in templates){
+          this.built_in_templates.push(templates[temp]);
         }
-
-        // store to local storage
-        this.storage.set('built_in_templates', this.built_in_templates); 
-      });
-    }catch(err){
-      console.log("Unable to load data. No Internet Connection.");
-
-      // load the built-in survey templates from local DB
-      try{
-        this.storage.get("built_in_templates").then( templates => {
-          this.built_in_templates = [];
-          for ( var temp in templates){
-            this.built_in_templates.push(templates[temp]);
-          }
-        });
-      }catch (e){
+      }).catch( error => {
         console.log("Problems with built_in_templates in Local Storage. ");
-      }
+      });
+    }catch (e){
+      console.log("Problems with built_in_templates in Local Storage. ");
     }
+
   }
 
   ionViewDidLoad() {
