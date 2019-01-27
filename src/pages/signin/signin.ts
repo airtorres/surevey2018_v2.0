@@ -25,12 +25,25 @@ export class SigninPage {
   @ViewChild('email') email;
   @ViewChild('password') password;
 
-  isInvalidLogin = false;
+  usr;
+  pswd;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private formbuilder: FormBuilder,
     private fire: AngularFireAuth,
     private storage: Storage) {
+
+    // used for offline login
+    try{
+      this.storage.get('currentUser').then( currUser => {
+          this.usr = currUser;
+      });
+      this.storage.get('currentUserPSWD').then( cuurrpswd => {
+        this.pswd = cuurrpswd;
+      });
+    }catch(e){
+      console.log("Error logging in using localDB");
+    }
 
     let EMAILPATTERN = /^[a-z0-9][a-z0-9!#$%&'*+\/=?^_`{|}~.-]*\@[a-z0-9]+\.[a-z0-9]+(\.[a-z0-9]+)*$/i;
 
@@ -52,12 +65,30 @@ export class SigninPage {
   	this.navCtrl.setRoot(MyAppPage);
   }
 
+  showInvalidLogin(){
+    try{
+      document.getElementById('invalidLogin_div').style.display = "block";
+    }catch(e){}
+  }
+
+  logInUsingLocalStorage(){
+    if( this.usr == this.email.value && this.pswd == this.password.value){
+      this.navigateToHome();
+    }
+    else{
+      this.showInvalidLogin();
+    }
+  }
+
   signin(){
-    // var isInvalid = false;
     try{
       this.fire.auth.signInWithEmailAndPassword(this.email.value, this.password.value)
       .then(data => {
         console.log("Data got:\n", data);
+
+        try{
+          document.getElementById('invalidLogin_div').style.display = "none";
+        }catch(e){}
 
         // for offline login
         this.storage.set('currentUser', this.email.value);
@@ -65,32 +96,17 @@ export class SigninPage {
 
         this.navigateToHome();
       })
-      .catch( function(error) {
+      .catch( (error) => {
         console.log("got an error:", error);
+        if (error.code == 'auth/network-request-failed'){
+          this.logInUsingLocalStorage();
+        }
+        else if(error.code == 'auth/wrong-password' || error.code == 'auth/user-not-found' || error.code == 'auth/invalid-email'){
+          this.showInvalidLogin();
+        }
       });
     }catch (e){
-      var usr = '';
-      var pswd = '';
-      this.storage.get('currentUser').then( currUser => {
-        usr = currUser;
-      });
-      this.storage.get('currentUserPSWD').then( cuurrpswd => {
-        pswd = cuurrpswd;
-      });
-
-      if( usr == this.email.value && pswd == this.password.value){
-        this.navigateToHome();
-      }
-      else{
-        // isInvalid = true;
-        alert(e.message);
-      }
+      this.logInUsingLocalStorage();
     }
-
-    // BAKIT DI GUMAGANA!!! HUAHUAHUA
-
-    // console.log(isInvalid);
-    // this.isInvalidLogin = isInvalid;
   }
-
 }

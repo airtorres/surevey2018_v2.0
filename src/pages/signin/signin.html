@@ -18,6 +18,10 @@
           <ion-input block type="text" placeholder="Email" #email formControlName="email"></ion-input>
         </ion-row>
 
+        <ion-row style="margin: 5px 0;">
+          <ion-input block type="password" placeholder="Password" #password formControlName="password"></ion-input>
+        </ion-row>
+
         <p class="errorMessage" *ngIf="!authSignin.controls.email.hasError('required') && authSignin.controls.email.hasError('pattern') && authSignin.controls.email.dirty">
           Please enter valid email
         </p>
@@ -25,10 +29,6 @@
         <p class="errorMessage" *ngIf="authSignin.controls.email.hasError('required') && authSignin.controls.email.dirty">
           Please enter email
         </p>
-
-        <ion-row style="margin: 5px 0;">
-          <ion-input block type="password" placeholder="Password" #password formControlName="password"></ion-input>
-        </ion-row>
 
         <p class="errorMessage" *ngIf="authSignin.controls.password.hasError('required') && authSignin.controls.password.dirty">
           Please enter password.
@@ -38,7 +38,7 @@
           Password should be at least 6 characters
         </p>
 
-        <p class="errorMessage" *ngIf="isInvalidLogin">
+        <p class="errorMessage" id="invalidLogin_div" style="display: none">
           Email and password does not match!
         </p>
       </ion-grid>
