@@ -99,21 +99,29 @@ export class SurveyListPage {
         const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.mySurveys_ids[i]);
         mysurv.on('value', mysurvSnapshot => {
           temp = mysurvSnapshot.val();
-          temp['type'] = '';
-          temp['type'] = 'mySurvey';
-          this.mySurveys.push(temp);
-          this.all_surveys.push(temp);
+          if(temp){
+            temp['type'] = '';
+            temp['type'] = 'mySurvey';
+            this.mySurveys.push(temp);
+            this.all_surveys.push(temp);
+          }else{
+            this.mySurveys_ids.splice(i,1);
+          }
         });
       }
 
       for(i in this.survey_invites_ids){
         const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.survey_invites_ids[i]);
         mysurv.on('value', mysurvSnapshot => {
-          temp = mysurvSnapshot.val();
-          temp['type'] = '';
-          temp['type'] = 'invites';
-          this.survey_invites.push(temp);
-          this.all_surveys.push(temp);
+          if(temp){
+            temp = mysurvSnapshot.val();
+            temp['type'] = '';
+            temp['type'] = 'invites';
+            this.survey_invites.push(temp);
+            this.all_surveys.push(temp);
+          }else{
+            this.survey_invites_ids.splice(i,1);
+          }
         });
       }
 

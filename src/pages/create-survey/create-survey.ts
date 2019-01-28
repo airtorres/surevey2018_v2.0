@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 
 import { QuestionPage } from '../question/question';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFireDatabase } from '@angular/fire/database';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
 
@@ -60,7 +59,6 @@ export class CreateSurveyPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private alertCtrl: AlertController,
     private fire: AngularFireAuth,
-    private fireDB: AngularFireDatabase,
     private storage: Storage) {
 
     // getting the survey to edit: from survey-summary
@@ -179,12 +177,16 @@ export class CreateSurveyPage {
           thisUser = userToSurveySnapshot.val();
         });
 
+        console.log(thisUser);
+
         if(thisUser['surveylist']){
           thisUser['surveylist'].push(thisSurveyId);
         }else{
           thisUser['surveylist'] = [];
           thisUser['surveylist'].push(thisSurveyId);
         }
+
+        thisUser['email'] = this.fire.auth.currentUser.email;
 
         firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid).set(thisUser);
         // assume successful saving at this point
@@ -201,6 +203,7 @@ export class CreateSurveyPage {
 
       }catch(err){
         console.log("Unable to load data. No Internet Connection. OR there is a problem.");
+        console.log(err);
         this.showSavingPrompt(false);
       }
     }
