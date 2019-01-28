@@ -44,12 +44,12 @@ export class SurveySummaryPage {
     this.s_id = this.thisSurvey['id'];
 
     var date = new Date(this.thisSurvey['created_at']);
-    date = date? ((date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear()):null;
-    this.created_date =  date;
+    var dateVal = date? ((date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear()):null;
+    this.created_date =  dateVal;
 
     date = new Date(this.thisSurvey['updated_at']);
-    date = date? ((date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear()):null;
-    this.updated_date =  date;
+    dateVal = date? ((date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear()):null;
+    this.updated_date =  dateVal;
 
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
@@ -100,12 +100,12 @@ export class SurveySummaryPage {
     const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/');
     surv.on('value', survSnapshot => {
       userSurvey = survSnapshot.val();
-    }).then( () => {
-      for ( var i in userSurvey){
-        if ( userSurvey[i]['email'] == this.currUser){
-          firebase.database().ref('/user_surveys/'+i+'/surveylist/').removeValue(this.id);
-        }
-      }
+    // }).then( () => {
+    //   for ( var i in userSurvey){
+    //     if ( userSurvey[i]['email'] == this.currUser){
+    //       // firebase.database().ref('/user_surveys/'+i+'/surveylist/').removeValue(this.id);
+    //     }
+    //   }
     });
 
     // this.storage.get('surveys').then((s) => {

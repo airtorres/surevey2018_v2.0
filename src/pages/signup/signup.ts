@@ -8,6 +8,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 import * as firebase from 'firebase/app';
 import 'firebase/database'
+import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the SignupPage page.
@@ -29,6 +30,7 @@ export class SignupPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private formbuilder: FormBuilder,
+    private storage: Storage,
     private fire: AngularFireAuth) {
 
     let EMAILPATTERN = /^[a-z0-9][a-z0-9!#$%&'*+\/=?^_`{|}~.-]*\@[a-z0-9]+\.[a-z0-9]+(\.[a-z0-9]+)*$/i;
@@ -78,13 +80,17 @@ export class SignupPage {
       }
 
       try{
-        firebase.database().ref("/users/"+id).set(user);
+        firebase.database().ref("/users/"+id).set(user).then( ()=>{});
         firebase.database().ref("/user_surveys/"+id).set(user_survey);
-      }catch(e){
+
+        // for offline login
+        this.storage.set('currentUser', this.email.value);
+        this.storage.set('currentUserPSWD', this.password.value);
+        this.navigateToHome();
+      }catch(error){
         console.log("got an error:", error);
         document.getElementById('unAbleSignup_div').style.display = "block";
       }
-      this.navigateToHome();
     })
     .catch( function(error) {
       console.log("got an error:", error);

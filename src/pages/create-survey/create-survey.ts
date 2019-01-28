@@ -49,7 +49,7 @@ export class CreateSurveyPage {
     'end_date': '',
     'isActive': true, //true/false
     'questions': [],
-    'key':''
+    'id':''
   };
   questions = [];
   questions_with_IDs = [];
@@ -152,12 +152,11 @@ export class CreateSurveyPage {
       this.survey['created_at'] = new Date().toISOString();
 
       try{
+        // generate ID for this survey
         var newPostKey = firebase.database().ref().child('surveys').push().key;
-        this.survey['key'] = '';
-        this.survey['key'] = newPostKey;
-
-        console.log(this.survey);
-        this.fireDB.list("/surveys").push(this.survey);
+        this.survey['id'] = newPostKey;
+        firebase.database().ref("/surveys/"+newPostKey).set(this.survey);
+        this.s_id = newPostKey;
       }catch(e){
         console.log("There's a problem pushing the survey.");
         this.showSavingPrompt(true);
@@ -171,82 +170,35 @@ export class CreateSurveyPage {
     if(this.push_flag_for_survey){
       // load surveys from firebase
       try{
-        var thisSurveyId;
-        var users = [];
-
-        // getting the survey id
-        const allSurveysRef:firebase.database.Reference = firebase.database().ref('/surveys');
-        allSurveysRef.on('value', allSurveysSnapshot => {
-          var all = allSurveysSnapshot.val();
-          for ( var surv in all){
-            if( this.survey['key'] == all[surv]['key']){
-              thisSurveyId = surv;
-              break;
-            }
-          }
-        });
+        var thisSurveyId = this.s_id;
+        var thisUser = {};
 
         // saving survey id to user's survey list
-        const userToSurveyRef:firebase.database.Reference = firebase.database().ref('/user_surveys');
+        const userToSurveyRef:firebase.database.Reference = firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid);
         userToSurveyRef.on('value', userToSurveySnapshot => {
-          users = userToSurveySnapshot.val();  
+          thisUser = userToSurveySnapshot.val();
         });
 
-        if(users.length != 0){
-          for ( var u in users){
-              if (this.fire.auth.currentUser.email == users[u]['email']){
-                var newArray = [];
-                if(users[u]['surveylist']){
-                  const temp:firebase.database.Reference = firebase.database().ref("/user_surveys/"+u).child('surveylist');
-                  temp.on('value', tempSnap => {
-                    var arr = tempSnap.val();
-                    for ( var a in arr ){
-                      newArray.push(arr[a]);
-                    }
-                    newArray[arr.length] = thisSurveyId;
-                  });
+        if(thisUser['surveylist']){
+          thisUser['surveylist'].push(thisSurveyId);
+        }else{
+          thisUser['surveylist'] = [];
+          thisUser['surveylist'].push(thisSurveyId);
+        }
 
-                  firebase.database().ref("/user_surveys/"+u).set({
-                    'email': users[u]['email'],
-                    'surveylist': newArray
-                  }, function(error) {
-                    if (error) {
-                      alert("Data was not saved!");
-                    } else {
-                      console.log("Data saved successfully");
-                    }
-                  });
-                }else{
-                  newArray = [thisSurveyId];
-                  firebase.database().ref("/user_surveys/"+u).set({
-                    'email': users[u]['email'],
-                    'surveylist': newArray
-                  }, function(error) {
-                    if (error) {
-                      alert("Data was not saved!");
-                    } else {
-                      console.log("Data saved successfully");
-                    }
-                  });
-                }
-                break;
-              }
-            }
+        firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid).set(thisUser);
+        // assume successful saving at this point
+        this.savingFlag = true;
+        this.navCtrl.pop();
 
-            // assume successful saving at this point
-            this.savingFlag = true;
-            this.navCtrl.pop();
+         // pop the templates-list page
+        if(this.navParams.get('surveyFromTemplate')){
+          this.navCtrl.pop();
+        }
 
-             // pop the templates-list page
-            if(this.navParams.get('surveyFromTemplate')){
-              this.navCtrl.pop();
-            }
+        // redirect to survey-list: showing all surveys
+        this.navCtrl.parent.select(1);
 
-            // redirect to survey-list: showing all surveys
-            this.navCtrl.parent.select(1);
-          }else{
-            this.showSavingPrompt(false);
-          }
       }catch(err){
         console.log("Unable to load data. No Internet Connection. OR there is a problem.");
         this.showSavingPrompt(false);

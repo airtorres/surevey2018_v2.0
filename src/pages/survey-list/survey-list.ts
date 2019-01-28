@@ -75,28 +75,23 @@ export class SurveyListPage {
   fetchSurveys(){
     // fetch mysurveys from firebase
     try{
-      var user_to_survey = [];
-      const userSurveyRef:firebase.database.Reference = firebase.database().ref('/user_surveys');
+      var survs = {};
+      const userSurveyRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid);
       userSurveyRef.on('value', userToSurveySnapshot => {
-        user_to_survey = userToSurveySnapshot.val();
+        survs = userToSurveySnapshot.val();
       });
 
       // fetching mySurveys IDs
-      for (var usr in user_to_survey){
-        if (this.fire.auth.currentUser.email == user_to_survey[usr]['email']){
-          if(user_to_survey[usr]['surveylist']){
-            this.mySurveys_ids = user_to_survey[usr]['surveylist'];
-          }
-        }
+      if(survs['surveylist']){
+        this.mySurveys_ids = survs['surveylist'];
       }
       // fetching mySurveyInvitations IDs
-      for (var inv in user_to_survey){
-        if (this.fire.auth.currentUser.email == user_to_survey[inv]['email']){
-          if(user_to_survey[inv]['invitations']){
-            this.survey_invites_ids = user_to_survey[inv]['invitations'];
-          }
-        }
+      if(survs['invitations']){
+        this.survey_invites_ids = survs['invitations'];
       }
+
+      console.log(this.mySurveys_ids);
+      console.log(this.survey_invites_ids);
 
       var i;
       var temp = {};
@@ -104,8 +99,6 @@ export class SurveyListPage {
         const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.mySurveys_ids[i]);
         mysurv.on('value', mysurvSnapshot => {
           temp = mysurvSnapshot.val();
-          temp['id'] = '';
-          temp['id'] = this.mySurveys_ids[i];
           temp['type'] = '';
           temp['type'] = 'mySurvey';
           this.mySurveys.push(temp);
@@ -117,8 +110,6 @@ export class SurveyListPage {
         const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.survey_invites_ids[i]);
         mysurv.on('value', mysurvSnapshot => {
           temp = mysurvSnapshot.val();
-          temp['id'] = '';
-          temp['id'] = this.survey_invites_ids[i];
           temp['type'] = '';
           temp['type'] = 'invites';
           this.survey_invites.push(temp);
