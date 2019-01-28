@@ -6,6 +6,8 @@ import { CreateSurveyPage } from '../create-survey/create-survey';
 import { ResultsPage } from '../results/results';
 import { AnswerSurveyPage } from '../answer-survey/answer-survey';
 
+import * as firebase from 'firebase/app';
+import 'firebase/database';
 import { Storage } from '@ionic/storage';
 
 /**
@@ -90,49 +92,65 @@ export class SurveySummaryPage {
   }
 
   confirmDeleteSurvey(){
-    this.storage.get('surveys').then((s) => {
-      if (s){
-         for ( var surv_id in s['surveys']){
-            // console.log(s['surveys'][surv]);
+    const thisSurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.s_id);
+    thisSurv.remove();
 
-            if( surv_id == this.s_id){
-
-              // DO NOT DELETE SURVEY on surveys? The ids affecting on the surveys listed on the user
-              // TRADEOFFS: Storage VS Speed (of updating IDs on ALL 'surveys' and 'invitations' array)
-              // s['surveys'].splice(surv_id, 1);
-              // this.storage.set('surveys', s).then((val) =>{});
-
-              // removing survey_ids in users
-              this.storage.get('users').then((u) => {
-                for ( var i in u['users']){
-                  if (u['users'][i]['email'] == this.currUser){
-                    for ( var survs in u['users'][i]['surveys']){
-                      if( u['users'][i]['surveys'][survs] == this.s_id){
-                        u['users'][i]['surveys'].splice(survs, 1);
-                      }
-                    }
-                  }
-                  else{
-                    for ( var invs in u['users'][i]['invitations']){
-                      if( u['users'][i]['invitations'][invs] == this.s_id){
-                        u['users'][i]['invitations'].splice(invs, 1);
-                      }
-                    }
-                  }
-                }
-
-                // update users
-                this.storage.set('users', u).then((data) => {
-                  return
-                });
-              });
-
-
-              break;
-            }
-         }
+    // deleting survey id from user_to_survey
+    var userSurvey = {};
+    const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/');
+    surv.on('value', survSnapshot => {
+      userSurvey = survSnapshot.val();
+    }).then( () => {
+      for ( var i in userSurvey){
+        if ( userSurvey[i]['email'] == this.currUser){
+          firebase.database().ref('/user_surveys/'+i+'/surveylist/').removeValue(this.id);
         }
+      }
     });
+
+    // this.storage.get('surveys').then((s) => {
+    //   if (s){
+    //      for ( var surv_id in s['surveys']){
+    //         // console.log(s['surveys'][surv]);
+
+    //         if( surv_id == this.s_id){
+
+    //           // DO NOT DELETE SURVEY on surveys? The ids affecting on the surveys listed on the user
+    //           // TRADEOFFS: Storage VS Speed (of updating IDs on ALL 'surveys' and 'invitations' array)
+    //           // s['surveys'].splice(surv_id, 1);
+    //           // this.storage.set('surveys', s).then((val) =>{});
+
+    //           // removing survey_ids in users
+    //           this.storage.get('users').then((u) => {
+    //             for ( var i in u['users']){
+    //               if (u['users'][i]['email'] == this.currUser){
+    //                 for ( var survs in u['users'][i]['surveys']){
+    //                   if( u['users'][i]['surveys'][survs] == this.s_id){
+    //                     u['users'][i]['surveys'].splice(survs, 1);
+    //                   }
+    //                 }
+    //               }
+    //               else{
+    //                 for ( var invs in u['users'][i]['invitations']){
+    //                   if( u['users'][i]['invitations'][invs] == this.s_id){
+    //                     u['users'][i]['invitations'].splice(invs, 1);
+    //                   }
+    //                 }
+    //               }
+    //             }
+
+    //             // update users
+    //             this.storage.set('users', u).then((data) => {
+    //               return
+    //             });
+    //           });
+
+
+    //           break;
+    //         }
+    //      }
+    //     }
+    // });
 
     this.navCtrl.pop();
   }

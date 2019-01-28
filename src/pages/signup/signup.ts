@@ -5,7 +5,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SigninPage } from '../signin/signin';
 import { WelcomePage } from '../welcome/welcome';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFireDatabase } from '@angular/fire/database';
+
+import * as firebase from 'firebase/app';
+import 'firebase/database'
 
 /**
  * Generated class for the SignupPage page.
@@ -27,8 +29,7 @@ export class SignupPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private formbuilder: FormBuilder,
-    private fire: AngularFireAuth,
-    private fireDB: AngularFireDatabase) {
+    private fire: AngularFireAuth) {
 
     let EMAILPATTERN = /^[a-z0-9][a-z0-9!#$%&'*+\/=?^_`{|}~.-]*\@[a-z0-9]+\.[a-z0-9]+(\.[a-z0-9]+)*$/i;
     let USERNAMEPATTERN = /^[a-z]+[a-z0-9!#$%&'*+\/=?^_`{|}~.-]*/i;
@@ -54,6 +55,7 @@ export class SignupPage {
     this.fire.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
     .then(data => {
       console.log("Data got:\n", data);
+      var id = this.fire.auth.currentUser.uid;
 
       var user = {
         'username': this.username.value,
@@ -75,9 +77,13 @@ export class SignupPage {
         'invitations': []
       }
 
-      this.fireDB.list("/users").push(user);
-      this.fireDB.list("/user_surveys").push(user_survey);
-
+      try{
+        firebase.database().ref("/users/"+id).set(user);
+        firebase.database().ref("/user_surveys/"+id).set(user_survey);
+      }catch(e){
+        console.log("got an error:", error);
+        document.getElementById('unAbleSignup_div').style.display = "block";
+      }
       this.navigateToHome();
     })
     .catch( function(error) {
