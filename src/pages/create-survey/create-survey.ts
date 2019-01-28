@@ -40,7 +40,6 @@ export class CreateSurveyPage {
   savingFlag = false;
   push_flag_for_survey = true;
 
-  surveys = {};
   survey = {
     'title':'untitled survey',
     'description':'No Description to show.',
@@ -100,10 +99,6 @@ export class CreateSurveyPage {
         this.reloadQuestionIDs();
     }
 
-    this.storage.get("surveys").then(value => {
-        this.surveys = value;
-    });
-
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
@@ -132,46 +127,41 @@ export class CreateSurveyPage {
     // save changes to ionic localStorage
     this.survey['title'] = this.surveyTitle.value || "untitled survey";
     this.survey['description'] = this.surveyDescription.value || "No Description to show.";
-    var date = new Date();
-    this.survey['updated_at'] = date.toString();
+    this.survey['updated_at'] = new Date().toISOString();
     this.survey['author'] = this.currUser;
     this.survey['isActive'] = true;//the survey is active upon creation
 
     this.push_flag_for_survey = true;
 
-    if(this.surveys){
-      for( var surv_id in this.surveys['surveys'] ){
-        var author = this.surveys['surveys'][surv_id]['author'];
-        if( surv_id == this.s_id && this.survey['author'] == author){
-          // replacing the survey: @editing
-          var update = new Date();
-          this.survey['updated_at'] = update.toString();
+    // For editing
+      // for( var surv_id in this.surveys['surveys'] ){
+      //   var author = this.surveys['surveys'][surv_id]['author'];
+      //   if( surv_id == this.s_id && this.survey['author'] == author){
+      //     // replacing the survey: @editing
+      //     var update = new Date();
+      //     this.survey['updated_at'] = update.toISOString();
 
-          this.surveys['surveys'][surv_id] = this.survey;
+      //     this.surveys['surveys'][surv_id] = this.survey;
 
-          this.push_flag_for_survey = false;
-          break;
-        }
+      //     this.push_flag_for_survey = false;
+      //     break;
+      //   }
+      // }
+
+    if (this.push_flag_for_survey){
+      this.survey['created_at'] = new Date().toISOString();
+
+      try{
+        var newPostKey = firebase.database().ref().child('surveys').push().key;
+        this.survey['key'] = '';
+        this.survey['key'] = newPostKey;
+
+        console.log(this.survey);
+        this.fireDB.list("/surveys").push(this.survey);
+      }catch(e){
+        console.log("There's a problem pushing the survey.");
+        this.showSavingPrompt(true);
       }
-
-      if (this.push_flag_for_survey){
-        // JSON.parse(this.surveys['surveys'].push(this.survey));
-        try{
-          var newPostKey = firebase.database().ref().child('surveys').push().key;
-          this.survey['key'] = '';
-          this.survey['key'] = newPostKey;
-
-          console.log(this.survey);
-          this.fireDB.list("/surveys").push(this.survey);
-        }catch(e){
-          console.log("There's a problem pushing the survey.");
-          this.showSavingPrompt(true);
-        }
-      }
-    }
-    else{
-      this.surveys = {'surveys': ''};
-      this.surveys['surveys'] = [this.survey];
     }
 
     this.saveToUserSurveyList();

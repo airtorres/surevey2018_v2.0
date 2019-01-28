@@ -41,11 +41,11 @@ export class SurveySummaryPage {
     this.isActive = this.thisSurvey['isActive'];
     this.s_id = this.thisSurvey['id'];
 
-    var date = this.thisSurvey['created_at'];
+    var date = new Date(this.thisSurvey['created_at']);
     date = date? ((date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear()):null;
     this.created_date =  date;
 
-    date = this.thisSurvey['updated_at'];
+    date = new Date(this.thisSurvey['updated_at']);
     date = date? ((date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear()):null;
     this.updated_date =  date;
 

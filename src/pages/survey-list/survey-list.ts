@@ -137,8 +137,6 @@ export class SurveyListPage {
   }
 
   public ionViewWillEnter() {
-    console.log("im coming ...");
-
     this.surveys = {};
 
     this.mySurveys = [];
