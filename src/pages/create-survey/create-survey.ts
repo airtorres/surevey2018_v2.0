@@ -72,6 +72,8 @@ export class CreateSurveyPage {
 
       this.prev_title = JSON.stringify(this.survey['title']);
       this.prev_description = JSON.stringify(this.survey['description']);
+
+      this.push_flag_for_survey = false;
     }
     else if(this.navParams.get('surveyFromTemplate')){
       var survTemplate = this.navParams.get('surveyFromTemplate');
@@ -86,10 +88,13 @@ export class CreateSurveyPage {
 
       this.prev_title = JSON.stringify(this.survey['title']);
       this.prev_description = JSON.stringify(this.survey['description']);
+
+      this.push_flag_for_survey = true;
     }
     else{
       this.prev_title = '';
       this.prev_description = '';
+      this.push_flag_for_survey = true;
     }
 
     if( this.survey){
@@ -122,29 +127,11 @@ export class CreateSurveyPage {
   }
 
   saveChanges(){
-    // save changes to ionic localStorage
     this.survey['title'] = this.surveyTitle.value || "untitled survey";
     this.survey['description'] = this.surveyDescription.value || "No Description to show.";
     this.survey['updated_at'] = new Date().toISOString();
     this.survey['author'] = this.currUser;
     this.survey['isActive'] = true;//the survey is active upon creation
-
-    this.push_flag_for_survey = true;
-
-    // For editing
-      // for( var surv_id in this.surveys['surveys'] ){
-      //   var author = this.surveys['surveys'][surv_id]['author'];
-      //   if( surv_id == this.s_id && this.survey['author'] == author){
-      //     // replacing the survey: @editing
-      //     var update = new Date();
-      //     this.survey['updated_at'] = update.toISOString();
-
-      //     this.surveys['surveys'][surv_id] = this.survey;
-
-      //     this.push_flag_for_survey = false;
-      //     break;
-      //   }
-      // }
 
     if (this.push_flag_for_survey){
       this.survey['created_at'] = new Date().toISOString();
@@ -157,64 +144,81 @@ export class CreateSurveyPage {
         this.s_id = newPostKey;
       }catch(e){
         console.log("There's a problem pushing the survey.");
+        console.log(e);
+        this.showSavingPrompt(true);
+      }
+
+      this.saveToUserSurveyList();
+    }
+    // Editing survey
+    else{
+      try{
+        this.survey['updated_at'] = new Date().toISOString();
+
+        firebase.database().ref("/surveys/"+this.s_id).set(this.survey);
+        this.savingFlag = true;
+        this.navCtrl.pop();
+        // redirect to survey-list: showing all surveys
+        this.navCtrl.parent.select(1);
+      }catch(e){
+        console.log("There's a problem pushing the survey.");
+        console.log(e);
         this.showSavingPrompt(true);
       }
     }
-
-    this.saveToUserSurveyList();
   }
 
   saveToUserSurveyList(){
-    if(this.push_flag_for_survey){
-      // load surveys from firebase
-      try{
-        var thisSurveyId = this.s_id;
-        var thisUser = {};
+    // load surveys from firebase
+    try{
+      var thisSurveyId = this.s_id;
+      var thisUser = {};
 
-        // saving survey id to user's survey list
-        const userToSurveyRef:firebase.database.Reference = firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid);
-        userToSurveyRef.on('value', userToSurveySnapshot => {
-          thisUser = userToSurveySnapshot.val();
-        });
+      // saving survey id to user's survey list
+      const userToSurveyRef:firebase.database.Reference = firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid);
+      userToSurveyRef.on('value', userToSurveySnapshot => {
+        thisUser = userToSurveySnapshot.val();
+      });
 
-        console.log(thisUser);
+      console.log(thisUser);
 
-        if(thisUser['surveylist']){
-          thisUser['surveylist'].push(thisSurveyId);
-        }else{
-          thisUser['surveylist'] = [];
-          thisUser['surveylist'].push(thisSurveyId);
-        }
-
-        thisUser['email'] = this.fire.auth.currentUser.email;
-
-        firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid).set(thisUser);
-        // assume successful saving at this point
-        this.savingFlag = true;
-        this.navCtrl.pop();
-
-         // pop the templates-list page
-        if(this.navParams.get('surveyFromTemplate')){
-          this.navCtrl.pop();
-        }
-
-        // redirect to survey-list: showing all surveys
-        this.navCtrl.parent.select(1);
-
-      }catch(err){
-        console.log("Unable to load data. No Internet Connection. OR there is a problem.");
-        console.log(err);
-        this.showSavingPrompt(false);
+      if(thisUser['surveylist']){
+        thisUser['surveylist'].push(thisSurveyId);
+      }else{
+        thisUser['surveylist'] = [];
+        thisUser['surveylist'].push(thisSurveyId);
       }
+
+      thisUser['email'] = this.fire.auth.currentUser.email;
+
+      firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid).set(thisUser);
+      // assume successful saving at this point
+      this.savingFlag = true;
+      this.navCtrl.pop();
+
+       // pop the templates-list page
+      if(this.navParams.get('surveyFromTemplate')){
+        this.navCtrl.pop();
+      }
+
+      // redirect to survey-list: showing all surveys
+      this.navCtrl.parent.select(1);
+
+    }catch(err){
+      console.log("Unable to load data. No Internet Connection. OR there is a problem.");
+      console.log(err);
+      this.showSavingPrompt(false);
     }
   }
 
   deleteQuestion(q_id){
+    this.enteringQuestionPage = true;
     this.survey['questions'].splice(q_id,1);
     this.reloadQuestionIDs();
   }
 
   editQuestion(q_id){
+    this.enteringQuestionPage = true;
     this.navCtrl.push(QuestionPage, {question_data: this.survey['questions'][q_id], qID_fromEdit: q_id});
   }
 

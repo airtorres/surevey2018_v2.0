@@ -78,7 +78,13 @@ export class QuestionPage {
         this.thisQuestion['options'][0] = this.firstOpt_dropdown.value;
       }
 
-      this.thisQuestion['options'] = this.thisQuestion['options'].splice(0, 1);
+      if(this.deleteFirstOptFlag){
+        this.thisQuestion['options'] = [];
+      }else{
+        // the first value will be saved and later on appended with values from anArray
+        this.thisQuestion['options'] = this.thisQuestion['options'].splice(0, 1);
+      }
+
       for( var opt in this.anArray){
         this.thisQuestion['options'].push(this.anArray[opt]['value']);
       }
