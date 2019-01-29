@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
 
 /**
  * Generated class for the QuestionPage page.
@@ -27,31 +27,50 @@ export class QuestionPage {
   };
 
   deleteFirstOptFlag = false;
+  userCanLeave = true;
+  addingFlag = false;
+  leaveNowFlag = true;
+
+  prev_array = [];
+  prev_first_opt;
+  prev_qMsg;
+  prev_anArray = [];
 
 	public type;
   public anArray = [];
   isRequired = true;
 
- 	constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController) {
-  		this.type = this.navParams.get('type');
+ 	constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController,
+    private alertCtrl: AlertController) {
+		this.type = this.navParams.get('type');
 
-      if(this.navParams.get('question_data')){
-        console.log(this.navParams.get('question_data'));
-        this.thisQuestion = this.navParams.get('question_data');
-        this.type = this.thisQuestion['type'];
+    if(this.navParams.get('question_data')){
+      console.log(this.navParams.get('question_data'));
+      this.thisQuestion = this.navParams.get('question_data');
+      this.type = this.thisQuestion['type'];
 
-        console.log(this.thisQuestion['options'].length);
+      console.log(this.thisQuestion['options'].length);
 
-        for ( var opt = 0; opt < this.thisQuestion['options'].length; opt++ ){
-          if( opt != 0){
-            var val = {'value': this.thisQuestion['options'][opt]};
-            this.anArray.push(val);
-          }
+      for ( var opt = 0; opt < this.thisQuestion['options'].length; opt++ ){
+        if( opt != 0){
+          var val = {'value': this.thisQuestion['options'][opt]};
+          this.anArray.push(val);
         }
-
-        console.log(this.anArray);
       }
-      
+
+      console.log(this.anArray);
+    }
+
+    // storing the previous values to check the changes
+    this.prev_array = this.anArray;
+    this.prev_qMsg = this.thisQuestion? this.thisQuestion['message']: '';
+    this.prev_anArray = this.anArray;
+    if(this.type == "multipleChoice" || this.type == "checkbox" || this.type == "dropdown"){
+      this.prev_first_opt = this.thisQuestion['options'].length == 0? '':this.thisQuestion['options'][0];
+    }
+    else{
+      this.prev_first_opt = '';
+    }
   }
 
 	ionViewDidLoad() {
@@ -60,6 +79,8 @@ export class QuestionPage {
 
   addQuestion(){
     console.log("question: "+ this.question.value);
+    this.userCanLeave = true;
+    this.addingFlag = true;
 
     this.thisQuestion['type'] = this.type;
     this.thisQuestion['message'] = (this.question ? this.question.value : "Missing Question");
@@ -100,7 +121,10 @@ export class QuestionPage {
       this.navCtrl.getPrevious().data.replace_flag = true;
       this.navCtrl.getPrevious().data.qID = this.navParams.get('qID_fromEdit');
     }
-    this.navCtrl.pop();
+
+    if(this.leaveNowFlag){
+      this.navCtrl.pop();
+    }
   }
     
   closeQuestionModal() {
@@ -119,6 +143,75 @@ export class QuestionPage {
     }else{
       this.anArray.splice(idx,1);
     }
+  }
+
+  checkAllChanges(){
+    var exitFlag = false;
+
+    if(this.type == "multipleChoice" && this.prev_first_opt == this.firstOpt_multipleChoice.value
+      && this.prev_anArray == this.anArray){
+      exitFlag = true;
+    }
+    else if( this.type == "checkbox" && this.prev_first_opt == this.firstOpt_checkbox.value
+      && this.prev_anArray == this.anArray){
+      exitFlag = true;
+    }
+    else if(this.type == "dropdown" && this.prev_first_opt == this.firstOpt_dropdown.value
+      && this.prev_anArray == this.anArray){
+      exitFlag = true;
+    }
+    else if(this.type == "shortAnswer" || this.type == "longAnswer" || this.type == "date" || this.type == "time"){
+      exitFlag = true;
+    }
+
+    if (exitFlag && this.prev_qMsg == this.question.value){
+      console.log("NO CHANGES MADE.");
+      this.userCanLeave = true;
+    }else{
+      console.log("THERE ARE UNSAVED CHANGES.");
+      this.userCanLeave = false;
+    }
+  }
+
+  ionViewCanLeave() {
+    console.log("checking the page if allowed to leave ...");
+    this.checkAllChanges();
+
+    // here you can use other vars to see if there are reasons we want to keep user in this page:
+    if (!this.userCanLeave && !this.addingFlag) {
+      return new Promise((resolve, reject) => {
+        let alert = this.alertCtrl.create({
+          title: 'Changes made',
+          message: 'Do you want to save?',
+          buttons: [
+            {
+              text: "Don't Save",
+              handler: () => {
+                this.userCanLeave = true;
+                resolve();
+              }
+            },
+            {
+              text: 'Save',
+              handler: () => {
+                this.leaveNowFlag = false;
+                this.addQuestion();
+                resolve();
+              }
+            },
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+                this.userCanLeave = false;
+                reject();
+              }
+            },
+          ]
+        });
+        alert.present();
+      });
+    } else { return true }
   }
 
   public ionViewWillLeave() {
