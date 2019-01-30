@@ -107,6 +107,7 @@ export class CreateSurveyPage {
     });
 
     // storing the previous values to check the changes
+    this.enteringQuestionPage = false;
     this.prev_survey = JSON.stringify(this.survey);
     this.prev_questions = JSON.stringify(this.survey['questions']);
   }
@@ -212,7 +213,6 @@ export class CreateSurveyPage {
   }
 
   deleteQuestion(q_id){
-    this.enteringQuestionPage = true;
     this.survey['questions'].splice(q_id,1);
     this.reloadQuestionIDs();
   }
@@ -232,7 +232,7 @@ export class CreateSurveyPage {
       temp['q_id'] = q;
       this.questions_with_IDs.push(temp);
     }
-
+    this.enteringQuestionPage = false;
     console.log(this.questions_with_IDs);
   }
 

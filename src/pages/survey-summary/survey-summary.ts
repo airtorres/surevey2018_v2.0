@@ -39,7 +39,7 @@ export class SurveySummaryPage {
     private storage: Storage,
     private fire: AngularFireAuth,
     private alertCtrl: AlertController) {
-    this.thisSurvey = navParams.get('item');
+    this.thisSurvey = this.navParams.get('item');
 
     this.title = this.thisSurvey['title'];
     this.isActive = this.thisSurvey['isActive'];
