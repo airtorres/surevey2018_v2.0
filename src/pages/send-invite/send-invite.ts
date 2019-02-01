@@ -30,7 +30,6 @@ export class SendInvitePage {
 
   public s_id;
   thisSurvey = {
-    'id':'',
   	's_id':'',
   	'status':'pending' //status: cancelled/deleted/pending/incomplete/completed
   }
@@ -39,21 +38,50 @@ export class SendInvitePage {
   	private storage: Storage,
     private fire: AngularFireAuth,
   	private alertCtrl: AlertController) {
+
   	this.s_id = this.navParams.get('s_id');
 
-    // getting all users from firebase
+    this.storage.get('currentUser').then(x =>{
+      this.currUser = x;
+    });
+
+    this.checkConnection();
+  }
+
+  ionViewWillEnter(){
+  }
+
+  checkConnection(){
+    // check for Firebase connection
+    var connectFlag = false;
     try{
-      const allUsersRef:firebase.database.Reference = firebase.database().ref('/users/');
-      allUsersRef.on('value', allUsersSnapshot => {
-        this.all_users = allUsersSnapshot.val();
+      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
+      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          console.log("Getting data from Firebase...");
+          connectFlag = true;          
+        }else {
+          console.log("Error loading data from Firebase.");
+          connectFlag = false;
+        }
       });
     }catch(e){
       console.log(e);
-      this.showInternetConnectionError();
     }
 
-  	this.storage.get('currentUser').then(x =>{
-      this.currUser = x;
+    if(connectFlag){
+      this.loadUsersFromFirebase();
+    }
+    else{
+      this.showInternetConnectionError();
+    }
+  }
+
+  loadUsersFromFirebase(){
+    // getting all users from firebase
+    const allUsersRef:firebase.database.Reference = firebase.database().ref('/users/');
+    allUsersRef.on('value', allUsersSnapshot => {
+      this.all_users = allUsersSnapshot.val();
     });
 
     // getting the emails of all_users
@@ -64,9 +92,6 @@ export class SendInvitePage {
     }
   }
 
-  ionViewWillEnter(){
-  }
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad SendInvitePage');
   }
@@ -75,6 +100,15 @@ export class SendInvitePage {
     let alert = this.alertCtrl.create({
       title: 'Oppss! Connection Timeout.',
       message: 'You must be connected to the internet.',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  showSuccessPrompt(){
+    let alert = this.alertCtrl.create({
+      title: 'Success',
+      message: 'Your invitations are successfully sent.',
       buttons: ['OK']
     });
     alert.present();
@@ -92,69 +126,40 @@ export class SendInvitePage {
   sendInvitation(){
     console.log(this.selected_users);
 
-    var thisUser = {};
-    try{
-      const userToSurveyRef:firebase.database.Reference = firebase.database().ref("/user_surveys/");
-      userToSurveyRef.on('value', userToSurveySnapshot => {
-        thisUser = userToSurveySnapshot.val();
-      });
-    }catch(e){
-      console.log(e);
-      this.showInternetConnectionError();
-    }
+    this.thisSurvey['s_id'] = this.s_id;
+    var successFlag = true;
 
     // getting all the users
     for(var s in this.selected_users){
-      for(var u in thisUser){
-        console.log(this.selected_users[s])
-        console.log(thisUser[u]['email']);
-        if(thisUser[u]['email'] == this.selected_users[s]){
-          console.log("Sending invitation to "+thisUser[u]['email']+"...");
+      for(var u in this.all_users){
+        if(this.all_users[u]['email'] == this.selected_users[s]){
+          console.log("Sending invitation to "+this.all_users[u]['email']+"...");
 
-          var newPostKey = firebase.database().ref().child('surveys').push().key;
-          this.thisSurvey['id'] = newPostKey;
+          var inviExist = firebase.database().ref("/user_surveys/"+u+"/invitations")? true:false;
+          // the survey ID is used as the pushed ID for this invitation
+          var newPostKey = this.s_id;
 
-          // if(thisUser[u]['invitations']){
-          //   // thisUser[u]['email'] = this.currUser;
-          //   firebase.database().ref("/user_surveys/"+u+"/invitations/"+newPostKey).set(this.thisSurvey);
-          // }
-          // else{
-          //   firebase.database().ref("/user_surveys/"+u).set({
-          //     'email': this.currUser,
-          //     'invitations':[]
-          //   });
-          //   // thisUser[u]['email'] = this.currUser;
-          //   firebase.database().ref("/user_surveys/"+u+"/invitations/"+newPostKey).set(this.thisSurvey);
-          // }
-          console.log("-------------");
+          if(inviExist){
+            firebase.database().ref("/user_surveys/"+u+"/invitations/"+newPostKey).set(this.thisSurvey, function(error){
+              if(error){
+                console.log("Not successful pushing to invitations (for some users ONLY)."+error);
+                successFlag = false;
+              }else{
+                console.log("Successfully added the surveyID to invitations!");
+                successFlag = true && successFlag;
+              }
+            });
+          }
           break;
         }
-        console.log("+++++++++");
       }
     }
 
-  	// for ( var u in this.selected_users){
-  	// 	if (this.selected_users[u] == true){
-  	// 		for ( var i in this.users['users']){
-  	// 			if (this.users['users'][i]['email'] == u){
-		 //    		this.thisSurvey['s_id'] = this.s_id;
-		 //    		this.users['users'][i]['invitations'].push(this.thisSurvey);
-		 //    		break;
-		 //    	}
-  	// 		}
-  	// 	}
-  	// }
-
-  	// this.storage.set('users', this.users).then((data) => {
-   //  	console.log("Sending invite ...");
-   //  });
-
-    // let alert = this.alertCtrl.create({
-    //   title: 'Success',
-    //   message: 'Your invitations are successfully sent.',
-    //   buttons: ['OK']
-    // });
-    // alert.present();
+    if(successFlag){
+      this.showSuccessPrompt();
+    }else{
+      this.showInternetConnectionError();
+    }
 
   	this.navCtrl.pop();
   }

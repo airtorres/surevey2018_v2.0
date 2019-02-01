@@ -103,12 +103,20 @@ export class SurveyListPage {
         this.mySurveys_ids = survs['surveylist'];
       }
       // fetching mySurveyInvitations IDs
+      var all_invitations = {};
       if(survs['invitations']){
-        this.survey_invites_ids = survs['invitations'];
+        all_invitations = survs['invitations'];
+      }
+
+      this.survey_invites_ids = [];
+      for ( var invit in all_invitations){
+        this.survey_invites_ids.push(all_invitations[invit]['s_id']);
+        this.invite_status[invit] = all_invitations[invit]['status'];
       }
 
       console.log(this.mySurveys_ids);
       console.log(this.survey_invites_ids);
+      console.log(this.invite_status);
 
       var i;
       var temp = {};
@@ -146,6 +154,7 @@ export class SurveyListPage {
       this.storage.set('mySurveys', this.mySurveys);
       this.storage.set('survey_invites', this.survey_invites);
       this.storage.set('all_surveys', this.all_surveys);
+      this.storage.set('invite_status', this.invite_status);
     }
     else{
       // getting the survey data from localDB if not connected to Firebase

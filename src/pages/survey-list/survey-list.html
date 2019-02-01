@@ -39,7 +39,7 @@
 
 			<ion-item *ngFor="let item of survey_invites" value="item">
 			  	{{ item['title'] }}
-				<button item-end round ion-button *ngIf="invite_status[item['id']] == 'pending'" (click)="gotoRespondentView(item)">
+				<button item-end round ion-button *ngIf="invite_status[item['id']] != 'completed'" (click)="gotoRespondentView(item)">
 					Respond Now
 				</button>
 				<button *ngIf="invite_status[item['id']] == 'completed'" item-end disabled>Responded</button>
