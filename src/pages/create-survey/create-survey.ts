@@ -134,36 +134,77 @@ export class CreateSurveyPage {
     this.survey['author'] = this.currUser;
     this.survey['isActive'] = true;//the survey is active upon creation
 
+    // check for Firebase connection
+    var connectedToFirebaseFlag = false;
+    try{
+      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
+      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          console.log("Getting data from Firebase...");
+          connectedToFirebaseFlag = true;          
+        }else {
+          console.log("Error loading data from Firebase.");
+          connectedToFirebaseFlag = false;
+        }
+      });
+    }catch(e){
+      console.log(e);
+    }
+
     if (this.push_flag_for_survey){
       this.survey['created_at'] = new Date().toISOString();
 
-      try{
-        // generate ID for this survey
-        var newPostKey = firebase.database().ref().child('surveys').push().key;
-        this.survey['id'] = newPostKey;
-        firebase.database().ref("/surveys/"+newPostKey).set(this.survey);
-        this.s_id = newPostKey;
-      }catch(e){
+      if(connectedToFirebaseFlag){
+        try{
+          // generate ID for this survey
+          var newPostKey = firebase.database().ref().child('surveys').push().key;
+          this.survey['id'] = newPostKey;
+          firebase.database().ref("/surveys/"+newPostKey).set(this.survey, function(error){
+            if(error){
+              console.log("Not successful pushing ID to surveys."+error);
+              this.showSavingPrompt(true);
+            }else{
+              console.log("Successfully added the surveyID to surveys!");
+            }
+          });
+          this.s_id = newPostKey;
+        }catch(e){
+          console.log("There's a problem pushing the survey.");
+          console.log(e);
+          this.showSavingPrompt(true);
+        }
+
+        this.saveToUserSurveyList();
+      }else{
         console.log("There's a problem pushing the survey.");
-        console.log(e);
         this.showSavingPrompt(true);
       }
-
-      this.saveToUserSurveyList();
     }
     // Editing survey
     else{
-      try{
-        this.survey['updated_at'] = new Date().toISOString();
+      if(connectedToFirebaseFlag){
+        try{
+          this.survey['updated_at'] = new Date().toISOString();
 
-        firebase.database().ref("/surveys/"+this.s_id).set(this.survey);
-        this.savingFlag = true;
-        this.navCtrl.pop();
-        // redirect to survey-list: showing all surveys
-        this.navCtrl.parent.select(1);
-      }catch(e){
+          firebase.database().ref("/surveys/"+this.s_id).set(this.survey, function(error){
+            if(error){
+              console.log("Not successful pushing ID to surveys."+error);
+              this.showSavingPrompt(true);
+            }else{
+              console.log("Successfully added the surveyID to surveys!");
+            }
+          });
+          this.savingFlag = true;
+          this.navCtrl.pop();
+          // redirect to survey-list: showing all surveys
+          this.navCtrl.parent.select(1);
+        }catch(e){
+          console.log("There's a problem pushing the survey.");
+          console.log(e);
+          this.showSavingPrompt(true);
+        }
+      }else{
         console.log("There's a problem pushing the survey.");
-        console.log(e);
         this.showSavingPrompt(true);
       }
     }
@@ -192,7 +233,14 @@ export class CreateSurveyPage {
 
       thisUser['email'] = this.fire.auth.currentUser.email;
 
-      firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid).set(thisUser);
+      firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid).set(thisUser, function(error){
+        if(error){
+          console.log("Not successful pushing ID to surveys."+error);
+          this.showSavingPrompt(false);
+        }else{
+          console.log("Successfully added the surveyID to user-survey list!");
+        }
+      });
       // assume successful saving at this point
       this.savingFlag = true;
       this.navCtrl.pop();
@@ -206,7 +254,7 @@ export class CreateSurveyPage {
       this.navCtrl.parent.select(1);
 
     }catch(err){
-      console.log("Unable to load data. No Internet Connection. OR there is a problem.");
+      console.log("Something went wrong while pushing survey ID to the users survey list.");
       console.log(err);
       this.showSavingPrompt(false);
     }
@@ -361,6 +409,7 @@ export class CreateSurveyPage {
             text: 'Save as Draft',
             handler: () => {
               this.userCanLeave = true;
+              this.savingFlag = true;
               this.saveAsDraft();
               resolve();
             }
@@ -370,13 +419,14 @@ export class CreateSurveyPage {
             role: 'cancel',
             handler: () => {
               this.userCanLeave = true;
+              this.savingFlag = true;
               reject();
             }
           },
         ]
       });
       alert.present();
-    });
+    }).catch((error) => this.navCtrl.pop());
   }
 
 }

@@ -73,7 +73,7 @@ export class SurveyListPage {
   }
 
   fetchSurveys(){
-    // fetch mysurveys from firebase
+    // check for Firebase connection
     var connectedToFirebaseFlag = false;
     try{
       const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
@@ -90,6 +90,7 @@ export class SurveyListPage {
       console.log(e);
     }
 
+    // fetch mysurveys from firebase
     if(connectedToFirebaseFlag){
       var survs = {};
       const userSurveyRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid);

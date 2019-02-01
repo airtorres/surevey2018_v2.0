@@ -112,7 +112,15 @@ export class SurveySummaryPage {
 
     for (var m in mySurvs){
       if(this.s_id == mySurvs[m]){
-        firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+m).remove();
+        firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+m).remove(
+          function(error) {
+            if(error){
+              console.log("Not able to delete survey");
+            }else{
+              console.log("Survey Deleted!");
+            }
+          }
+        );
       }
     }
 
