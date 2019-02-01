@@ -30,32 +30,7 @@ export class HomePage {
       this.currentUser = x;
     });
 
-    // load built-in surveys from firebase
-    try{
-      const templateRef:firebase.database.Reference = firebase.database().ref('/built_in_templates');
-      templateRef.on('value', templateSnapshot => {
-        this.built_in_templates = [];
-        var tempRef = templateSnapshot.val();
-        for ( var temp in tempRef){
-          this.built_in_templates.push(tempRef[temp]);
-        }
-
-        // store to local storage
-        this.storage.set('built_in_templates', this.built_in_templates);
-
-      });
-    }catch(e){
-      console.log("Error loading templates from firebase. Use local DB.");
-      console.log(e);
-    }
-
-    try{
-      firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid).on('value', u => {});
-      firebase.database().ref('/surveys/').on('value', u => {});
-    }catch(e){
-      console.log("Error occurs while fetching survey list.");
-      console.log(e);
-    }
+    this.loadTemplates();
   }
 
   gotoProfile(){
@@ -79,6 +54,52 @@ export class HomePage {
 
   create_survey(){
   	this.navCtrl.push(CreateSurveyPage, {});
+  }
+
+  loadTemplates(){
+    var connectedToFirebaseFlag = false;
+    try{
+      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
+      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          console.log("Getting data from Firebase...");
+          connectedToFirebaseFlag = true;          
+        }else {
+          console.log("Error loading data from Firebase.");
+          connectedToFirebaseFlag = false;
+        }
+      });
+    }catch(e){
+      console.log(e);
+    }
+
+    // load built-in surveys from firebase
+    try{
+      const templateRef:firebase.database.Reference = firebase.database().ref('/built_in_templates');
+      templateRef.on('value', templateSnapshot => {
+        this.built_in_templates = [];
+        var tempRef = templateSnapshot.val();
+        for ( var temp in tempRef){
+          this.built_in_templates.push(tempRef[temp]);
+        }
+
+        if(connectedToFirebaseFlag){
+          // store to local storage
+          this.storage.set('built_in_templates', this.built_in_templates);
+        }
+      });
+    }catch(e){
+      console.log("Error loading templates from firebase. Use local DB.");
+      console.log(e);
+    }
+
+    try{
+      firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid).on('value', u => {});
+      firebase.database().ref('/surveys/').on('value', u => {});
+    }catch(e){
+      console.log("Error occurs while fetching survey list.");
+      console.log(e);
+    }
   }
 
   browse_templates(){

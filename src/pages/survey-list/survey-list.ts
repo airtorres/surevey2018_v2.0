@@ -74,7 +74,23 @@ export class SurveyListPage {
 
   fetchSurveys(){
     // fetch mysurveys from firebase
+    var connectedToFirebaseFlag = false;
     try{
+      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
+      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          console.log("Getting data from Firebase...");
+          connectedToFirebaseFlag = true;          
+        }else {
+          console.log("Error loading data from Firebase.");
+          connectedToFirebaseFlag = false;
+        }
+      });
+    }catch(e){
+      console.log(e);
+    }
+
+    if(connectedToFirebaseFlag){
       var survs = {};
       const userSurveyRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid);
       userSurveyRef.on('value', userToSurveySnapshot => {
@@ -129,8 +145,9 @@ export class SurveyListPage {
       this.storage.set('mySurveys', this.mySurveys);
       this.storage.set('survey_invites', this.survey_invites);
       this.storage.set('all_surveys', this.all_surveys);
-    }catch(e){
-      console.log("Error occurs while fetching survey list.");
+    }
+    else{
+      // getting the survey data from localDB if not connected to Firebase
       this.loadSurveysFromLocalDB();
     }
   }
