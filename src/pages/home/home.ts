@@ -46,6 +46,15 @@ export class HomePage {
       });
     }catch(e){
       console.log("Error loading templates from firebase. Use local DB.");
+      console.log(e);
+    }
+
+    try{
+      firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid).on('value', u => {});
+      firebase.database().ref('/surveys/').on('value', u => {});
+    }catch(e){
+      console.log("Error occurs while fetching survey list.");
+      console.log(e);
     }
   }
 
@@ -75,5 +84,4 @@ export class HomePage {
   browse_templates(){
     this.navCtrl.push(TemplateListPage, {})
   }
-
 }

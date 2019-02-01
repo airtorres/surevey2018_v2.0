@@ -60,6 +60,12 @@ export class SurveySummaryPage {
     this.storage.get('responses').then(res => {
       this.responses = res;
     });
+
+    try{
+      firebase.database().ref('/users/').on('value', val => {});
+    }catch(e){
+      console.log(e);
+    }
   }
 
   ionViewDidLoad() {

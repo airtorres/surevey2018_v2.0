@@ -30,12 +30,17 @@
 
 	<!-- DISPLAY CONTACTS -->
 	<ion-list text-wrap>
+		<p *ngIf="all_users_email.length == 0">
+			No users to show.<br/>
+			You must be connected to the internet.
+		</p>
+
 		<ion-item *ngFor="let user_email of all_users_email">
 			<ion-avatar item-start>
 	       		<ion-img src="../assets/imgs/avatar.png"></ion-img>
 	      	</ion-avatar>
 	      	<ion-label>{{ user_email }}</ion-label>
-	      	<ion-checkbox item-end mode="ios" color="secondary" [(ngModel)]="selected_users[user_email]" item-end></ion-checkbox>
+	      	<ion-checkbox mode="ios" color="secondary" [(ngModel)]="selections[user_email]" (ionChange)="refresh()" item-end></ion-checkbox>
 	    </ion-item>
 
 	    <!-- <ion-item>
@@ -81,7 +86,7 @@
 				<ion-icon name="close"></ion-icon>
 			</button>
 			4 selected
-			<button item-end clear ion-button (click)="sendInvitation()">
+			<button clear ion-button (click)="sendInvitation()" item-end>
 				<ion-icon name="send"></ion-icon>
 			</button>
 		</ion-item>
