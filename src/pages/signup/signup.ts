@@ -70,7 +70,10 @@ export class SignupPage {
         'birthdate': '',
         'gender': '',
         'sex': '',
-        'age': ''
+        'age': '',
+        'country': '',
+        'city': '',
+        'state': ''
       }
 
       var user_survey = {

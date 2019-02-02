@@ -15,4 +15,88 @@
 
 <ion-content padding>
 
+	<ion-avatar>
+		<img class="avatar" src="../assets/imgs/avatar.png">
+	</ion-avatar>
+
+	<ion-buttons text-center>
+		<button ion-button clear class="btn-profImg">Change Profile Photo</button>
+	</ion-buttons>
+
+	<ion-list>
+		<ion-item>
+			<ion-label color="primary">First Name</ion-label>
+			<ion-input value="{{userData['first_name']}}" #firstname></ion-input>
+		</ion-item>
+
+		<ion-item>
+			<ion-label color="primary">Last Name</ion-label>
+			<ion-input value="{{userData['last_name']}}" #lastname></ion-input>
+		</ion-item>
+
+		<ion-item>
+			<ion-label color="primary">Username</ion-label>
+			<ion-input value="{{userData['username']}}" #username></ion-input>
+		</ion-item>
+
+		<ion-item>
+			<ion-label color="primary">Birth Date</ion-label>
+			<ion-datetime displayFormat="MMM DD, YYYY" placeholder="Select Date" [(ngModel)]="bdate"></ion-datetime>
+		</ion-item>
+
+		<ion-item>
+		  	<ion-label color="primary">Sex</ion-label>
+		  	<ion-select [(ngModel)]="sex">
+			    <ion-option value="Female">Female</ion-option>
+			    <ion-option value="Male">Male</ion-option>
+		  	</ion-select>
+		</ion-item>
+
+		<ion-item>
+		  	<ion-label color="primary">Profession</ion-label>
+		  	<ion-select [(ngModel)]="profession">
+		  		<ion-option value="Student">Student</ion-option>
+				<ion-option value="Teacher">Teacher</ion-option>
+				<ion-option value="Engineer">Engineer</ion-option>
+				<ion-option value="Lawyer">Lawyer</ion-option>
+				<ion-option value="Technician">Technician</ion-option>
+				<ion-option value="Architect">Architect</ion-option>
+				<ion-option value="Musician">Musician</ion-option>
+				<ion-option value="Athlete">Athlete</ion-option>
+		  	</ion-select>
+		</ion-item>
+
+		<ion-item no-lines>
+			<ion-label color="primary" style="margin: 13px 8px 0px 0;">Address</ion-label>
+		</ion-item>
+		
+		<ion-item-group style="padding-left: 16px;">	
+			<ion-item>
+				<ion-label>Country</ion-label>
+				<ion-select [(ngModel)]="country" (ionChange)="getCountry()">
+					<ion-option *ngFor="let country of countries" value="{{country['id']}}"> {{country['name']}} </ion-option>
+				</ion-select>
+			</ion-item>
+
+			<ion-item>
+				<ion-label>Province/State</ion-label>
+				<ion-select [(ngModel)]="state" (ionChange)="getState()">
+					<ion-option *ngFor="let state of states" value="{{state['id']}}"> {{state['name']}} </ion-option>
+				</ion-select>
+			</ion-item>
+
+			<ion-item>
+				<ion-label>Municipality/City</ion-label>
+				<ion-select [(ngModel)]="city" (ionChange)="getCity()">
+					<ion-option *ngFor="let city of cities" value="{{city['id']}}"> {{city['name']}} </ion-option>
+				</ion-select>
+			</ion-item>
+		</ion-item-group>
+
+	</ion-list>
+	
+	<ion-buttons end style="margin-top: 10px;">
+		<button ion-button (click)="saveProfile()">Save</button>
+	</ion-buttons>
+
 </ion-content>
