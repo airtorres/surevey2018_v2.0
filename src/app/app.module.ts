@@ -25,6 +25,7 @@ import { AnswerSurveyPage } from '../pages/answer-survey/answer-survey';
 import { TemplateListPage } from '../pages/template-list/template-list';
 import { ResultsPage } from '../pages/results/results';
 import { FiltersPage } from '../pages/filters/filters';
+import { EditProfilePage } from '../pages/edit-profile/edit-profile';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -68,7 +69,8 @@ import { File } from '@ionic-native/file';
     AnswerSurveyPage,
     TemplateListPage,
     ResultsPage,
-    FiltersPage
+    FiltersPage,
+    EditProfilePage
   ],
   imports: [
     BrowserModule,
@@ -102,7 +104,8 @@ import { File } from '@ionic-native/file';
     AnswerSurveyPage,
     TemplateListPage,
     ResultsPage,
-    FiltersPage
+    FiltersPage,
+    EditProfilePage
   ],
   providers: [
     StatusBar,
