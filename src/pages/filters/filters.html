@@ -6,105 +6,122 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Filters</ion-title>
-  </ion-navbar>
+  <ion-navbar color="primary">
+    	<ion-title>Filters</ion-title>
+
+    	<ion-buttons end>
+	      	<button ion-button (click)="reset()" style="margin-right: 10px;">
+	        	Reset
+	      	</button>
+	    </ion-buttons>
+  	</ion-navbar>
 
 </ion-header>
 
 
 <ion-content>
-	<ion-item-group>
-		<ion-item-divider color="light">Age Range</ion-item-divider>
 
- 		<ion-list id="age">
-			<ion-grid>
-				<ion-row>
-					<ion-col>
-						<ion-label stacked>MIN</ion-label>
-						<ion-input type="number" min="0" placeholder="Any" [(ngModel)]="min"></ion-input>
-					</ion-col>
-					<ion-col>
-						<ion-label stacked>MAX</ion-label>
-						<ion-input type="number" placeholder="Any" min={{min}}></ion-input>
-					</ion-col>
-				</ion-row>
-			</ion-grid>
-		</ion-list>
-	</ion-item-group>
+	<ion-card class="card" style="margin-top: 16px;">
+		<ion-card-content>
+			<ion-card-title color="primary" class="card-title">AGE RANGE</ion-card-title>
 
-	<ion-item-group>
-		<ion-item-divider color="light">Sex</ion-item-divider>
+			<ion-list id="age">
+				<ion-grid>
+					<ion-row>
+						<ion-col>
+							<ion-label stacked class="stacked">MIN</ion-label>
+							<ion-input type="number" min="0" #min [(ngModel)]="minimum"></ion-input>
+						</ion-col>
 
- 		<ion-list id="sex" radio-group>
-			<ion-grid>
-				<ion-row>
-					<ion-col>
-						<ion-item>
-				        	<ion-radio></ion-radio>
-				        	<ion-label>Male</ion-label>
-				        </ion-item>
-					</ion-col>
+						<ion-col>
+							<ion-label stacked class="stacked">MAX</ion-label>
+							<ion-input type="number" #max [(ngModel)]="maximum"></ion-input>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-list>
+		</ion-card-content>
+	</ion-card>
+	
+	<ion-card class="card">
+		<ion-card-content>
+			<ion-card-title color="primary" class="card-title">SEX</ion-card-title>
 
- 					<ion-col>
-						<ion-item>
-				        	<ion-radio></ion-radio>
-				        	<ion-label>Female</ion-label>
-				        </ion-item>
-					</ion-col>
+			<ion-list id="sex">
+				<ion-item>
+					<ion-label>Sex</ion-label>
+					<ion-select [(ngModel)]="sex">
+						<ion-option value="Male">Male</ion-option>
+						<ion-option value="Female">Female</ion-option>
+						<ion-option value="Male & Female">Male & Female</ion-option>
+					</ion-select>
+				</ion-item>
+			</ion-list>
+		</ion-card-content>
+	</ion-card>
 
- 					<ion-col>
-						<ion-item>
-				        	<ion-radio></ion-radio>
-				        	<ion-label>Both</ion-label>
-				        </ion-item>
-					</ion-col>
-				</ion-row>
-			</ion-grid>
-		</ion-list>
-	</ion-item-group>
+	<ion-card class="card">
+		<ion-card-content>
+			<ion-card-title color="primary" class="card-title">PROFESSION</ion-card-title>
 
- 	<ion-item-group>
-		<ion-item-divider color="light">Profession</ion-item-divider>
+			<ion-list id="profession">
+				<ion-item>
+					<ion-label>Profession</ion-label>
+					<ion-select [(ngModel)]="profession">
+						<ion-option value="Any">Any</ion-option>
+						<ion-option value="Student">Student</ion-option>
+						<ion-option value="Teacher">Teacher</ion-option>
+						<ion-option value="Engineer">Engineer</ion-option>
+						<ion-option value="Programmer">Programmer</ion-option>
+						<ion-option value="Lawyer">Lawyer</ion-option>
+						<ion-option value="Technician">Technician</ion-option>
+						<ion-option value="Architect">Architect</ion-option>
+						<ion-option value="Musician">Musician</ion-option>
+						<ion-option value="Athlete">Athlete</ion-option>
+					</ion-select>
+				</ion-item>
+			</ion-list>
+		</ion-card-content>
+	</ion-card>
 
- 		<ion-list id="profession">
-			<ion-item>
-				<ion-label>Profession</ion-label>
-				<ion-select [(ngModel)]="profession">
-					<ion-option>Any</ion-option>
-					<ion-option>Student</ion-option>
-					<ion-option>Teacher</ion-option>
-					<ion-option>Engineer</ion-option>
-					<ion-option>Lawyer</ion-option>
-					<ion-option>Technician</ion-option>
-					<ion-option>Architect</ion-option>
-					<ion-option>Musician</ion-option>
-					<ion-option>Athlete</ion-option>
-				</ion-select>
-			</ion-item>
-		</ion-list>
+	<ion-card class="card">
+		<ion-card-content>
+			<ion-card-title color="primary" class="card-title">LOCATION</ion-card-title>
 
-	</ion-item-group>
+			<ion-list id="address">
+			
+				<ion-item>
+					<ion-label>Country</ion-label>
+					<ion-select [(ngModel)]="country" (ionChange)="getCountry()">
+						<ion-option value="Anywhere">Anywhere</ion-option>
+						<ion-option *ngFor="let country of countries" value="{{country['id']}}">{{country['name']}}</ion-option>
+					</ion-select>
+				</ion-item>
 
- 	<ion-item-group>
-		<ion-item-divider color="light">Location</ion-item-divider>
+				<ion-item>
+					<ion-label>Province/State</ion-label>
+					<ion-select [(ngModel)]="state" (ionChange)="getState()">
+						<ion-option value="Anywhere">Anywhere</ion-option>
+						<ion-option *ngFor="let state of states" value="{{state['id']}}">{{state['name']}}</ion-option>
+					</ion-select>
+				</ion-item>
 
- 		<ion-list id="country">
-			<ion-grid>
-				<ion-row>
-					<ion-col>
-						<ion-item>
-							<ion-label>Country</ion-label>
-							<ion-select>
-								<ion-option value="any">Any</ion-option>
-								<ion-option *ngFor="let country of countries" value="{{country}}">{{ country }}</ion-option>
-							</ion-select>
-						</ion-item>
-					</ion-col>
- 				</ion-row>
-			</ion-grid>
- 		</ion-list>
+				<ion-item>
+					<ion-label>Municipality/City</ion-label>
+					<ion-select [(ngModel)]="city" (ionChange)="getCity()">
+						<ion-option value="Anywhere">Anywhere</ion-option>
+						<ion-option *ngFor="let city of cities" value="{{city['id']}}">{{city['name']}}</ion-option>
+					</ion-select>
+				</ion-item>
 
- 	</ion-item-group>
+			</ion-list>
+
+		</ion-card-content>
+	</ion-card>
+
+	<ion-buttons end style="margin-right: 10px; margin-bottom: 10px;">
+		<button ion-button clear id="cancelbtn" (click)="cancelBtn()">Cancel</button>
+		<button ion-button id="applybtn" (click)="applyFilter()">Apply Filters</button>
+	</ion-buttons>
 
 </ion-content>
