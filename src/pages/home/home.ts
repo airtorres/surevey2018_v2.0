@@ -19,6 +19,7 @@ import { Storage } from '@ionic/storage';
 })
 export class HomePage {
   currentUser;
+  username;
   built_in_templates = [];
 
   constructor(public navCtrl: NavController,
@@ -28,6 +29,10 @@ export class HomePage {
 
     this.storage.get('currentUser').then(x =>{
       this.currentUser = x;
+    });
+
+    this.storage.get('username').then(u =>{
+      this.username = u;
     });
 
     this.loadTemplates();
@@ -85,6 +90,10 @@ export class HomePage {
 
         if(connectedToFirebaseFlag){
           // store to local storage
+          const uname:firebase.database.Reference = firebase.database().ref('/users/'+this.fire.auth.currentUser.uid);
+          uname.on('value', userSnapshot => {
+            this.storage.set('username', userSnapshot.val()['username']);
+          });
           this.storage.set('built_in_templates', this.built_in_templates);
         }
       });
