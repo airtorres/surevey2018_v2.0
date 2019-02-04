@@ -218,23 +218,6 @@ export class EditProfilePage {
    			firebase.database().ref('/users/' + this.userId + '/city/').set(this.cityName);
    		}
 
-   		// -----------------------------------------------------
-
-  		if (this.countryName != "" && this.stateName == "" && this.cityName == "") {
-			firebase.database().ref('/users/' + this.userId + '/location/').set(this.countryName);
-  		}
-
-  		else if (this.countryName != "" && this.stateName != "" && this.cityName == "") {
-  			firebase.database().ref('/users/' + this.userId + '/location/').set(this.stateName + ", " + this.countryName);
-  		}
-
-  		else if (this.countryName != "" && this.stateName != "" && this.cityName != "") {
-   			firebase.database().ref('/users/' + this.userId + '/location/').set(this.cityName + ", " + this.stateName + ", " + this.countryName);
-   		}
-   		else{
-   			firebase.database().ref('/users/' + this.userId + '/location/').set("");
-   		}
-
 	    let toast = this.toastCtrl.create({
 	      message: 'Success! Profile Updated!',
 	      duration: 2000,

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { SignupPage } from '../signup/signup';
@@ -28,7 +28,7 @@ export class SigninPage {
   usr;
   pswd;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl : ToastController,
     private formbuilder: FormBuilder,
     private fire: AngularFireAuth,
     private storage: Storage) {
@@ -67,7 +67,15 @@ export class SigninPage {
 
   showInvalidLogin(){
     try{
-      document.getElementById('invalidLogin_div').style.display = "block";
+      // document.getElementById('invalidLogin_div').style.display = "block";
+      let invalidLogin = this.toastCtrl.create({
+        message: 'Email and password does not match!',
+        duration: 2000,
+        position: 'bottom'
+      });
+
+      invalidLogin.present();
+      
     }catch(e){}
   }
 

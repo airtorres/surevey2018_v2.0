@@ -18,5 +18,24 @@ page-signin {
 	.errorMessage {
 		color: red;
 		font-size: 11px;
+		font-style: italic;
+	}
+
+	#signInBtn {
+		button {
+			line-height: normal;
+		}
+	}
+
+	#signUpBtn {
+		margin-top: 70px;
+
+		ion-label {
+			margin: 13px 8px 0px 0;
+		}
+
+		button {
+			margin: 0px 0px;
+		}
 	}
 }

@@ -45,7 +45,6 @@ export class CreateSurveyPage {
     'author': '',
     'created_at': '',
     'updated_at': '',
-    'end_date': '',
     'isActive': true, //true/false
     'questions': [],
     'id':''

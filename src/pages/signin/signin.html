@@ -22,34 +22,34 @@
           <ion-input block type="password" placeholder="Password" #password formControlName="password"></ion-input>
         </ion-row>
 
-        <p class="errorMessage" *ngIf="!authSignin.controls.email.hasError('required') && authSignin.controls.email.hasError('pattern') && authSignin.controls.email.dirty">
+        <ion-note class="errorMessage" *ngIf="!authSignin.controls.email.hasError('required') && authSignin.controls.email.hasError('pattern') && authSignin.controls.email.dirty">
           Please enter valid email
-        </p>
-
+        </ion-note>
+<!-- 
         <p class="errorMessage" *ngIf="authSignin.controls.email.hasError('required') && authSignin.controls.email.dirty">
           Please enter email
-        </p>
+        </p> -->
 
-        <p class="errorMessage" *ngIf="authSignin.controls.password.hasError('required') && authSignin.controls.password.dirty">
+        <!-- <p class="errorMessage" *ngIf="authSignin.controls.password.hasError('required') && authSignin.controls.password.dirty">
           Please enter password.
-        </p>
+        </p> -->
 
-        <p class="errorMessage" *ngIf="!authSignin.controls.password.hasError('required') && authSignin.controls.password.hasError('minlength') && authSignin.controls.password.dirty ">
+        <ion-note class="errorMessage" *ngIf="!authSignin.controls.password.hasError('required') && authSignin.controls.password.hasError('minlength') && authSignin.controls.password.dirty ">
           Password should be at least 6 characters
-        </p>
+        </ion-note>
 
-        <p class="errorMessage" id="invalidLogin_div" style="display: none">
+        <!-- <p class="errorMessage" id="invalidLogin_div" style="display: none">
           Email and password does not match!
-        </p>
+        </p> -->
       </ion-grid>
 
-      <div text-center>
+      <div text-center id="signInBtn">
         <button ion-button round (click)="signin()" #signIn_btn [disabled]="!authSignin.valid">Sign in</button>
       </div>
     </form>
   
-  	<div text-center>
-  		<p>Don't have an account?</p>
+  	<div text-center id="signUpBtn">
+  		<ion-label>Don't have an account?</ion-label>
   		<button ion-button clear (click)="navigateToSignUp()">Sign Up</button>
   	</div>
 

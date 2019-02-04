@@ -8,7 +8,7 @@
 <ion-content padding>
   <div class="fixed-content" padding>
   	<div text-center style="margin-top: 7%;">
-      <ion-img width="200" height="200" src="../assets/imgs/logo-05.png" style="background: transparent !important;"></ion-img>
+      <ion-img width="150" height="150" src="../assets/imgs/logo-05.png" style="background: transparent !important;"></ion-img>
     </div>
 
     <form [formGroup]="authSignup">
@@ -17,41 +17,41 @@
           <ion-input type="text" placeholder="Username" #username formControlName="username"></ion-input>
         </ion-row>
 
-        <p class="errorMessage" *ngIf="!authSignup.controls.username.hasError('required') && authSignup.controls.username.hasError('pattern') && authSignup.controls.username.dirty">
-          Please enter valid username
-        </p>
-
-        <p class="errorMessage" *ngIf="authSignup.controls.username.hasError('required') && authSignup.controls.username.dirty">
-          Please enter username
-        </p>
-
         <ion-row style="margin: 5px 0;">
           <ion-input type="text" #email placeholder="Email" formControlName="email"></ion-input>
         </ion-row>
-
-        <p class="errorMessage" *ngIf="!authSignup.controls.email.hasError('required') && authSignup.controls.email.hasError('pattern') && authSignup.controls.email.dirty">
-          Please enter valid email
-        </p>
-
-        <p class="errorMessage" *ngIf="authSignup.controls.email.hasError('required') && authSignup.controls.email.dirty">
-          Please enter email
-        </p>
 
         <ion-row style="margin: 5px 0;">
           <ion-input type="password" #password placeholder="Password" formControlName="password"></ion-input>
         </ion-row>
 
-        <p class="errorMessage" *ngIf="authSignup.controls.password.hasError('required') && authSignup.controls.password.dirty">
+        <ion-note class="errorMessage" *ngIf="!authSignup.controls.username.hasError('required') && authSignup.controls.username.hasError('pattern') && authSignup.controls.username.dirty">
+          Please enter valid username
+        </ion-note>
+
+        <!-- <p class="errorMessage" *ngIf="authSignup.controls.username.hasError('required') && authSignup.controls.username.dirty">
+          Please enter username
+        </p> -->
+
+        <ion-note class="errorMessage" *ngIf="!authSignup.controls.email.hasError('required') && authSignup.controls.email.hasError('pattern') && authSignup.controls.email.dirty">
+          Please enter valid email
+        </ion-note>
+
+        <!-- <p class="errorMessage" *ngIf="authSignup.controls.email.hasError('required') && authSignup.controls.email.dirty">
+          Please enter email
+        </p> -->
+
+        <!-- <p class="errorMessage" *ngIf="authSignup.controls.password.hasError('required') && authSignup.controls.password.dirty">
           Please enter password
-        </p>
+        </p> -->
 
-        <p class="errorMessage" *ngIf="!authSignup.controls.password.hasError('required') && authSignup.controls.password.hasError('minlength') && authSignup.controls.password.dirty ">
+        <ion-note class="errorMessage" *ngIf="!authSignup.controls.password.hasError('required') && authSignup.controls.password.hasError('minlength') && authSignup.controls.password.dirty ">
           Password should be at least 6 characters
-        </p>
+        </ion-note>
 
-        <p class="errorMessage" id="unAbleSignup_div" style="display: none">
+        <!-- <p class="errorMessage" id="unAbleSignup_div" style="display: none">
           Unable to signup. Connection failed! Try again later.
-        </p>
+        </p> -->
       </ion-grid>
 
       <div text-center>
@@ -59,8 +59,8 @@
       </div>
     </form>
 
-  	<div text-center>
-  		<p>Already have an account?</p>
+  	<div text-center id="signInBtn">
+  		<ion-label>Already have an account?</ion-label>
   		<button ion-button clear (click)="navigateToSignIn()">Sign in</button>
   	</div>
 
