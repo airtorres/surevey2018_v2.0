@@ -66,7 +66,6 @@ export class SignupPage {
         'first_name': '',
         'last_name': '',
         'profession': '',
-        'location': '',
         'birthdate': '',
         'gender': '',
         'sex': '',
