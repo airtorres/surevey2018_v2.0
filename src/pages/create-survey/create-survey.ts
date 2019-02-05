@@ -55,6 +55,8 @@ export class CreateSurveyPage {
 
   currUser;
 
+  drafts = [];
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private alertCtrl: AlertController,
     private fire: AngularFireAuth,
@@ -100,6 +102,10 @@ export class CreateSurveyPage {
         this.questions = this.survey['questions'];
         this.reloadQuestionIDs();
     }
+
+    this.storage.get('drafts').then(d =>{
+      this.drafts = d;
+    });
 
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
@@ -384,6 +390,12 @@ export class CreateSurveyPage {
   }
 
   saveAsDraft(){
+    this.drafts.push(this.survey);
+
+    this.storage.set('drafts', this.drafts);
+    // redirect to survey-list: showing all surveys
+    this.navCtrl.parent.select(1);
+
     this.navCtrl.pop();
   }
 

@@ -26,6 +26,7 @@ import { TemplateListPage } from '../pages/template-list/template-list';
 import { ResultsPage } from '../pages/results/results';
 import { FiltersPage } from '../pages/filters/filters';
 import { EditProfilePage } from '../pages/edit-profile/edit-profile';
+import { EditDraftPage } from '../pages/edit-draft/edit-draft';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -70,7 +71,8 @@ import { File } from '@ionic-native/file';
     TemplateListPage,
     ResultsPage,
     FiltersPage,
-    EditProfilePage
+    EditProfilePage,
+    EditDraftPage
   ],
   imports: [
     BrowserModule,
@@ -105,7 +107,8 @@ import { File } from '@ionic-native/file';
     TemplateListPage,
     ResultsPage,
     FiltersPage,
-    EditProfilePage
+    EditProfilePage,
+    EditDraftPage
   ],
   providers: [
     StatusBar,

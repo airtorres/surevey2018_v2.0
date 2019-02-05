@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { SurveySummaryPage } from '../survey-summary/survey-summary';
 import { AnswerSurveyPage } from '../answer-survey/answer-survey';
+import { EditDraftPage } from '..//edit-draft/edit-draft';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
@@ -38,6 +39,8 @@ export class SurveyListPage {
 
   // mySurveys + survey invites: NOT USED IN HTML
   all_surveys = [];
+
+  drafts = [];
 	
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private fire: AngularFireAuth,
@@ -46,10 +49,22 @@ export class SurveyListPage {
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
+
+    this.storage.get('drafts').then(d =>{
+      if(d){
+        this.drafts = d;
+      }
+    });
+
+    console.log(this.drafts);
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SurveyListPage');
+  }
+
+  gotoDraftPage(item){
+    this.navCtrl.push(EditDraftPage, {'item' : item, 'draftFlag': true});
   }
 
   gotoSummary(item){
