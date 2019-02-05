@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 
 import * as countryStateCity from 'country-state-city';
 import * as firebase from 'firebase/app';
@@ -27,28 +27,54 @@ export class EditProfilePage {
   countryName: string;
   stateName: string;
   cityName: string;
+  countryId : string;
+  stateId : string;
+  cityId : string;
+
   profession : any;
   sex: any;
   bdate: any;
   country: any;
   state: any;
   city: any;
+
   userData = {};
   countries = [];
   states = [];
   cities = [];
 
-  countryId : string;
-  stateId : string;
-  cityId : string;
+  prev_age;
+  prev_birthdate;
+  prev_city;
+  prev_country;
+  prev_first_name;
+  prev_last_name;
+  prev_profession;
+  prev_sex;
+  prev_state;
+  prev_username;
 
+  userCanLeave = true;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController,
   	private fire: AngularFireAuth,
   	public toastCtrl : ToastController) {
 
   	this.userId = this.fire.auth.currentUser.uid;
   	this.userData = this.navParams.get('userData');
+
+    this.prev_age = this.userData['age'];
+    this.prev_birthdate = this.userData['birthdate'];
+    this.prev_city = this.userData['city'];
+    this.prev_country = this.userData['country'];
+    this.prev_first_name = this.userData['first_name'];
+    this.prev_last_name = this.userData['last_name'];
+    this.prev_profession = this.userData['profession'];
+    this.prev_sex = this.userData['sex'];
+    this.prev_state = this.userData['state'];
+    this.prev_username = this.userData['username'];
   }
 
   ionViewDidLoad() {
@@ -218,6 +244,10 @@ export class EditProfilePage {
    			firebase.database().ref('/users/' + this.userId + '/city/').set(this.cityName);
    		}
 
+      console.log(this.country);
+      console.log(this.state);
+      console.log(this.city);
+
 	    let toast = this.toastCtrl.create({
 	      message: 'Success! Profile Updated!',
 	      duration: 2000,
@@ -227,7 +257,73 @@ export class EditProfilePage {
 	    toast.present();
 
    		this.navCtrl.pop();
-
 	}
+
+  // check if there are changes made before leaving the page
+  checkAllChanges() {
+    // if (this.countryName == undefined) {
+    //   userCountry = "";
+    // }
+    // if (this.stateName == undefined) {
+    //   userState = "";
+    // }
+    // if (this.userCity == undefined) {
+    //   userCity = "";
+    // }
+
+    if (this.prev_first_name == this.firstname.value && this.prev_last_name == this.lastname.value && this.prev_username == this.username.value && this.prev_profession == this.profession && this.prev_sex == this.sex && this.prev_birthdate == this.bdate) {
+      console.log("NO CHANGES MADE.");
+      this.userCanLeave = true;
+    } else {
+      console.log("THERE ARE UNSAVED CHANGES.");
+      this.userCanLeave = false;
+    }
+
+  }
+
+
+  ionViewCanLeave() {
+    this.checkAllChanges();
+
+    if (!this.userCanLeave) {
+      return new Promise((resolve, reject) => {
+        let alert = this.alertCtrl.create({
+          title: 'Changes made',
+          message: 'Do you want to save?',
+          buttons: [
+            {
+              text: "Don't Save",
+              handler: () => {
+                console.log("User didn't saved data");
+                this.userCanLeave = true;
+                resolve();
+              }
+            },
+            {
+              text: 'Save',
+              handler: () => {
+                console.log('User saved data');
+                // do saving logic
+                this.saveProfile();
+                this.userCanLeave = true;
+                resolve();
+              }
+            },
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+                console.log('User stayed');
+                this.userCanLeave = false;
+                reject();
+              }
+            },
+          ]
+        });
+        alert.present();
+      });
+    } else { return true }
+
+  }
 
 }

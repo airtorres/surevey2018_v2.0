@@ -7,51 +7,63 @@ page-home {
 		width: 110px;
 		height: 110px;
 	}
-}
-.main-card{
-	margin-top: 25px;
-}
+	.main-card{
+		margin-top: 25px;
+	}
 
-.card-radius{
-	border-radius: 12px;
-}
+	.card-radius{
+		border-radius: 12px;
+	}
 
 
-.page-header{
-	background: #FFFEFE;
-}
+	.page-header{
+		background: #FFFEFE;
+	}
 
-ion-icon{
-	font-size: 20px;
-}
+	ion-icon{
+		font-size: 20px;
+	}
 
-ion-card-header{
-	letter-spacing: 2px;
-}
+	ion-card-header{
+		letter-spacing: 2px;
+	}
 
-.menu_items{
-	margin-top: 15px;
-}
-.ongoing-card-header{
-	background-color:  map-get($colors, primary);
-}
+	.menu_items{
+		margin-top: 15px;
+	}
+	.ongoing-card-header{
+		background-color:  map-get($colors, primary);
+	}
 
-#ongoing-card-title, .ongoing-card-header p{
-	color: white;
-}
+	#ongoing-card-title, .ongoing-card-header p{
+		color: white;
+	}
 
-#view-ongoing-btn{
-	border: 2px solid white;
-	border-radius: 54px;
-}
+	#view-ongoing-btn{
+		border: 2px solid white;
+		border-radius: 54px;
+	}
 
-.invite-card{
-	background-color:  #E6EEF2
-}
-#invite-card-title{
-	font-size: 16px;
-	font-weight: 500;
-}
-#invite-respond-btn{
-	border-radius: 54px;
+	.invite-card{
+		background-color:  #E6EEF2
+	}
+	#invite-card-title{
+		font-size: 16px;
+		font-weight: 500;
+	}
+	#invite-respond-btn{
+		border-radius: 54px;
+	}
+
+	#usernameTitle {
+		margin: 13px 8px 3px 0;
+		font-size: 21px;
+		font-weight: bold;
+		letter-spacing: 1px;
+	}
+	#emailTitle {
+		margin: 0px 8px 0px 0;
+		font-size: 14px;
+	}
+
 }
