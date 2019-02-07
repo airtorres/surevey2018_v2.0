@@ -70,7 +70,6 @@ export class AnswerSurveyPage {
 
     		// initializing the checkboxes to false
     		for (var o in this.questions[q]['options']){
-    			console.log(o);
     			this.answers[q][o] = false;
     		}
     	}

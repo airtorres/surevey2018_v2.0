@@ -7,22 +7,24 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>answer-survey</ion-title>
+    <ion-title>Answer</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-	<h3>{{ title }}</h3>
-	<p>{{ description }}</p>
+	<div id="title-desc">
+		<h3>{{ title }}</h3>
+		<p style="text-align: justify;">{{ description }}</p>
+	</div>
 
 	<!-- show this only if you know -->
 	<ion-input *ngIf="thisSurvey['author'] == currUser" placeholder="Name of Respondent" style="border-bottom: 1px solid gray;" #respondent_name></ion-input>
 	<!-- <ion-input placeholder="Enter text" style="border-bottom: 1px solid gray;"></ion-input> -->
 
 	<div *ngFor="let question of questions; let idx = index">
-		<ion-label text-wrap>{{idx+1}}. {{ question['message'] }}</ion-label>
+		<ion-label id="qMSg" style="text-align: justify;" text-wrap>{{idx+1}}. {{ question['message'] }}</ion-label>
 
 		<!-- MULTIPLE CHOICE -->
 		<div *ngIf="question['type'] == 'multipleChoice'">
@@ -64,7 +66,7 @@
 		<!-- LONG ANSWER -->
 		<div *ngIf="question['type'] == 'longAnswer'">
 			<ion-item>
-				<ion-textarea placeholder="Long answer text" rows=2 [(ngModel)]="answers[idx]"></ion-textarea>
+				<ion-textarea placeholder="Enter answer" rows=3 [(ngModel)]="answers[idx]" style="border: none;"></ion-textarea>
 			</ion-item>
 		</div>
 

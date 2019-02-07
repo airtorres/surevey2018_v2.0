@@ -20,7 +20,7 @@
 		<ion-input type="text" placeholder="Untitled survey" value="{{ initial_title }}" autofocus #surveyTitle></ion-input>
 	</ion-item>
 	<ion-item>
-		<ion-input type="text" placeholder="Description" value="{{ intial_desc }}" style="font-size: 16px;" #surveyDescription></ion-input>
+		<ion-textarea type="text" placeholder="Description" value="{{ intial_desc }}" style="font-size: 16px;border: none;text-align: justify;" rows="3" #surveyDescription></ion-textarea>
 	</ion-item>
 
 	<ion-fab bottom right #fab>
@@ -48,7 +48,7 @@
  			<ion-note *ngIf="question['type'] == 'date'">Date</ion-note>
  			<ion-note *ngIf="question['type'] == 'time'">Time</ion-note>
  		</div>
- 		<ion-card-title id="question-title">{{ question['message'] }}</ion-card-title>
+ 		<ion-card-title id="question-title" text-wrap style="text-align: justify;">{{ question['message'] }}</ion-card-title>
 
  		<!-- MULTIPLE CHOICE -->
  		<ion-list radio-group [(ngModel)]="relationship" *ngIf="question['type'] == 'multipleChoice'">
