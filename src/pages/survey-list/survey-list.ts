@@ -50,6 +50,9 @@ export class SurveyListPage {
       this.currUser = x;
     });
 
+    // save offline responses from localDB to Firebase
+    this.syncResponsesToFirebase();
+
     this.storage.get('drafts').then(d =>{
       if(d){
         this.drafts = d;
@@ -73,6 +76,60 @@ export class SurveyListPage {
 
   gotoRespondentView(item){
     this.navCtrl.push(AnswerSurveyPage, {'item' : item});
+  }
+
+  syncResponsesToFirebase(){
+    // check for Firebase connection
+    var connectedToFirebaseFlag = false;
+    try{
+      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
+      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          console.log("Getting data from Firebase...");
+          connectedToFirebaseFlag = true;          
+        }else {
+          console.log("Error loading data from Firebase.");
+          connectedToFirebaseFlag = false;
+        }
+      });
+    }catch(e){
+      console.log(e);
+    }
+
+    console.log(connectedToFirebaseFlag);
+
+    if(connectedToFirebaseFlag){
+      try{
+        var offline_responses = [];
+        this.storage.get('offline_responses').then(res =>{
+          if(res){
+            offline_responses = res;
+          }
+        });
+
+        console.log(offline_responses);
+
+        for( var survId in offline_responses){
+          for( var resp in offline_responses[survId]){
+            var newUserKey = firebase.database().ref().child('responses/'+survId).push().key;
+            var thisResponse = offline_responses[survId][resp];
+            firebase.database().ref("/responses/"+survId+"/"+newUserKey).set(thisResponse, function(error){
+              if(error){
+                console.log("Not successful pushing response to list of responses."+error);
+              }else{
+                console.log("Successfully added to responses!");
+                // remove this response
+                offline_responses[survId].splice(resp,1);
+              }
+            });
+          }
+        }
+
+        this.storage.set('offline_responses', offline_responses);
+      }catch(e){
+        console.log(e);
+      }
+    }
   }
 
   loadSurveysFromLocalDB(){

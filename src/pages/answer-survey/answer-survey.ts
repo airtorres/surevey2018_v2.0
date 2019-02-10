@@ -91,7 +91,6 @@ export class AnswerSurveyPage {
   }
 
   ionViewDidLoad() {
-  	console.log(this.thisSurvey['author']);
     console.log('ionViewDidLoad AnswerSurveyPage');
   }
 
@@ -176,6 +175,18 @@ export class AnswerSurveyPage {
   	this.response['submitted_at'] = new Date().toISOString();
   	this.response['answers'] = this.answers;
 
+    for( var q in this.questions){
+      if(this.questions[q]['type'] == 'checkbox'){
+        var finalAns = [];
+        for( var a in this.answers[q]){
+          if(this.answers[q][a] == true){
+            finalAns.push(this.questions[q]['options'][a]);
+          }
+        }
+        this.answers[q] = finalAns;
+      }
+    }
+
     // setting the respondents name through 'manual' input
     // STORE to localDB
     if (this.navParams.get('diff_respondent_flag')){
@@ -188,20 +199,18 @@ export class AnswerSurveyPage {
           firebase.database().ref("/responses/"+this.s_id+"/"+newUserKey).set(this.response, function(error){
             if(error){
               console.log("Not successful pushing response to list of responses."+error);
-              this.showSubmitError();
             }else{
               console.log("Successfully added to responses!");
             }
           });
-
-          // update USER_SURVEYS invitation to COMPLETED
-          this.UpdateInvitationStatus();
         }catch(e){
           console.log(e);
         }
       }else{
         this.saveToLocalDB(this.response);
       }
+
+      this.navCtrl.pop();
     }
     else{
       // store response to firebase
