@@ -1,6 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
+import { AngularFireAuth } from '@angular/fire/auth';
+import * as firebase from 'firebase/app';
+import 'firebase/database';
+
 import { Storage } from '@ionic/storage';
 
 /**
@@ -24,34 +28,41 @@ export class AnswerSurveyPage {
   description;
   questions;
 
+  offline_responses = [];
+
   currUser;
   users = {};
 
   responses = {};
   response = {
   	'respondent': '',
-  	'survey_id': null,
+  	'survey_id': '',
   	'answers': [],
-  	'submitted_at': new Date()
+  	'submitted_at': ''
   };
 
   public answers = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
+    private fire: AngularFireAuth,
   	private storage: Storage,
   	private alertCtrl: AlertController) {
+
   	this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
 
-    this.storage.get("responses").then(res => {
-        this.responses = res;
-    });
+    try{
+      this.storage.get('offline_responses').then(res =>{
+        if(res){
+          this.offline_responses = res;
+        }
+      });
+    }catch(e){
+      console.log(e);
+    }
 
-    this.storage.get("users").then(usr => {
-        this.users = usr;
-        console.log(usr);
-    });
+    // DB structure: survey_id -> user_id -> responses
 
   	this.thisSurvey = navParams.get('item');
 
@@ -80,72 +91,141 @@ export class AnswerSurveyPage {
   }
 
   ionViewDidLoad() {
-    console.log(this.currUser);
   	console.log(this.thisSurvey['author']);
     console.log('ionViewDidLoad AnswerSurveyPage');
   }
 
-  submitResponse(){
-    console.log("submitting response ...")
-    console.log(this.answers);
+  showSubmitError(){
+    console.log("ERROR SUBMITTING at responses/user_surveys");
+  }
 
-    // setting the respondents name through 'manual' input
-    if (this.navParams.get('diff_respondent_flag')){
-      this.currUser = this.respondent_name? this.respondent_name.value: 'no name available';
-    }
+  showNetworkError(){
+    let alert = this.alertCtrl.create({
+      title: 'Network Error',
+      message: 'You must be connected to the Internet.',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
 
-  	// save responses to ionic localStorage
-  	this.response['respondent'] = this.currUser;
-  	this.response['survey_id'] = this.s_id;
-  	this.response['submitted_at'] = new Date();
-  	this.response['answers'] = this.answers;
-
-  	if(this.responses){
-      JSON.parse(this.responses['responses'].push(this.response));
-    }
-    else{
-      this.responses = {'responses': ''};
-      this.responses['responses'] = [this.response];
-    }
-
-    this.storage.set('responses', this.responses).then((val) =>{});
-
-    var usr = this.users['users'];
-
-    for ( var i in usr){
-      if (usr[i]['email'] == this.currUser){
-        for (var x in usr[i]['invitations']){
-
-          var invi = usr[i]['invitations'][x];
-
-          if( invi['s_id'] == this.s_id){
-            var temp = {
-              's_id': this.s_id,
-              'status': 'completed'
-            }
-
-            invi = temp;
-            usr[i]['invitations'][x] = invi;
-
-          }
-        }
-        break;
-      }
-    }
-
-    this.users['users'] = usr;
-    console.log(this.users);
-    // update users
-    this.storage.set('users', this.users).then((data) => {});
-
+  showSuccesSubmit(){
     let alert = this.alertCtrl.create({
       title: 'Success',
       message: 'Answers Submitted!.',
       buttons: ['OK']
     });
     alert.present();
+  }
 
+  UpdateInvitationStatus(){
+    try{
+      firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid+"/invitations/"+this.s_id+"/status").set("completed", function(error){
+        if(error){
+          console.log("Not successful updating invitation status."+error);
+          this.showSubmitError();
+        }else{
+          console.log("Successfully updated: invitation status to completed!");
+        }
+      });
+
+      // pop this page
+      this.navCtrl.pop();
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+  saveToLocalDB(response){
+    console.log("saving response to local storage...");
+
+    if(this.offline_responses[this.s_id]){
+      // there are offline responses for this survey
+      this.offline_responses[this.s_id].push(response);
+    }
+    else{
+      this.offline_responses[this.s_id] = [];
+      this.offline_responses[this.s_id].push(response);
+    }
+
+    this.storage.set('offline_responses', this.offline_responses);
     this.navCtrl.pop();
+  }
+
+  submitResponse(){
+    // check for Firebase connection
+    var connectedToFirebaseFlag = false;
+    try{
+      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
+      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          console.log("Getting data from Firebase...");
+          connectedToFirebaseFlag = true;          
+        }else {
+          console.log("Error loading data from Firebase.");
+          connectedToFirebaseFlag = false;
+        }
+      });
+    }catch(e){
+      console.log(e);
+    }
+
+    console.log("submitting response ...")
+
+  	this.response['respondent'] = this.currUser;
+  	this.response['survey_id'] = this.s_id;
+  	this.response['submitted_at'] = new Date().toISOString();
+  	this.response['answers'] = this.answers;
+
+    // setting the respondents name through 'manual' input
+    // STORE to localDB
+    if (this.navParams.get('diff_respondent_flag')){
+      // USE NEWLY GENERATED KEY for this unique user...
+      var newUserKey = firebase.database().ref().child('responses/'+this.s_id).push().key;
+      this.response['respondent'] = this.respondent_name? this.respondent_name.value: newUserKey;
+
+      if(connectedToFirebaseFlag){
+        try{
+          firebase.database().ref("/responses/"+this.s_id+"/"+newUserKey).set(this.response, function(error){
+            if(error){
+              console.log("Not successful pushing response to list of responses."+error);
+              this.showSubmitError();
+            }else{
+              console.log("Successfully added to responses!");
+            }
+          });
+
+          // update USER_SURVEYS invitation to COMPLETED
+          this.UpdateInvitationStatus();
+        }catch(e){
+          console.log(e);
+        }
+      }else{
+        this.saveToLocalDB(this.response);
+      }
+    }
+    else{
+      // store response to firebase
+      if(connectedToFirebaseFlag){
+        try{
+          firebase.database().ref("/responses/"+this.s_id+"/"+this.fire.auth.currentUser.uid).set(this.response, function(error){
+            if(error){
+              console.log("Not successful pushing response to list of responses."+error);
+              this.showSubmitError();
+            }else{
+              console.log("Successfully added to responses!");
+            }
+          });
+
+          // update USER_SURVEYS invitation to COMPLETED
+          this.UpdateInvitationStatus();
+        }catch(e){
+          console.log(e);
+        }
+      }
+      else{
+        this.showNetworkError();
+      }
+    }
   }
 
 }
