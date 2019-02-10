@@ -206,11 +206,11 @@ export class AnswerSurveyPage {
         }catch(e){
           console.log(e);
         }
+
+        this.navCtrl.pop();
       }else{
         this.saveToLocalDB(this.response);
       }
-
-      this.navCtrl.pop();
     }
     else{
       // store response to firebase

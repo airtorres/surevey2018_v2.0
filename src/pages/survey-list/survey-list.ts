@@ -41,6 +41,7 @@ export class SurveyListPage {
   all_surveys = [];
 
   drafts = [];
+  offline_responses = [];
 	
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private fire: AngularFireAuth,
@@ -50,14 +51,21 @@ export class SurveyListPage {
       this.currUser = x;
     });
 
-    // save offline responses from localDB to Firebase
-    this.syncResponsesToFirebase();
-
     this.storage.get('drafts').then(d =>{
       if(d){
         this.drafts = d;
       }
     });
+
+    try{
+      this.storage.get('offline_responses').then(res =>{
+        if(res){
+          this.offline_responses = res;
+        }
+      });
+    }catch(e){
+      console.log(e);
+    }
 
     console.log(this.drafts);
   }
@@ -96,39 +104,27 @@ export class SurveyListPage {
       console.log(e);
     }
 
-    console.log(connectedToFirebaseFlag);
-
     if(connectedToFirebaseFlag){
-      try{
-        var offline_responses = [];
-        this.storage.get('offline_responses').then(res =>{
-          if(res){
-            offline_responses = res;
-          }
-        });
-
-        console.log(offline_responses);
-
-        for( var survId in offline_responses){
-          for( var resp in offline_responses[survId]){
-            var newUserKey = firebase.database().ref().child('responses/'+survId).push().key;
-            var thisResponse = offline_responses[survId][resp];
-            firebase.database().ref("/responses/"+survId+"/"+newUserKey).set(thisResponse, function(error){
-              if(error){
-                console.log("Not successful pushing response to list of responses."+error);
-              }else{
-                console.log("Successfully added to responses!");
-                // remove this response
-                offline_responses[survId].splice(resp,1);
-              }
-            });
+      for( var survId in this.offline_responses){
+        for( var resp in this.offline_responses[survId]){
+          var newUserKey = firebase.database().ref().child('responses/'+survId).push().key;
+          var thisResponse = this.offline_responses[survId][resp];
+          var successFlag = true;
+          firebase.database().ref("/responses/"+survId+"/"+newUserKey).set(thisResponse, function(error){
+            if(error){
+              console.log("Not successful pushing response to list of responses."+error);
+              successFlag = false;
+            }else{
+              console.log("Successfully added to responses!");
+            }
+          });
+          if(successFlag){
+            // remove this response
+            this.offline_responses[survId].splice(resp,1);
           }
         }
-
-        this.storage.set('offline_responses', offline_responses);
-      }catch(e){
-        console.log(e);
       }
+      this.storage.set('offline_responses', this.offline_responses);
     }
   }
 
@@ -246,6 +242,9 @@ export class SurveyListPage {
     // mySurveys + survey invites
     this.all_surveys = [];
     this.fetchSurveys();
+
+    // save offline responses from localDB to Firebase
+    this.syncResponsesToFirebase();
   }
 
 }
