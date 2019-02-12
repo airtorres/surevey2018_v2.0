@@ -42,6 +42,7 @@ export class CreateSurveyPage {
   survey = {
     'title':'untitled survey',
     'description':'No Description to show.',
+    'author_id':'',
     'author': '',
     'created_at': '',
     'updated_at': '',
@@ -160,6 +161,12 @@ export class CreateSurveyPage {
       this.survey['created_at'] = new Date().toISOString();
 
       if(connectedToFirebaseFlag){
+        try{
+          this.survey['author_id'] = this.fire.auth.currentUser.uid;
+        }catch(e){
+          console.log(e);
+        }
+
         try{
           // generate ID for this survey
           var newPostKey = firebase.database().ref().child('surveys').push().key;

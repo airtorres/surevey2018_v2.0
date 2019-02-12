@@ -22,6 +22,14 @@ export class HomePage {
   username;
   built_in_templates = [];
 
+  mySurveys = [];
+  mySurveys_ids = [];
+
+  survey_invites = [];
+  survey_invites_ids = [];
+
+  invite_status = {};
+
   constructor(public navCtrl: NavController,
   	private fire: AngularFireAuth,
   	public app: App,
@@ -35,6 +43,7 @@ export class HomePage {
       this.username = u;
     });
 
+    this.loadSurveys();
     this.loadTemplates();
   }
 
@@ -59,6 +68,138 @@ export class HomePage {
 
   create_survey(){
   	this.navCtrl.push(CreateSurveyPage, {});
+  }
+
+  transformDate(isoDate){
+    var date = new Date(isoDate);
+    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    
+    var month = months[date.getMonth()];
+    var day = date.getDate();
+    var year = date.getFullYear();
+
+    var dateVal = month + ' '+ day + ', ' + year;
+
+    if (dateVal){
+      return dateVal;
+    }
+    else{
+      return "No Date Specified";
+    }
+  }
+
+  transformAuthorName(authorId, email){
+    var name = email;
+    const user:firebase.database.Reference = firebase.database().ref('/users/'+authorId);
+    user.on('value', userSnapshot => {
+      var u = userSnapshot.val();
+
+      if(u){
+        var firstname = u['first_name'];
+        var lastname = u['last_name'];
+
+        if(u['first_name'] != null && u['last_name'] != null){
+          name = firstname + ' ' + lastname;
+        }
+      }
+    });
+
+    return name;
+  }
+
+  loadSurveysFromLocalDB(){
+    this.storage.get("mySurveys").then(mySurv => {
+        this.mySurveys = mySurv;
+    });
+    this.storage.get("survey_invites").then(invites => {
+        this.survey_invites = invites;
+    });
+  }
+
+  loadSurveys(){
+    var connectedToFirebaseFlag = false;
+    try{
+      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
+      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          console.log("Getting data from Firebase...");
+          connectedToFirebaseFlag = true;          
+        }else {
+          console.log("Error loading data from Firebase.");
+          connectedToFirebaseFlag = false;
+        }
+      });
+    }catch(e){
+      console.log(e);
+    }
+
+        // fetch mysurveys from firebase
+    if(connectedToFirebaseFlag){
+      var survs = {};
+      const userSurveyRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid);
+      userSurveyRef.on('value', userToSurveySnapshot => {
+        survs = userToSurveySnapshot.val();
+      });
+
+      // fetching mySurveys IDs
+      if(survs['surveylist']){
+        this.mySurveys_ids = survs['surveylist'];
+      }
+      // fetching mySurveyInvitations IDs
+      var all_invitations = {};
+      if(survs['invitations']){
+        all_invitations = survs['invitations'];
+      }
+
+      this.survey_invites_ids = [];
+      for ( var invit in all_invitations){
+        this.survey_invites_ids.push(all_invitations[invit]['s_id']);
+        this.invite_status[invit] = all_invitations[invit]['status'];
+      }
+
+      console.log(this.mySurveys_ids);
+      console.log(this.survey_invites_ids);
+      console.log(this.invite_status);
+
+      var i;
+      var temp = {};
+      for(i in this.mySurveys_ids){
+        const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.mySurveys_ids[i]);
+        mysurv.on('value', mysurvSnapshot => {
+          temp = mysurvSnapshot.val();
+          if(temp){
+            temp['type'] = '';
+            temp['type'] = 'mySurvey';
+            this.mySurveys.push(temp);
+          }else{
+            this.mySurveys_ids.splice(i,1);
+          }
+        });
+      }
+
+      for(i in this.survey_invites_ids){
+        const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.survey_invites_ids[i]);
+        mysurv.on('value', mysurvSnapshot => {
+          if(temp){
+            temp = mysurvSnapshot.val();
+            temp['type'] = '';
+            temp['type'] = 'invites';
+            this.survey_invites.push(temp);
+          }else{
+            this.survey_invites_ids.splice(i,1);
+          }
+        });
+      }
+
+      // saving surveys to local storage for offline access
+      this.storage.set('mySurveys', this.mySurveys);
+      this.storage.set('survey_invites', this.survey_invites);
+      this.storage.set('invite_status', this.invite_status);
+    }
+    else{
+      // getting the survey data from localDB if not connected to Firebase
+      this.loadSurveysFromLocalDB();
+    }
   }
 
   loadTemplates(){

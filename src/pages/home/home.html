@@ -51,13 +51,17 @@
 
 	<ion-item-divider no-lines style="text-transform: uppercase;">Ongoing Surveys</ion-item-divider>
 
-	<ion-card class="ongoing-card card-radius">
+	<div padding *ngIf="mySurveys.length == 0">
+		No Survey
+	</div>
+
+	<ion-card class="ongoing-card card-radius" *ngFor="let item of mySurveys">
 
 		<div padding class="ongoing-card-header">
-			<ion-card-title id="ongoing-card-title">Music for the brain</ion-card-title>
+			<ion-card-title id="ongoing-card-title">{{ item['title'] }}</ion-card-title>
 			<ion-row>
 			    <ion-col>
-			      	<p style="font-size: 12px;">Created: Sept. 22, 2018</p>
+			      	<p style="font-size: 12px;">Created: {{ transformDate(item['created_at']) }}</p>
 			    </ion-col>
 
 			    <ion-col>
@@ -81,15 +85,19 @@
 
 	<ion-item-divider no-lines style="text-transform: uppercase;">Survey Invites</ion-item-divider>
 
-	<ion-card class="invite-card card-radius">
+	<div padding *ngIf="survey_invites.length == 0">
+		No Survey Invitations
+	</div>
+
+	<ion-card class="invite-card card-radius" *ngFor="let item of survey_invites">
 
 		<ion-card-content>
 
-			<ion-card-title id="invite-card-title">Computer Science: Course of the Future</ion-card-title>
+			<ion-card-title id="invite-card-title">{{ item['title'] }}</ion-card-title>
 			
 			<ion-row>
 			    <ion-col>
-			      	<p>By: Alliah Wriths</p> 
+			      	<p>By: {{ transformAuthorName(item['author_id'], item['author']) }}</p>
 			    </ion-col>
 
 			    <ion-col>
