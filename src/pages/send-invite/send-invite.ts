@@ -28,6 +28,8 @@ export class SendInvitePage {
   public selections = {};
   public selected_users = [];
 
+  selAll: boolean = false;
+
   public s_id;
   thisSurvey = {
   	's_id':'',
@@ -163,6 +165,22 @@ export class SendInvitePage {
 
   	this.navCtrl.pop();
   }
+
+  // selectAll() {
+  //   if (this.selAll == true) {
+  //     for (var i=0; i < this.all_users_email.length; i++) {
+  //       this.all_users_email[i]['selected'] = true;
+  //     }
+  //   }
+
+  //   if (this.selAll == false) {
+  //     for (var i=0; i < this.all_users_email.length; i++) {
+  //       this.all_users_email[i]['selected'] = false;
+  //     }
+  //   }
+  // }
+
+
 
   gotoFiltersPage() {
      this.navCtrl.push(FiltersPage);

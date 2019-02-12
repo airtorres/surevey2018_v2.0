@@ -20,7 +20,7 @@
 	</ion-avatar>
 
 	<ion-buttons text-center>
-		<button ion-button clear class="btn-profImg">Change Profile Photo</button>
+		<button ion-button clear class="btn-profImg" (click)="choose()">Change Profile Photo</button>
 	</ion-buttons>
 
 	<ion-list>
@@ -96,7 +96,7 @@
 	</ion-list>
 	
 	<ion-buttons end style="margin-top: 10px;">
-		<button ion-button (click)="saveProfile()">Save</button>
+		<button ion-button (click)="savePrompt()">Save</button>
 	</ion-buttons>
 
 </ion-content>

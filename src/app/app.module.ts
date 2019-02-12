@@ -37,6 +37,7 @@ import { IonicStorageModule } from '@ionic/storage';
 
 import { HttpModule } from '@angular/http';
 import { File } from '@ionic-native/file';
+import { FileChooser } from '@ionic-native/file-chooser';
 
  const firebaseAuth = {
     apiKey: "AIzaSyCVS6S7r9Fzou64HzePqZ9JSVZKG0-_LAU",
@@ -114,6 +115,7 @@ import { File } from '@ionic-native/file';
     StatusBar,
     SplashScreen,
     File,
+    FileChooser,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

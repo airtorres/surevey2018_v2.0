@@ -1,9 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 
-import * as countryStateCity from 'country-state-city';
+import countryStateCity from 'country-state-city';
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
+
+import { File } from '@ionic-native/file';
+import { FileChooser } from '@ionic-native/file-chooser';
 
 /**
  * Generated class for the EditProfilePage page.
@@ -58,7 +61,7 @@ export class EditProfilePage {
 
   
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController,
+  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private file: File, private fileChooser : FileChooser,
   	private fire: AngularFireAuth,
   	public toastCtrl : ToastController) {
 
@@ -146,6 +149,19 @@ export class EditProfilePage {
     	this.cities = countryStateCity.getCitiesOfState(this.stateId);
     	this.city = null; 
     }
+
+    if (this.country == null) { this.countryName = ""; }
+    if (this.state == null) { this.stateName = ""; }
+    if (this.city == null) { this.cityName = ""; }
+
+    console.log(this.prev_country);
+    console.log(this.prev_state);
+    console.log(this.prev_city);
+    console.log(this.countryName);
+    console.log(this.stateName);
+    console.log(this.cityName);
+
+
   }
 
   getCountry() {
@@ -197,6 +213,16 @@ export class EditProfilePage {
   		}	
   	}
 
+  displayToast() {
+    let toast = this.toastCtrl.create({
+        message: 'Success! Profile Updated!',
+        duration: 2000,
+        position: 'bottom'
+      });
+
+      toast.present();
+  }
+
 	saveProfile() {
 
 		var today = new Date();
@@ -244,34 +270,17 @@ export class EditProfilePage {
    			firebase.database().ref('/users/' + this.userId + '/city/').set(this.cityName);
    		}
 
-      console.log(this.country);
-      console.log(this.state);
-      console.log(this.city);
-
-	    let toast = this.toastCtrl.create({
-	      message: 'Success! Profile Updated!',
-	      duration: 2000,
-	      position: 'bottom'
-	    });
-
-	    toast.present();
-
-   		this.navCtrl.pop();
+      this.displayToast();
 	}
 
   // check if there are changes made before leaving the page
   checkAllChanges() {
-    // if (this.countryName == undefined) {
-    //   userCountry = "";
-    // }
-    // if (this.stateName == undefined) {
-    //   userState = "";
-    // }
-    // if (this.userCity == undefined) {
-    //   userCity = "";
-    // }
 
-    if (this.prev_first_name == this.firstname.value && this.prev_last_name == this.lastname.value && this.prev_username == this.username.value && this.prev_profession == this.profession && this.prev_sex == this.sex && this.prev_birthdate == this.bdate) {
+    if (this.country == null) { this.countryName = ""; }
+    if (this.state == null) { this.stateName = ""; }
+    if (this.city == null) { this.cityName = ""; }
+
+    if (this.prev_first_name == this.firstname.value && this.prev_last_name == this.lastname.value && this.prev_username == this.username.value && this.prev_profession == this.profession && this.prev_sex == this.sex && this.prev_birthdate == this.bdate && this.prev_country == this.countryName && this.prev_state == this.stateName && this.prev_city == this.cityName) {
       console.log("NO CHANGES MADE.");
       this.userCanLeave = true;
     } else {
@@ -289,7 +298,52 @@ export class EditProfilePage {
       return new Promise((resolve, reject) => {
         let alert = this.alertCtrl.create({
           title: 'Changes made',
-          message: 'Do you want to save?',
+          message: 'Do you want to save these changes?',
+          buttons: [
+            {
+              text: "Don't Save",
+              handler: () => {
+                console.log("User didn't saved data");
+                this.userCanLeave = true;
+                resolve();
+              }
+            },
+            {
+              text: 'Save',
+              handler: () => {
+                console.log('User saved data');
+                // do saving logic
+                this.saveProfile();
+                this.userCanLeave = true;
+                resolve();
+              }
+            },
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+                console.log('User stayed');
+                this.userCanLeave = true;
+                reject();
+              }
+            },
+          ]
+        });
+        alert.present();
+      });
+    } else { return true;
+    }
+
+  }
+
+  savePrompt() {
+    this.checkAllChanges();
+
+    if (!this.userCanLeave) {
+      return new Promise((resolve, reject) => {
+        let alert = this.alertCtrl.create({
+          title: 'Save Profile',
+          message: 'Make changes to your profile?',
           buttons: [
             {
               text: "Don't Save",
@@ -321,9 +375,45 @@ export class EditProfilePage {
           ]
         });
         alert.present();
-      });
-    } else { return true }
+      }).catch((error) => this.navCtrl.pop());
+    } 
+    else { 
+      this.saveProfile();
+      this.navCtrl.pop();
+    }
 
+  }
+
+  choose() {
+    this.fileChooser.open().then((uri)=>{
+      alert(uri);
+
+      this.file.resolveLocalFilesystemUrl(uri).then((newUrl)=>{
+        alert(JSON.stringify(newUrl));
+
+        let dirPath = newUrl.nativeURL;
+        let dirPathSegments = dirPath.split('/');  //break the string into an array
+        dirPathSegments.pop();  //remove its last element
+        dirPath = dirPathSegments.join('/');
+
+        this.file.readAsArrayBuffer(dirPath, newUrl.name).then(async (buffer)=>{
+          await this.upload(buffer, newUrl.name);
+        });
+
+      });
+
+    });
+  }
+
+  async upload(buffer, name) {
+    let blob = new Blob([buffer], { type: "image/jpeg" });
+
+    let storage = firebase.storage();
+    storage.ref('images/' + name).put(blob).then((d)=>{
+      alert("Done!");
+    }).catch((error)=>{
+      alert(JSON.stringify(error));
+    });
   }
 
 }
