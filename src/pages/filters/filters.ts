@@ -37,11 +37,13 @@ export class FiltersPage {
   cities = [];
 
   all_users = [];
+  all_users_email = [];
   currUser;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	public toastCtrl: ToastController,
-    private fire: AngularFireAuth) {
+    private fire: AngularFireAuth,
+    private storage: Storage) {
 
   	this.countries = countryStateCity.getAllCountries();
 
@@ -60,6 +62,11 @@ export class FiltersPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad FiltersPage');
+  }
+
+  showInternetConnectionError(){
+    console.log("Error connecting to Firebase.");
+    // INSERT CODE HERE: Toaster showing error
   }
 
   checkConnection(){
