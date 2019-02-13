@@ -89,24 +89,26 @@
 		<ion-note>No Survey Invitations</ion-note>
 	</div>
 
-	<ion-card class="invite-card card-radius" *ngFor="let item of survey_invites">
+	<div *ngFor="let item of survey_invites">
+		<ion-card class="invite-card card-radius" *ngIf="invite_status[item['id']] != 'completed'">
 
-		<ion-card-content>
+			<ion-card-content>
 
-			<ion-card-title id="invite-card-title">{{ item['title'] }}</ion-card-title>
-			
-			<ion-row>
-			    <ion-col>
-			      	<p>By: {{ transformAuthorName(item['author_id'], item['author']) }}</p>
-			    </ion-col>
+				<ion-card-title id="invite-card-title">{{ item['title'] }}</ion-card-title>
+				
+				<ion-row>
+				    <ion-col>
+				      	<p>By: {{ transformAuthorName(item['author_id'], item['author']) }}</p>
+				    </ion-col>
 
-			    <ion-col>
-			     	<button ion-button small id="invite-respond-btn" (click)="gotoAnswer(item)">RESPOND NOW</button>
-			    </ion-col>
-		  	</ion-row>
+				    <ion-col>
+				     	<button ion-button small id="invite-respond-btn" (click)="gotoAnswer(item)">RESPOND NOW</button>
+				    </ion-col>
+			  	</ion-row>
 
-		</ion-card-content>
+			</ion-card-content>
 
-	</ion-card>
+		</ion-card>
+	</div>
 
 </ion-content>

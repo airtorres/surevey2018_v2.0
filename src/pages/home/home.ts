@@ -120,10 +120,14 @@ export class HomePage {
 
   loadSurveysFromLocalDB(){
     this.storage.get("mySurveys").then(mySurv => {
+      if(mySurv){
         this.mySurveys = mySurv;
+      }
     });
     this.storage.get("survey_invites").then(invites => {
+      if(invites){
         this.survey_invites = invites;
+      }
     });
   }
 
@@ -200,8 +204,8 @@ export class HomePage {
       for(i in this.survey_invites_ids){
         const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.survey_invites_ids[i]);
         mysurv.on('value', mysurvSnapshot => {
+          temp = mysurvSnapshot.val();
           if(temp){
-            temp = mysurvSnapshot.val();
             temp['type'] = '';
             temp['type'] = 'invites';
             this.survey_invites.push(temp);
@@ -274,5 +278,17 @@ export class HomePage {
 
   browse_templates(){
     this.navCtrl.push(TemplateListPage, {})
+  }
+
+  public ionViewWillEnter(){
+    this.mySurveys = [];
+    this.mySurveys_ids = [];
+
+    this.survey_invites = [];
+    this.survey_invites_ids = [];
+
+    this.invite_status = {};
+
+    this.loadSurveys();
   }
 }

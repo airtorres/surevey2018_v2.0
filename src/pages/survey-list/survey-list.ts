@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ActionSheetController, ToastController, AlertController } from 'ionic-angular';
 
 import { SurveySummaryPage } from '../survey-summary/survey-summary';
 import { AnswerSurveyPage } from '../answer-survey/answer-survey';
@@ -44,6 +44,9 @@ export class SurveyListPage {
   offline_responses = [];
 	
   constructor(public navCtrl: NavController, public navParams: NavParams,
+    public actionSheetController: ActionSheetController,
+    private alertCtrl: AlertController,
+    public toastCtrl : ToastController,
     private fire: AngularFireAuth,
     private storage: Storage) {
 
@@ -130,13 +133,19 @@ export class SurveyListPage {
 
   loadSurveysFromLocalDB(){
     this.storage.get("mySurveys").then(mySurv => {
+      if(mySurv){
         this.mySurveys = mySurv;
+      }
     });
     this.storage.get("survey_invites").then(invites => {
+      if(invites){
         this.survey_invites = invites;
+      }
     });
     this.storage.get("all_surveys").then(all => {
+      if(all){
         this.all_surveys = all;
+      }
     });
   }
 
@@ -215,8 +224,8 @@ export class SurveyListPage {
       for(i in this.survey_invites_ids){
         const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.survey_invites_ids[i]);
         mysurv.on('value', mysurvSnapshot => {
+          temp = mysurvSnapshot.val();
           if(temp){
-            temp = mysurvSnapshot.val();
             temp['type'] = '';
             temp['type'] = 'invites';
             this.survey_invites.push(temp);
@@ -237,6 +246,117 @@ export class SurveyListPage {
       // getting the survey data from localDB if not connected to Firebase
       this.loadSurveysFromLocalDB();
     }
+  }
+
+  confirmDeleteSurvey(item){
+    const thisSurv:firebase.database.Reference = firebase.database().ref('/surveys/'+item['id']);
+    thisSurv.remove();
+
+    // deleting survey id from user_to_survey
+    var mySurvs = {};
+    const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist');
+    surv.on('value', survSnapshot => {
+      mySurvs = survSnapshot.val();
+    });
+
+    for (var m in mySurvs){
+      if(item['id'] == mySurvs[m]){
+        firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+m).remove(
+          function(error) {
+            if(error){
+              console.log("Not able to delete survey");
+            }else{
+              // Show success toaster
+              try{
+                this.displayToast();
+              }catch(e){
+                console.log(e);
+              }
+              console.log("Survey Deleted!");
+            }
+          }
+        );
+      }
+    }
+
+    console.log(mySurvs);
+    // saving surveys to local storage for offline access
+    this.storage.set('mySurveys', mySurvs);
+  }
+
+  deleteMySurvey(item){
+    let alert = this.alertCtrl.create({
+      title: 'Warning',
+      message: 'Are you sure to delete this survey?',
+      buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked. Do not delete survey.');
+        }
+      },
+      {
+        text: 'Delete',
+        handler: () => {
+          console.log('deleting survey ...');
+          this.confirmDeleteSurvey(item);
+        }
+      }
+    ]
+    });
+    alert.present();
+  }
+
+  deleteSurveyInvitation(item){
+
+  }
+
+  deleteDraft(item){
+
+  }
+
+  showItemOption(item){
+    const actionSheet = this.actionSheetController.create({
+      buttons: [{
+        text: 'Delete',
+        role: 'destructive',
+        icon: 'trash',
+        handler: () => {
+          if(item['type']){
+            if(item['type'] == 'mySurvey'){
+              console.log("Deleting my survey...");
+              this.deleteMySurvey(item);
+            }else if( item['type'] == 'invites'){
+              console.log("Deleting survey invitations...");
+              this.deleteSurveyInvitation(item);
+            }
+          }else{
+            // assume draft item
+            console.log("Deleting my drafts...");
+            this.deleteDraft(item);
+          }
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    actionSheet.present();
+  }
+
+  displayToast(){
+    let toast = this.toastCtrl.create({
+      message: 'Survey Deleted!',
+      duration: 2000,
+      position: 'bottom'
+    });
+
+    toast.present();
   }
 
   public ionViewWillEnter() {
