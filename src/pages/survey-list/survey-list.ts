@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ActionSheetController, ToastContro
 
 import { SurveySummaryPage } from '../survey-summary/survey-summary';
 import { AnswerSurveyPage } from '../answer-survey/answer-survey';
-import { EditDraftPage } from '..//edit-draft/edit-draft';
+import { EditDraftPage } from '../edit-draft/edit-draft';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';

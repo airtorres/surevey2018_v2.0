@@ -30,6 +30,7 @@ export class SurveySummaryPage {
   s_id;
   created_date;
   updated_date;
+  num_responses = 0;
 
   currUser;
   responses;
@@ -44,6 +45,7 @@ export class SurveySummaryPage {
     this.title = this.thisSurvey['title'];
     this.isActive = this.thisSurvey['isActive'];
     this.s_id = this.thisSurvey['id'];
+    this.num_responses = this.thisSurvey['num_responses']? this.thisSurvey['num_responses']:0;
 
     var date = new Date(this.thisSurvey['created_at']);
     var dateVal = date? ((date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear()):null;

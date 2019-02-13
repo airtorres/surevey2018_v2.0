@@ -7,6 +7,8 @@ import 'firebase/database';
 
 import { Storage } from '@ionic/storage';
 
+import { NewMsgPage } from '../new-msg/new-msg';
+
 /**
  * Generated class for the AnswerSurveyPage page.
  *
@@ -23,9 +25,12 @@ export class AnswerSurveyPage {
   @ViewChild('respondent_name') respondent_name;
 
   thisSurvey;
-  title;
+  title = '(Untitled Survey)';
   s_id;
-  description;
+  description = 'No description to show.';
+  author = 'Unknown author';
+  author_id;
+  author_name;
   questions;
 
   offline_responses = [];
@@ -68,6 +73,9 @@ export class AnswerSurveyPage {
 
   	this.title = this.thisSurvey['title'];
   	this.description = this.thisSurvey['description'];
+    this.author = this.thisSurvey['author'];
+    this.author_id = this.thisSurvey['author_id'];
+    this.author_name = this.transformAuthorName(this.author_id, this.author);
     this.s_id = this.thisSurvey['id'];
 
     this.questions = this.thisSurvey['questions'];
@@ -92,6 +100,25 @@ export class AnswerSurveyPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad AnswerSurveyPage');
+  }
+
+  transformAuthorName(authorId, email){
+    var name = email;
+    const user:firebase.database.Reference = firebase.database().ref('/users/'+authorId);
+    user.on('value', userSnapshot => {
+      var u = userSnapshot.val();
+
+      if(u){
+        var firstname = u['first_name'];
+        var lastname = u['last_name'];
+
+        if(u['first_name'] != null && u['last_name'] != null){
+          name = firstname + ' ' + lastname;
+        }
+      }
+    });
+
+    return name;
   }
 
   showSubmitError(){
@@ -235,6 +262,11 @@ export class AnswerSurveyPage {
         this.showNetworkError();
       }
     }
+  }
+
+  sendMessage(){
+    console.log("Redirecting to chat...");
+    this.navCtrl.push(NewMsgPage, {'chatmate' : this.author});
   }
 
 }

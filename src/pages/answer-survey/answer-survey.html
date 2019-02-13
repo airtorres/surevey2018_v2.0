@@ -8,6 +8,11 @@
 
   <ion-navbar>
     <ion-title>Answer</ion-title>
+    <ion-buttons *ngIf="thisSurvey['author'] != currUser" end>
+      <button ion-button (click)="sendMessage()" style="margin-right: 10px;">
+        <ion-icon id="chat-icon-top-right" name="mail"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -16,11 +21,12 @@
 <ion-content padding>
 	<div id="title-desc">
 		<h3>{{ title }}</h3>
+		<p>By: {{ author_name }}</p>
 		<p style="text-align: justify;">{{ description }}</p>
 	</div>
 
 	<!-- show this only if you know -->
-	<ion-input *ngIf="thisSurvey['author'] == currUser" placeholder="Name of Respondent" style="border-bottom: 1px solid gray;" #respondent_name></ion-input>
+	<ion-input *ngIf="thisSurvey['author'] == currUser" placeholder="Name of Respondent/ Respondent Identifier" style="border-bottom: 1px solid gray;" #respondent_name></ion-input>
 	<!-- <ion-input placeholder="Enter text" style="border-bottom: 1px solid gray;"></ion-input> -->
 
 	<div *ngFor="let question of questions; let idx = index">
