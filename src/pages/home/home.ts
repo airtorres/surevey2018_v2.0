@@ -7,6 +7,9 @@ import { ProfilePage } from '../profile/profile';
 import { SettingPage } from '../setting/setting';
 import { TemplateListPage } from '../template-list/template-list';
 
+import { SurveySummaryPage } from '../survey-summary/survey-summary';
+import { AnswerSurveyPage } from '../answer-survey/answer-survey';
+
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
@@ -53,6 +56,14 @@ export class HomePage {
 
   gotoSettings(){
   	this.navCtrl.push(SettingPage, {});
+  }
+
+  gotoSummary(item){
+    this.navCtrl.push(SurveySummaryPage, {'item' : item});
+  }
+
+  gotoAnswer(item){
+    this.navCtrl.push(AnswerSurveyPage, {'item' : item});
   }
 
   logout(){
@@ -170,6 +181,15 @@ export class HomePage {
           if(temp){
             temp['type'] = '';
             temp['type'] = 'mySurvey';
+            temp['num_responses'] = 0;
+
+            // getting number of responses
+            const resp:firebase.database.Reference = firebase.database().ref('/responses/'+this.mySurveys_ids[i]);
+            resp.on('value', respSnapshot => {
+              if(respSnapshot.val()){
+                temp['num_responses'] = respSnapshot.numChildren();
+              }
+            });
             this.mySurveys.push(temp);
           }else{
             this.mySurveys_ids.splice(i,1);

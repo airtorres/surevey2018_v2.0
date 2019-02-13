@@ -195,6 +195,15 @@ export class SurveyListPage {
           if(temp){
             temp['type'] = '';
             temp['type'] = 'mySurvey';
+            temp['num_responses'] = 0;
+
+            // getting number of responses
+            const resp:firebase.database.Reference = firebase.database().ref('/responses/'+this.mySurveys_ids[i]);
+            resp.on('value', respSnapshot => {
+              if(respSnapshot.val()){
+                temp['num_responses'] = respSnapshot.numChildren();
+              }
+            });
             this.mySurveys.push(temp);
             this.all_surveys.push(temp);
           }else{

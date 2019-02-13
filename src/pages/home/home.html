@@ -52,7 +52,7 @@
 	<ion-item-divider no-lines style="text-transform: uppercase;">Ongoing Surveys</ion-item-divider>
 
 	<div padding *ngIf="mySurveys.length == 0">
-		No Survey
+		<ion-note>No Survey</ion-note>
 	</div>
 
 	<ion-card class="ongoing-card card-radius" *ngFor="let item of mySurveys">
@@ -65,18 +65,18 @@
 			    </ion-col>
 
 			    <ion-col>
-			     	<button ion-button id="view-ongoing-btn">VIEW DETAILS</button>
+			     	<button ion-button id="view-ongoing-btn" (click)="gotoSummary(item)">VIEW DETAILS</button>
 			    </ion-col>
 		  	</ion-row>
 		</div>
 
 		<ion-row padding>
 		    <ion-col>
-		      	5 total responses
+		      	{{ item['num_responses'] }} total responses
 		    </ion-col>
 
 		    <ion-col>
-		     	5 complete responses
+		     	{{ item['num_responses'] }} total responses
 		    </ion-col>
 		</ion-row>
 		 
@@ -86,7 +86,7 @@
 	<ion-item-divider no-lines style="text-transform: uppercase;">Survey Invites</ion-item-divider>
 
 	<div padding *ngIf="survey_invites.length == 0">
-		No Survey Invitations
+		<ion-note>No Survey Invitations</ion-note>
 	</div>
 
 	<ion-card class="invite-card card-radius" *ngFor="let item of survey_invites">
@@ -101,7 +101,7 @@
 			    </ion-col>
 
 			    <ion-col>
-			     	<button ion-button small id="invite-respond-btn">RESPOND NOW</button>
+			     	<button ion-button small id="invite-respond-btn" (click)="gotoAnswer(item)">RESPOND NOW</button>
 			    </ion-col>
 		  	</ion-row>
 
