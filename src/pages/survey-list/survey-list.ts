@@ -86,7 +86,37 @@ export class SurveyListPage {
   }
 
   gotoRespondentView(item){
-    this.navCtrl.push(AnswerSurveyPage, {'item' : item});
+    // check for Firebase connection
+    var connectedToFirebaseFlag = false;
+    try{
+      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
+      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          console.log("Connected to Firebase.");
+          connectedToFirebaseFlag = true;          
+        }else {
+          console.log("Error connecting to Firebase.");
+          connectedToFirebaseFlag = false;
+        }
+      });
+    }catch(e){
+      console.log(e);
+    }
+
+    if(connectedToFirebaseFlag && this.invite_status[item['id']] != 'completed'){
+      this.navCtrl.push(AnswerSurveyPage, {'item' : item});
+    }else if(this.invite_status[item['id']] != 'completed'){
+      this.showConnectionError();
+    }
+  }
+
+  showConnectionError(){
+    let alert = this.alertCtrl.create({
+      title: 'Connection Timeout',
+      message: 'You must be connected to the internet.',
+      buttons: ['OK']
+    });
+    alert.present();
   }
 
   syncResponsesToFirebase(){
@@ -140,6 +170,11 @@ export class SurveyListPage {
     this.storage.get("survey_invites").then(invites => {
       if(invites){
         this.survey_invites = invites;
+      }
+    });
+    this.storage.get("invite_status").then(status => {
+      if(status){
+        this.invite_status = status;
       }
     });
     this.storage.get("all_surveys").then(all => {

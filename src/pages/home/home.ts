@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, App } from 'ionic-angular';
+import { NavController, App, AlertController } from 'ionic-angular';
 
 import { SigninPage } from '../signin/signin';
 import { CreateSurveyPage } from '../create-survey/create-survey';
@@ -36,6 +36,7 @@ export class HomePage {
   constructor(public navCtrl: NavController,
   	private fire: AngularFireAuth,
   	public app: App,
+    private alertCtrl: AlertController,
     private storage: Storage) {
 
     this.storage.get('currentUser').then(x =>{
@@ -63,7 +64,37 @@ export class HomePage {
   }
 
   gotoAnswer(item){
-    this.navCtrl.push(AnswerSurveyPage, {'item' : item});
+    // check for Firebase connection
+    var connectedToFirebaseFlag = false;
+    try{
+      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
+      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          console.log("Connected to Firebase.");
+          connectedToFirebaseFlag = true;          
+        }else {
+          console.log("Error connecting to Firebase.");
+          connectedToFirebaseFlag = false;
+        }
+      });
+    }catch(e){
+      console.log(e);
+    }
+
+    if(connectedToFirebaseFlag){
+      this.navCtrl.push(AnswerSurveyPage, {'item' : item});
+    }else{
+      this.showConnectionError();
+    }
+  }
+
+  showConnectionError(){
+    let alert = this.alertCtrl.create({
+      title: 'Connection Timeout',
+      message: 'You must be connected to the internet.',
+      buttons: ['OK']
+    });
+    alert.present();
   }
 
   logout(){
@@ -127,6 +158,11 @@ export class HomePage {
     this.storage.get("survey_invites").then(invites => {
       if(invites){
         this.survey_invites = invites;
+      }
+    });
+    this.storage.get("invite_status").then(status => {
+      if(status){
+        this.invite_status = status;
       }
     });
   }
