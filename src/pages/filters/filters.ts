@@ -67,11 +67,6 @@ export class FiltersPage {
     console.log('ionViewDidLoad FiltersPage');
   }
 
-  showInternetConnectionError(){
-    console.log("Error connecting to Firebase.");
-    // INSERT CODE HERE: Toaster showing error
-  }
-
   checkConnection(){
     // check for Firebase connection
     var connectFlag = false;
