@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 
 import { SendInvitePage } from '../send-invite/send-invite';
 import { CreateSurveyPage } from '../create-survey/create-survey';
@@ -39,7 +39,7 @@ export class SurveySummaryPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage,
     private fire: AngularFireAuth,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController, public loadingCtrl: LoadingController) {
     this.thisSurvey = this.navParams.get('item');
 
     this.title = this.thisSurvey['title'];
@@ -75,7 +75,21 @@ export class SurveySummaryPage {
   }
 
   gotoSendInvitePage(){
-  	this.navCtrl.push(SendInvitePage, {s_id: this.s_id});
+      let loading = this.loadingCtrl.create({
+        content: 'Please wait...'
+      });
+
+      loading.present();
+
+      setTimeout(() => {
+        this.navCtrl.push(SendInvitePage, {s_id: this.s_id});
+      }, 1000);
+
+      setTimeout(() => {
+        loading.dismiss();
+      }, 1000);
+
+  	// this.navCtrl.push(SendInvitePage, {s_id: this.s_id});
   }
 
   gotoEdit(){

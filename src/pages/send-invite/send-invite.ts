@@ -27,6 +27,7 @@ export class SendInvitePage {
 
   public selections = {};
   public selected_users = [];
+  public generated_users_from_filter = [];
 
   selAll: boolean = false;
 
@@ -51,6 +52,8 @@ export class SendInvitePage {
   }
 
   ionViewWillEnter(){
+    this.generated_users_from_filter = this.navParams.get('generated_users') || null;
+    console.log(this.generated_users_from_filter);
   }
 
   checkConnection(){

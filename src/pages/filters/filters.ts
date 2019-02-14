@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, AlertController, LoadingController } from 'ionic-angular';
 
 import countryStateCity from 'country-state-city';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
+import { Storage } from '@ionic/storage';
 /**
  * Generated class for the FiltersPage page.
  *
@@ -22,6 +23,7 @@ export class FiltersPage {
   
   @ViewChild('min') min;
   @ViewChild('max') max;
+  @ViewChild('numPersons') numPersons;
   profession: any;
   sex: any;
   country: any;
@@ -38,12 +40,13 @@ export class FiltersPage {
 
   all_users = [];
   all_users_email = [];
+  public generated_users = [];
   currUser;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-  	public toastCtrl: ToastController,
-    private fire: AngularFireAuth,
-    private storage: Storage) {
+  	public toastCtrl: ToastController, private storage: Storage,
+    private fire: AngularFireAuth, private alertCtrl: AlertController,
+    public loadingCtrl: LoadingController) {
 
   	this.countries = countryStateCity.getAllCountries();
 
@@ -108,6 +111,17 @@ export class FiltersPage {
         this.all_users_email.push(this.all_users[e]['email']);
       }
     }
+
+    console.log(this.all_users_email);
+  }
+
+  showInternetConnectionError(){
+    let alert = this.alertCtrl.create({
+      title: 'Oppss! Connection Timeout.',
+      message: 'You must be connected to the internet.',
+      buttons: ['OK']
+    });
+    alert.present();
   }
 
 	getCountry() {
@@ -149,6 +163,35 @@ export class FiltersPage {
   	this.city = "Anywhere";
 	}
 
+  applyFilterToast() {
+    let applyFilter = this.toastCtrl.create({
+      message: 'Applied filters successfully!',
+      duration: 2000,
+      position: 'bottom'
+    });
+
+    applyFilter.present();
+  }
+
+  randomSample() {
+    console.log("im here");
+    let length = 0;
+    while (length != this.numPersons.value) {
+      let user = this.all_users_email[Math.floor(Math.random()*this.all_users_email.length)];
+
+      if (this.generated_users.indexOf(user) !== -1) {
+        console.log('user exists');
+        continue;
+      } else {
+        this.generated_users.push(user);
+        length++;
+      }
+    }
+    console.log(this.generated_users);
+    this.navCtrl.getPrevious().data.generated_users = this.generated_users;
+    this.navCtrl.pop();
+  }
+
 	applyFilter() {
 		console.log("Applying filter....");
 		console.log("min: ", this.min.value);
@@ -158,16 +201,30 @@ export class FiltersPage {
 		console.log(this.country, this.countryName);
 		console.log(this.state, this.stateName);
 		console.log(this.city, this.cityName);
+    console.log("Num Persons: ", this.numPersons.value);
 
-		let applyFilter = this.toastCtrl.create({
-      message: 'Applied filters successfully!',
-      duration: 2000,
-      position: 'bottom'
-    });
+    // if empty tanan nga fields
+    if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value == '') { 
+      let incompleteFieldsToast = this.toastCtrl.create({
+        message: 'Input at least one on the input fields',
+        duration: 2000,
+        position: 'bottom'
+      });
 
-    applyFilter.present();
+      incompleteFieldsToast.present();
+    }
 
- 		this.navCtrl.pop();
+    // for random sampling
+    if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value != '') {
+
+      this.randomSample();
+    }
+
+    // console.log(this.generated_users);
+    // this.applyFilterToast();
+
+    // this.navCtrl.getPrevious().data.generated_users_email = this.generated_users;
+    // this.navCtrl.pop();
 	}
 
 	cancelBtn() {

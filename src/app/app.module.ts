@@ -39,13 +39,22 @@ import { HttpModule } from '@angular/http';
 import { File } from '@ionic-native/file';
 import { FileChooser } from '@ionic-native/file-chooser';
 
+ // const firebaseAuth = {
+ //    apiKey: "AIzaSyCVS6S7r9Fzou64HzePqZ9JSVZKG0-_LAU",
+ //    authDomain: "sureveydb.firebaseapp.com",
+ //    databaseURL: "https://sureveydb.firebaseio.com",
+ //    projectId: "sureveydb",
+ //    storageBucket: "sureveydb.appspot.com",
+ //    messagingSenderId: "356066623007"
+ //  };
+
  const firebaseAuth = {
-    apiKey: "AIzaSyCVS6S7r9Fzou64HzePqZ9JSVZKG0-_LAU",
-    authDomain: "sureveydb.firebaseapp.com",
-    databaseURL: "https://sureveydb.firebaseio.com",
-    projectId: "sureveydb",
-    storageBucket: "sureveydb.appspot.com",
-    messagingSenderId: "356066623007"
+    apiKey: "AIzaSyDoso6IQBwpKn2KgQValVvynErc7vhGXHg",
+    authDomain: "sureveyuserstempdb.firebaseapp.com",
+    databaseURL: "https://sureveyuserstempdb.firebaseio.com",
+    projectId: "sureveyuserstempdb",
+    storageBucket: "sureveyuserstempdb.appspot.com",
+    messagingSenderId: "399527974751"
   };
 
 @NgModule({

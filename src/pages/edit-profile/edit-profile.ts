@@ -271,6 +271,7 @@ export class EditProfilePage {
    		}
 
       this.displayToast();
+      this.navCtrl.pop();
 	}
 
   // check if there are changes made before leaving the page
@@ -331,56 +332,7 @@ export class EditProfilePage {
         });
         alert.present();
       });
-    } else { return true;
-    }
-
-  }
-
-  savePrompt() {
-    this.checkAllChanges();
-
-    if (!this.userCanLeave) {
-      return new Promise((resolve, reject) => {
-        let alert = this.alertCtrl.create({
-          title: 'Save Profile',
-          message: 'Make changes to your profile?',
-          buttons: [
-            {
-              text: "Don't Save",
-              handler: () => {
-                console.log("User didn't saved data");
-                this.userCanLeave = true;
-                resolve();
-              }
-            },
-            {
-              text: 'Save',
-              handler: () => {
-                console.log('User saved data');
-                // do saving logic
-                this.saveProfile();
-                this.userCanLeave = true;
-                resolve();
-              }
-            },
-            {
-              text: 'Cancel',
-              role: 'cancel',
-              handler: () => {
-                console.log('User stayed');
-                this.userCanLeave = false;
-                reject();
-              }
-            },
-          ]
-        });
-        alert.present();
-      }).catch((error) => this.navCtrl.pop());
-    } 
-    else { 
-      this.saveProfile();
-      this.navCtrl.pop();
-    }
+    } else { return true; }
 
   }
 
