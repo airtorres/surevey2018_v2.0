@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController, ToastController } from 'ionic-angular';
 
 import { SendInvitePage } from '../send-invite/send-invite';
 import { CreateSurveyPage } from '../create-survey/create-survey';
@@ -39,7 +39,10 @@ export class SurveySummaryPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage,
     private fire: AngularFireAuth,
-    private alertCtrl: AlertController, public loadingCtrl: LoadingController) {
+    private alertCtrl: AlertController,
+    public loadingCtrl: LoadingController,
+    public toastCtrl : ToastController,) {
+
     this.thisSurvey = this.navParams.get('item');
 
     this.title = this.thisSurvey['title'];
@@ -115,36 +118,62 @@ export class SurveySummaryPage {
     this.navCtrl.push(ResultsPage, {s_id: this.s_id, responses: this.thisResponses});
   }
 
-  confirmDeleteSurvey(){
-    const thisSurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.s_id);
-    thisSurv.remove();
-
-    // deleting survey id from user_to_survey
-    var mySurvs = {};
-    const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist');
-    surv.on('value', survSnapshot => {
-      mySurvs = survSnapshot.val();
+  displayToast(){
+    let toast = this.toastCtrl.create({
+      message: 'Survey Deleted!',
+      duration: 2000,
+      position: 'bottom'
     });
 
-    for (var m in mySurvs){
-      if(this.s_id == mySurvs[m]){
-        firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+m).remove(
-          function(error) {
-            if(error){
-              console.log("Not able to delete survey");
-            }else{
-              console.log("Survey Deleted!");
+    toast.present();
+  }
+
+  confirmDeleteSurvey(){
+    let loading = this.loadingCtrl.create({
+      content: 'Deleting survey...'
+    });
+
+    loading.present().then(() => {
+      firebase.database().ref('/surveys/'+this.s_id).remove(
+        function(error) {
+        if(error){
+          console.log("Not able to delete survey on list");
+        }else{
+          console.log("Survey Deleted on survey List!");
+        }
+      });
+
+      // deleting survey id from user_to_survey
+      var mySurvs = [];
+      const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist');
+      surv.on('value', survSnapshot => {
+        mySurvs = survSnapshot.val();
+      });
+
+      var thisPrompt = this;
+      for (var m in mySurvs){
+        if(this.s_id == mySurvs[m]){
+          firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+m).remove(
+            function(error) {
+              if(error){
+                console.log("Not able to delete survey on user_survey");
+              }else{
+                console.log("Survey Deleted on user_survey!");
+                try{
+                  // Assume successful delete
+                  thisPrompt.displayToast();
+                }catch(e){
+                  console.log(e);
+                }
+              }
             }
-          }
-        );
+          );
+        }
       }
-    }
 
-    console.log(mySurvs);
-    // saving surveys to local storage for offline access
-    this.storage.set('mySurveys', mySurvs);
-
-    this.navCtrl.pop();
+      loading.dismiss();
+      this.navCtrl.pop();
+    });
   }
 
   deleteSurvey(){

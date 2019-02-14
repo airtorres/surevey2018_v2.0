@@ -42,7 +42,7 @@
   <!-- MAIN BUTTONS -->
 
   <ion-list>
-    <button ion-item (click)="gotoEdit()" style="padding-left: 0px;">
+    <button ion-item (click)="gotoEdit()" style="padding-left: 0px;" [disabled]="num_responses != 0">
       <ion-icon item-left name="create" color="blue" style="font-size: 25px;"></ion-icon>
       Edit
     </button>

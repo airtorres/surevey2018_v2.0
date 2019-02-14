@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ActionSheetController, ToastController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ActionSheetController, ToastController, AlertController, LoadingController } from 'ionic-angular';
 
 import { SurveySummaryPage } from '../survey-summary/survey-summary';
 import { AnswerSurveyPage } from '../answer-survey/answer-survey';
@@ -47,6 +47,7 @@ export class SurveyListPage {
     public actionSheetController: ActionSheetController,
     private alertCtrl: AlertController,
     public toastCtrl : ToastController,
+    public loadingCtrl: LoadingController,
     private fire: AngularFireAuth,
     private storage: Storage) {
 
@@ -106,17 +107,8 @@ export class SurveyListPage {
     if(connectedToFirebaseFlag && this.invite_status[item['id']] != 'completed'){
       this.navCtrl.push(AnswerSurveyPage, {'item' : item});
     }else if(this.invite_status[item['id']] != 'completed'){
-      this.showConnectionError();
+      this.showPrompt('Connection Timeout','You must be connected to the internet.');
     }
-  }
-
-  showConnectionError(){
-    let alert = this.alertCtrl.create({
-      title: 'Connection Timeout',
-      message: 'You must be connected to the internet.',
-      buttons: ['OK']
-    });
-    alert.present();
   }
 
   syncResponsesToFirebase(){
@@ -283,40 +275,63 @@ export class SurveyListPage {
     }
   }
 
-  confirmDeleteSurvey(item){
-    const thisSurv:firebase.database.Reference = firebase.database().ref('/surveys/'+item['id']);
-    thisSurv.remove();
+  showPrompt(thisTitle, msg){
+    let alert = this.alertCtrl.create({
+      title: thisTitle,
+      message: msg,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
 
-    // deleting survey id from user_to_survey
-    var mySurvs = {};
-    const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist');
-    surv.on('value', survSnapshot => {
-      mySurvs = survSnapshot.val();
+  confirmDeleteSurvey(item){
+    let loading = this.loadingCtrl.create({
+      content: 'Deleting survey...'
     });
 
-    for (var m in mySurvs){
-      if(item['id'] == mySurvs[m]){
-        firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+m).remove(
-          function(error) {
-            if(error){
-              console.log("Not able to delete survey");
-            }else{
-              // Show success toaster
-              try{
-                this.displayToast();
-              }catch(e){
-                console.log(e);
-              }
-              console.log("Survey Deleted!");
-            }
-          }
-        );
-      }
-    }
+    loading.present().then(() => {
 
-    console.log(mySurvs);
-    // saving surveys to local storage for offline access
-    this.storage.set('mySurveys', mySurvs);
+      firebase.database().ref('/surveys/'+item['id']).remove(
+        function(error) {
+        if(error){
+          console.log("Not able to delete survey on list");
+        }else{
+          console.log("Survey Deleted on survey List!");
+        }
+      });
+
+      // deleting survey id from user_to_survey
+      var mySurvs = [];
+      const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist');
+      surv.on('value', survSnapshot => {
+        mySurvs = survSnapshot.val();
+      });
+
+      var thisPrompt = this;
+      for (var m in mySurvs){
+        if(item['id'] == mySurvs[m]){
+          firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+m).remove(
+            function(error) {
+              if(error){
+                console.log("Not able to delete survey on user_survey");
+                thisPrompt.showPrompt('Connection Timeout', 'You must be connected to the Internet.');
+              }else{
+                console.log("Survey Deleted on user_survey!");
+                try{
+                  // Assume successful delete
+                  thisPrompt.displayToast();
+                }catch(e){
+                  console.log(e);
+                }
+              }
+            }
+          );
+        }
+      }
+
+      this.ionViewWillEnter();
+      loading.dismiss();
+    });
   }
 
   deleteMySurvey(item){
