@@ -146,6 +146,10 @@ export class HomePage {
       }
     });
 
+    if(name == ' '){
+      name = email;
+    }
+
     return name;
   }
 
@@ -250,6 +254,9 @@ export class HomePage {
           }
         });
       }
+
+      this.mySurveys.reverse();
+      this.survey_invites.reverse();
 
       // saving surveys to local storage for offline access
       this.storage.set('mySurveys', this.mySurveys);

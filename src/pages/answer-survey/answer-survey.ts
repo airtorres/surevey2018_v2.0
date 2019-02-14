@@ -118,6 +118,10 @@ export class AnswerSurveyPage {
       }
     });
 
+    if(name == ' '){
+      name = email;
+    }
+
     return name;
   }
 

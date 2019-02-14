@@ -263,6 +263,10 @@ export class SurveyListPage {
         });
       }
 
+      this.mySurveys.reverse();
+      this.survey_invites.reverse();
+      this.all_surveys.reverse();
+
       // saving surveys to local storage for offline access
       this.storage.set('mySurveys', this.mySurveys);
       this.storage.set('survey_invites', this.survey_invites);
