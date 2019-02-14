@@ -300,6 +300,16 @@ export class SurveyListPage {
         }
       });
 
+      // deleting all responses for this survey
+      firebase.database().ref('/responses/'+item['id']).remove(
+        function(error) {
+        if(error){
+          console.log("Not able to delete responses.");
+        }else{
+          console.log("Responses for this survey are deleted!");
+        }
+      });
+
       // deleting survey id from user_to_survey
       var mySurvs = [];
       const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist');
@@ -319,7 +329,7 @@ export class SurveyListPage {
                 console.log("Survey Deleted on user_survey!");
                 try{
                   // Assume successful delete
-                  thisPrompt.displayToast();
+                  thisPrompt.displayToast('Survey');
                 }catch(e){
                   console.log(e);
                 }
@@ -334,23 +344,46 @@ export class SurveyListPage {
     });
   }
 
-  deleteMySurvey(item){
+  showDeleteConfirmationAlert(item){
+    var msg = 'Are you sure to delete this survey?';
+    if(item['type']){
+      if(item['type'] == 'mySurvey'){
+        console.log("Deleting my survey...");
+        msg = 'Are you sure to delete this survey?';
+      }else if( item['type'] == 'invites'){
+        msg = 'Are you sure to delete this Invitation?';
+      }
+    }else{
+      msg = 'Are you sure to delete this Draft?';
+    }
+
     let alert = this.alertCtrl.create({
       title: 'Warning',
-      message: 'Are you sure to delete this survey?',
+      message: msg,
       buttons: [
       {
         text: 'Cancel',
         role: 'cancel',
         handler: () => {
-          console.log('Cancel clicked. Do not delete survey.');
+          console.log('Cancel clicked.');
         }
       },
       {
         text: 'Delete',
         handler: () => {
-          console.log('deleting survey ...');
-          this.confirmDeleteSurvey(item);
+          if(item['type']){
+            if(item['type'] == 'mySurvey'){
+              console.log("Deleting my survey...");
+              this.confirmDeleteSurvey(item);
+            }else if( item['type'] == 'invites'){
+              console.log("Deleting survey invitations...");
+              this.deleteSurveyInvitation(item);
+            }
+          }else{
+            // assume draft item
+            console.log("Deleting my drafts...");
+            this.deleteDraft(item);
+          }
         }
       }
     ]
@@ -359,7 +392,30 @@ export class SurveyListPage {
   }
 
   deleteSurveyInvitation(item){
+    let loading = this.loadingCtrl.create({
+      content: 'Deleting invitation...'
+    });
 
+    loading.present().then(() => {
+      var thisPrompt = this;
+      // deleting survey id from invitations
+      firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/invitations/'+item['id']).remove(
+        function(error) {
+        if(error){
+          console.log("Not able to delete invitation.");
+        }else{
+          console.log("Survey ID from invitation removed!");
+          try{
+            thisPrompt.displayToast('Invitation');
+          }catch(e){
+            console.log(e);
+          }
+        }
+      });
+
+      this.ionViewWillEnter();
+      loading.dismiss();
+    });
   }
 
   deleteDraft(item){
@@ -373,19 +429,7 @@ export class SurveyListPage {
         role: 'destructive',
         icon: 'trash',
         handler: () => {
-          if(item['type']){
-            if(item['type'] == 'mySurvey'){
-              console.log("Deleting my survey...");
-              this.deleteMySurvey(item);
-            }else if( item['type'] == 'invites'){
-              console.log("Deleting survey invitations...");
-              this.deleteSurveyInvitation(item);
-            }
-          }else{
-            // assume draft item
-            console.log("Deleting my drafts...");
-            this.deleteDraft(item);
-          }
+          this.showDeleteConfirmationAlert(item);
         }
       }, {
         text: 'Cancel',
@@ -399,9 +443,10 @@ export class SurveyListPage {
     actionSheet.present();
   }
 
-  displayToast(){
+  displayToast(msg){
+    var m = msg + " Deleted!";
     let toast = this.toastCtrl.create({
-      message: 'Survey Deleted!',
+      message: m,
       duration: 2000,
       position: 'bottom'
     });

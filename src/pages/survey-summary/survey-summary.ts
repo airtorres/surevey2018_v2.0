@@ -143,6 +143,16 @@ export class SurveySummaryPage {
         }
       });
 
+      // deleting all responses for this survey
+      firebase.database().ref('/responses/'+this.s_id).remove(
+        function(error) {
+        if(error){
+          console.log("Not able to delete responses.");
+        }else{
+          console.log("Responses for this survey are deleted!");
+        }
+      });
+
       // deleting survey id from user_to_survey
       var mySurvs = [];
       const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist');
