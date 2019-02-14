@@ -24,7 +24,7 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'survey-summary.html',
 })
 export class SurveySummaryPage {
-  isActive;
+  isActive = true;
   thisSurvey;
   title;
   s_id;
@@ -155,6 +155,18 @@ export class SurveySummaryPage {
     ]
     });
     alert.present();
+  }
+
+  updateSurveyStatus(){
+    console.log("updating isActive status of survey "+this.s_id);
+
+    firebase.database().ref("/surveys/"+this.s_id+"/isActive").set(this.isActive, function(error){
+      if(error){
+        console.log("Cannot update survey status."+error);
+      }else{
+        console.log("Survey status updated!");
+      }
+    });
   }
 
   public ionViewWillLeave(){

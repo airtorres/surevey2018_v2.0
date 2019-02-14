@@ -86,7 +86,7 @@
 	</div>
 
 	<div *ngFor="let item of survey_invites">
-		<ion-card class="invite-card card-radius" *ngIf="invite_status[item['id']] != 'completed'">
+		<ion-card class="invite-card card-radius" *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == true">
 
 			<ion-card-content>
 

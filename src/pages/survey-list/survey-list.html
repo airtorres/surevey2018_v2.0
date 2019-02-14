@@ -45,10 +45,13 @@
 				</button>
 			</ion-item>
 
-			<ion-item *ngFor="let item of survey_invites" value="item" (click)="gotoRespondentView(item)" (press)="showItemOption(item)">
+			<ion-item *ngFor="let item of survey_invites" value="item" (press)="showItemOption(item)">
 			  	{{ item['title'] }}
-				<button item-end round ion-button *ngIf="invite_status[item['id']] != 'completed'">
+				<button item-end round ion-button *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == true" (click)="gotoRespondentView(item)">
 					Respond Now
+				</button>
+				<button item-end clear style="color: red;" ion-button *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == false" disabled>
+					CLOSED
 				</button>
 				<button *ngIf="invite_status[item['id']] == 'completed'" item-end disabled>Responded</button>
 			</ion-item>
@@ -85,10 +88,13 @@
 				<img width="350" height="350" src="../assets/imgs/noSurveyIllustration.png" style="background: transparent !important; vertical-align: middle;">
 			</ion-item>
 
-			<ion-item *ngFor="let item of survey_invites" value="item" (click)="gotoRespondentView(item)" (press)="showItemOption(item)">
+			<ion-item *ngFor="let item of survey_invites" value="item" (press)="showItemOption(item)">
 			  	{{ item['title'] }}
-				<button item-end round ion-button *ngIf="invite_status[item['id']] != 'completed'">
+				<button item-end round ion-button *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == true" (click)="gotoRespondentView(item)">
 					Respond Now
+				</button>
+				<button item-end clear style="color: red;" ion-button *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == false" disabled>
+					CLOSED
 				</button>
 				<button *ngIf="invite_status[item['id']] == 'completed'" item-end disabled>Responded</button>
 			</ion-item>

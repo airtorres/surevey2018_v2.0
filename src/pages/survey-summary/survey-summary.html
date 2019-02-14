@@ -47,7 +47,7 @@
       Edit
     </button>
 
-    <button ion-item (click)="gotoSendInvitePage()" style="padding-left: 0px;">
+    <button ion-item (click)="gotoSendInvitePage()" style="padding-left: 0px;" [disabled]="isActive == false">
       <ion-icon item-left name="send" color="blue" style="font-size: 25px;"></ion-icon>
       Send Invites
     </button>
@@ -70,7 +70,7 @@
       <span style="color: #73CA5F;" *ngIf="isActive">OPEN</span>
       <span style="color: #FF675C;" *ngIf="!isActive">CLOSED</span> 
     </ion-label>
-    <ion-toggle [(ngModel)]="isActive" color="blue"></ion-toggle>
+    <ion-toggle [(ngModel)]="isActive" (ionChange)="updateSurveyStatus()" color="blue"></ion-toggle>
   </ion-item>
 
   <!-- DETAILS -->
