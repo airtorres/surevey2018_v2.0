@@ -6,6 +6,8 @@ import { SigninPage } from '../signin/signin';
 import { WelcomePage } from '../welcome/welcome';
 import { AngularFireAuth } from '@angular/fire/auth';
 
+import { LoginProvider } from '../../providers/login/login';
+
 import * as firebase from 'firebase/app';
 import 'firebase/database'
 import { Storage } from '@ionic/storage';
@@ -30,6 +32,7 @@ export class SignupPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private formbuilder: FormBuilder,
+    public loginService: LoginProvider,
     private storage: Storage,
     private fire: AngularFireAuth) {
 
@@ -57,12 +60,19 @@ export class SignupPage {
     this.fire.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
     .then(data => {
       console.log("Data got:\n", data);
-      var id = this.fire.auth.currentUser.uid;
+      var id;
+      try{
+        id = this.fire.auth.currentUser.uid;
+      }catch(e){
+        console.log(e);
+      }
+
+      var hashPassword = this.loginService.md5(this.password.value);
 
       var user = {
         'username': this.username.value,
         'email': this.email.value,
-        'password': this.password.value,
+        'password': hashPassword,
         'first_name': '',
         'last_name': '',
         'profession': '',
@@ -87,7 +97,7 @@ export class SignupPage {
 
         // for offline login
         this.storage.set('currentUser', this.email.value);
-        this.storage.set('currentUserPSWD', this.password.value);
+        this.storage.set('currentUserPSWD', this.loginService.md5(this.password.value));
         this.navigateToHome();
       }catch(error){
         console.log("got an error:", error);

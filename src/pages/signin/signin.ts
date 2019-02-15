@@ -4,6 +4,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { SignupPage } from '../signup/signup';
 import { MyAppPage } from '../my-app/my-app';
+
+import { LoginProvider } from '../../providers/login/login';
+
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { Storage } from '@ionic/storage';
@@ -30,6 +33,7 @@ export class SigninPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl : ToastController,
     private formbuilder: FormBuilder,
+    public loginService: LoginProvider,
     private fire: AngularFireAuth,
     private storage: Storage) {
 
@@ -80,7 +84,7 @@ export class SigninPage {
   }
 
   logInUsingLocalStorage(){
-    if( this.usr == this.email.value && this.pswd == this.password.value){
+    if( this.usr == this.email.value && this.pswd == this.loginService.md5(this.password.value)){
       this.navigateToHome();
     }
     else{
@@ -100,7 +104,7 @@ export class SigninPage {
 
         // for offline login
         this.storage.set('currentUser', this.email.value);
-        this.storage.set('currentUserPSWD', this.password.value);
+        this.storage.set('currentUserPSWD', this.loginService.md5(this.password.value));
 
         this.navigateToHome();
       })

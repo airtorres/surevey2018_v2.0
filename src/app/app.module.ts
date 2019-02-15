@@ -36,8 +36,10 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http'; 
 import { File } from '@ionic-native/file';
 import { FileChooser } from '@ionic-native/file-chooser';
+import { LoginProvider } from '../providers/login/login';
 
  // const firebaseAuth = {
  //    apiKey: "AIzaSyCVS6S7r9Fzou64HzePqZ9JSVZKG0-_LAU",
@@ -87,6 +89,7 @@ import { FileChooser } from '@ionic-native/file-chooser';
   imports: [
     BrowserModule,
     HttpModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseAuth),
     AngularFireAuthModule,
@@ -125,7 +128,8 @@ import { FileChooser } from '@ionic-native/file-chooser';
     SplashScreen,
     File,
     FileChooser,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    LoginProvider
   ]
 })
 export class AppModule {}
