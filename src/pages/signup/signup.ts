@@ -98,6 +98,7 @@ export class SignupPage {
         // for offline login
         this.storage.set('currentUser', this.email.value);
         this.storage.set('currentUserPSWD', this.loginService.md5(this.password.value));
+        this.storage.set('username', this.username.value);
         this.navigateToHome();
       }catch(error){
         console.log("got an error:", error);

@@ -24,7 +24,7 @@ import { Storage } from '@ionic/storage';
 })
 export class HomePage {
   currentUser;
-  username;
+  username = '';
   built_in_templates = [];
 
   mySurveys = [];
@@ -45,6 +45,12 @@ export class HomePage {
     this.storage.get('currentUser').then(x =>{
       this.currentUser = x;
     });
+
+    try{
+      this.configService.saveUsernameFromFirebaseToLocalDB();
+    }catch(e){
+      console.log(e);
+    }
 
     this.storage.get('username').then(u =>{
       this.username = u;
@@ -244,32 +250,9 @@ export class HomePage {
   }
 
   loadTemplates(){
-    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    this.built_in_templates = this.configService.getBuiltInTemplates();
 
-    // load built-in surveys from firebase
-    try{
-      const templateRef:firebase.database.Reference = firebase.database().ref('/built_in_templates');
-      templateRef.on('value', templateSnapshot => {
-        this.built_in_templates = [];
-        var tempRef = templateSnapshot.val();
-        for ( var temp in tempRef){
-          this.built_in_templates.push(tempRef[temp]);
-        }
-
-        if(connectedToFirebaseFlag){
-          // store to local storage
-          const uname:firebase.database.Reference = firebase.database().ref('/users/'+this.fire.auth.currentUser.uid);
-          uname.on('value', userSnapshot => {
-            this.storage.set('username', userSnapshot.val()['username']);
-          });
-          this.storage.set('built_in_templates', this.built_in_templates);
-        }
-      });
-    }catch(e){
-      console.log("Error loading templates from firebase. Use local DB.");
-      console.log(e);
-    }
-
+    // ADDED: Hoping that it makes loading of data faster. === DEL LATER
     try{
       firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid).on('value', u => {});
       firebase.database().ref('/surveys/').on('value', u => {});
@@ -283,6 +266,13 @@ export class HomePage {
     this.navCtrl.push(TemplateListPage, {})
   }
 
+  getUsername(){
+    this.configService.saveUsernameFromFirebaseToLocalDB();
+    this.storage.get('username').then(u =>{
+      this.username = u;
+    });
+  }
+
   public ionViewWillEnter(){
     this.mySurveys = [];
     this.mySurveys_ids = [];
@@ -292,6 +282,7 @@ export class HomePage {
 
     this.invite_status = {};
 
+    this.loadTemplates();
     this.loadSurveys();
   }
 }
