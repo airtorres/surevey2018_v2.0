@@ -161,14 +161,7 @@ export class CreateSurveyPage {
           // generate ID for this survey
           var newPostKey = firebase.database().ref().child('surveys').push().key;
           this.survey['id'] = newPostKey;
-          firebase.database().ref("/surveys/"+newPostKey).set(this.survey, function(error){
-            if(error){
-              console.log("Not successful pushing ID to surveys."+error);
-              this.showSavingPrompt(true);
-            }else{
-              console.log("Successfully added the surveyID to surveys!");
-            }
-          });
+          this.configService.saveSurveyData(this.survey, newPostKey);
           this.s_id = newPostKey;
         }catch(e){
           console.log("There's a problem pushing the survey.");
@@ -188,14 +181,8 @@ export class CreateSurveyPage {
         try{
           this.survey['updated_at'] = new Date().toISOString();
 
-          firebase.database().ref("/surveys/"+this.s_id).set(this.survey, function(error){
-            if(error){
-              console.log("Not successful pushing ID to surveys."+error);
-              this.showSavingPrompt(true);
-            }else{
-              console.log("Successfully added the surveyID to surveys!");
-            }
-          });
+          this.configService.saveSurveyData(this.survey, this.s_id);
+
           this.savingFlag = true;
           this.navCtrl.pop();
           // redirect to survey-list: showing all surveys
@@ -213,39 +200,24 @@ export class CreateSurveyPage {
   }
 
   saveToUserSurveyList(){
-    // load surveys from firebase
     try{
+      var mylist = [];
       var thisSurveyId = this.s_id;
-      var thisUser = {};
+      var mysurveylist = this.configService.getUserSurveysList(this.fire.auth.currentUser.uid);
 
-      // saving survey id to user's survey list
-      const userToSurveyRef:firebase.database.Reference = firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid);
-      userToSurveyRef.on('value', userToSurveySnapshot => {
-        thisUser = userToSurveySnapshot.val();
-      });
-
-      console.log(thisUser);
-
-      if(thisUser['surveylist']){
-        thisUser['surveylist'].push(thisSurveyId);
+      if(mysurveylist){
+        for(var m in mysurveylist){
+          mylist.push(mysurveylist[m]);
+        }
+        mylist.push(thisSurveyId);
       }else{
-        thisUser['surveylist'] = [];
-        thisUser['surveylist'].push(thisSurveyId);
+        mylist.push(thisSurveyId);
       }
 
-      thisUser['email'] = this.fire.auth.currentUser.email;
+      this.configService.updateUserSurveyList(mylist);
 
-      firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid).set(thisUser, function(error){
-        if(error){
-          console.log("Not successful pushing ID to surveys."+error);
-          this.showSavingPrompt(false);
-        }else{
-          console.log("Successfully added the surveyID to user-survey list!");
-        }
-      });
       // assume successful saving at this point
       this.savingFlag = true;
-      this.navCtrl.pop();
 
        // pop the templates-list page
       if(this.navParams.get('surveyFromTemplate')){

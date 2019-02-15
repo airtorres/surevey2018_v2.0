@@ -148,6 +148,16 @@ export class ConfigurationProvider {
     return this.built_in_templates;
   }
 
+  saveSurveyData(surveyData, postKey){
+  	firebase.database().ref("/surveys/"+postKey).set(surveyData, function(error){
+      if(error){
+        console.log("Not successful pushing ID to surveys."+error);
+      }else{
+        console.log("Successfully added the surveyID to surveys!");
+      }
+    });
+  }
+
   deleteSurveyFromSurveyList(surveyId){
   	var mySurvs = this.getUserSurveysList(this.fire.auth.currentUser.uid);
 
@@ -220,6 +230,15 @@ export class ConfigurationProvider {
 	return thisSurvey;
   }
 
+  getUserSurveysAllList(userId){
+  	var all = [];
+	const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+userId);
+	surv.on('value', survSnapshot => {
+	  all = survSnapshot.val();
+	});
+	return all;
+  }
+
   getUserSurveysList(userId){
   	var mySurvs = [];
 	const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+userId+'/surveylist');
@@ -255,6 +274,16 @@ export class ConfigurationProvider {
         console.log("Cannot update survey status."+error);
       }else{
         console.log("Survey status updated!");
+      }
+    });
+  }
+
+  updateUserSurveyList(newList){
+  	firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid+'/surveylist').set(newList, function(error){
+      if(error){
+        console.log("Not successful pushing ID to user-survey list."+error);
+      }else{
+        console.log("Successfully added the surveyID to user-survey list!");
       }
     });
   }
