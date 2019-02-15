@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, App, AlertController } from 'ionic-angular';
+import { NavController, App } from 'ionic-angular';
 
 import { SigninPage } from '../signin/signin';
 import { CreateSurveyPage } from '../create-survey/create-survey';
@@ -38,7 +38,6 @@ export class HomePage {
   constructor(public navCtrl: NavController,
   	private fire: AngularFireAuth,
   	public app: App,
-    private alertCtrl: AlertController,
     public configService: ConfigurationProvider,
     private storage: Storage) {
 
@@ -126,23 +125,9 @@ export class HomePage {
   loadSurveys(){
     var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
-        // fetch mysurveys from firebase
     if(connectedToFirebaseFlag){
-      var survs = {};
-      const userSurveyRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid);
-      userSurveyRef.on('value', userToSurveySnapshot => {
-        survs = userToSurveySnapshot.val();
-      });
-
-      // fetching mySurveys IDs
-      if(survs['surveylist']){
-        this.mySurveys_ids = survs['surveylist'];
-      }
-      // fetching mySurveyInvitations IDs
-      var all_invitations = {};
-      if(survs['invitations']){
-        all_invitations = survs['invitations'];
-      }
+      this.mySurveys_ids = this.configService.getUserSurveysList(this.fire.auth.currentUser.uid);
+      var all_invitations = this.configService.getUserInvitationsList(this.fire.auth.currentUser.uid);
 
       this.survey_invites_ids = [];
       for ( var invit in all_invitations){
@@ -155,42 +140,27 @@ export class HomePage {
       console.log(this.invite_status);
 
       var i;
-      var temp = {};
-      for(i in this.mySurveys_ids){
-        const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.mySurveys_ids[i]);
-        mysurv.on('value', mysurvSnapshot => {
-          temp = mysurvSnapshot.val();
-          if(temp){
-            temp['type'] = '';
-            temp['type'] = 'mySurvey';
-            temp['num_responses'] = 0;
+      var surv = [];
 
-            // getting number of responses
-            const resp:firebase.database.Reference = firebase.database().ref('/responses/'+this.mySurveys_ids[i]);
-            resp.on('value', respSnapshot => {
-              if(respSnapshot.val()){
-                temp['num_responses'] = respSnapshot.numChildren();
-              }
-            });
-            this.mySurveys.push(temp);
-          }else{
-            this.mySurveys_ids.splice(i,1);
-          }
-        });
+      for( i in this.mySurveys_ids){
+        surv = this.configService.getSurveyData(this.mySurveys_ids[i]);
+        if(surv){
+          surv['type'] = '';
+          surv['type'] = 'mySurvey';
+          surv['num_responses'] = 0;
+          surv['num_responses'] = this.configService.getNumResponses(this.mySurveys_ids[i]);
+
+          this.mySurveys.push(surv);
+        }
       }
 
       for(i in this.survey_invites_ids){
-        const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.survey_invites_ids[i]);
-        mysurv.on('value', mysurvSnapshot => {
-          temp = mysurvSnapshot.val();
-          if(temp){
-            temp['type'] = '';
-            temp['type'] = 'invites';
-            this.survey_invites.push(temp);
-          }else{
-            this.survey_invites_ids.splice(i,1);
-          }
-        });
+        surv = this.configService.getSurveyData(this.survey_invites_ids[i]);
+        if(surv){
+          surv['type'] = '';
+          surv['type'] = 'invites';
+          this.survey_invites.push(surv);
+        }
       }
 
       this.mySurveys.reverse();

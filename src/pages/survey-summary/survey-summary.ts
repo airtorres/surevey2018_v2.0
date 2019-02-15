@@ -8,7 +8,6 @@ import { AnswerSurveyPage } from '../answer-survey/answer-survey';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
-import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
 import { Storage } from '@ionic/storage';
@@ -40,7 +39,6 @@ export class SurveySummaryPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage,
-    private fire: AngularFireAuth,
     public configService: ConfigurationProvider,
     private alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
@@ -122,51 +120,11 @@ export class SurveySummaryPage {
     });
 
     loading.present().then(() => {
-      firebase.database().ref('/surveys/'+this.s_id).remove(
-        function(error) {
-        if(error){
-          console.log("Not able to delete survey on list");
-        }else{
-          console.log("Survey Deleted on survey List!");
-        }
-      });
-
-      // deleting all responses for this survey
-      firebase.database().ref('/responses/'+this.s_id).remove(
-        function(error) {
-        if(error){
-          console.log("Not able to delete responses.");
-        }else{
-          console.log("Responses for this survey are deleted!");
-        }
-      });
-
-      // deleting survey id from user_to_survey
-      var mySurvs = [];
-      const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist');
-      surv.on('value', survSnapshot => {
-        mySurvs = survSnapshot.val();
-      });
-
-      var thisPrompt = this;
-      for (var m in mySurvs){
-        if(this.s_id == mySurvs[m]){
-          firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+m).remove(
-            function(error) {
-              if(error){
-                console.log("Not able to delete survey on user_survey");
-              }else{
-                console.log("Survey Deleted on user_survey!");
-                try{
-                  // Assume successful delete
-                  thisPrompt.configService.displayToast('Survey Deleted!');
-                }catch(e){
-                  console.log(e);
-                }
-              }
-            }
-          );
-        }
+      var surveyId = this.s_id;
+      if(this.configService.isConnectedToFirebase()){
+        this.configService.deleteSurvey(surveyId);
+      }else{
+        this.configService.showSimpleConnectionError();
       }
 
       loading.dismiss();
@@ -200,14 +158,7 @@ export class SurveySummaryPage {
 
   updateSurveyStatus(){
     console.log("updating isActive status of survey "+this.s_id);
-
-    firebase.database().ref("/surveys/"+this.s_id+"/isActive").set(this.isActive, function(error){
-      if(error){
-        console.log("Cannot update survey status."+error);
-      }else{
-        console.log("Survey status updated!");
-      }
-    });
+    this.configService.updateSurveyStatus(this.s_id, this.isActive);
   }
 
   public ionViewWillLeave(){

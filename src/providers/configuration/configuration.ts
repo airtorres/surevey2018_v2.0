@@ -148,4 +148,115 @@ export class ConfigurationProvider {
     return this.built_in_templates;
   }
 
+  deleteSurveyFromSurveyList(surveyId){
+  	var mySurvs = this.getUserSurveysList(this.fire.auth.currentUser.uid);
+
+	var bindSelf = this;
+	for( var index in mySurvs){
+	  if(surveyId == mySurvs[index]){
+	  	firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+index).remove(
+		  function(error) {
+		  if(error){
+		    console.log("Not able to delete survey on user_survey.");
+		  }else{
+		    console.log("Survey Deleted on user_survey!");
+		    bindSelf.displayToast('Survey Deleted!');
+		  }
+		});
+		break;
+	  }
+	}
+  }
+
+  deleteSurvey(surveyId){
+  	var bindSelf = this;
+  	firebase.database().ref('/surveys/'+surveyId).remove(
+	  function(error) {
+	  if(error){
+	    console.log("Not able to delete survey on list");
+	  }else{
+	    console.log("Survey Deleted on survey List!");
+	    bindSelf.deleteSurveyFromSurveyList(surveyId);
+	  }
+	});
+
+	// deleting all responses for this survey
+	firebase.database().ref('/responses/'+surveyId).remove(
+	  function(error) {
+	  if(error){
+	    console.log("Not able to delete responses.");
+	  }else{
+	    console.log("Responses for this survey are deleted!");
+	  }
+	});
+
+	// this.deleteSentInvitation(surveyId);
+  }
+
+  deleteSurveyInvitation(surveyId){
+  	var bindSelf = this;
+  	firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/invitations/'+surveyId).remove(
+      function(error) {
+      if(error){
+        console.log("Not able to delete invitation.");
+      }else{
+        console.log("Survey ID from invitation removed!");
+        bindSelf.displayToast('Invitation Deleted!');
+      }
+    });
+  }
+
+  deleteSentInvitation(surveyId){
+  	// iterate to look for all invitation from user_surveys
+  	// OR, handle lang ang null valued survey sa receipient.
+  }
+
+  getSurveyData(surveyId){
+  	var thisSurvey = [];
+    const survey:firebase.database.Reference = firebase.database().ref('/surveys/'+surveyId);
+  	survey.on('value', surveySnapshot => {
+	  thisSurvey = surveySnapshot.val();
+	});
+	return thisSurvey;
+  }
+
+  getUserSurveysList(userId){
+  	var mySurvs = [];
+	const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+userId+'/surveylist');
+	surv.on('value', survSnapshot => {
+	  mySurvs = survSnapshot.val();
+	});
+	return mySurvs;
+  }
+
+  getUserInvitationsList(userId){
+  	var invits = [];
+	const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+userId+'/invitations');
+	surv.on('value', survSnapshot => {
+	  invits = survSnapshot.val();
+	});
+	return invits;
+  }
+
+  getNumResponses(surveyId){
+  	var num_responses = 0;
+  	const resp:firebase.database.Reference = firebase.database().ref('/responses/'+surveyId);
+    resp.on('value', respSnapshot => {
+      if(respSnapshot.val()){
+        num_responses = respSnapshot.numChildren();
+      }
+    });
+    return num_responses;
+  }
+
+  updateSurveyStatus(surveyId, status){
+    firebase.database().ref("/surveys/"+surveyId+"/isActive").set(status, function(error){
+      if(error){
+        console.log("Cannot update survey status."+error);
+      }else{
+        console.log("Survey status updated!");
+      }
+    });
+  }
+
 }

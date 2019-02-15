@@ -152,26 +152,11 @@ export class SurveyListPage {
   }
 
   fetchSurveys(){
-    // check for Firebase connection
     var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
-    // fetch mysurveys from firebase
     if(connectedToFirebaseFlag){
-      var survs = {};
-      const userSurveyRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid);
-      userSurveyRef.on('value', userToSurveySnapshot => {
-        survs = userToSurveySnapshot.val();
-      });
-
-      // fetching mySurveys IDs
-      if(survs['surveylist']){
-        this.mySurveys_ids = survs['surveylist'];
-      }
-      // fetching mySurveyInvitations IDs
-      var all_invitations = {};
-      if(survs['invitations']){
-        all_invitations = survs['invitations'];
-      }
+      this.mySurveys_ids = this.configService.getUserSurveysList(this.fire.auth.currentUser.uid);
+      var all_invitations = this.configService.getUserInvitationsList(this.fire.auth.currentUser.uid);
 
       this.survey_invites_ids = [];
       for ( var invit in all_invitations){
@@ -184,44 +169,29 @@ export class SurveyListPage {
       console.log(this.invite_status);
 
       var i;
-      var temp = {};
-      for(i in this.mySurveys_ids){
-        const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.mySurveys_ids[i]);
-        mysurv.on('value', mysurvSnapshot => {
-          temp = mysurvSnapshot.val();
-          if(temp){
-            temp['type'] = '';
-            temp['type'] = 'mySurvey';
-            temp['num_responses'] = 0;
+      var surv = [];
 
-            // getting number of responses
-            const resp:firebase.database.Reference = firebase.database().ref('/responses/'+this.mySurveys_ids[i]);
-            resp.on('value', respSnapshot => {
-              if(respSnapshot.val()){
-                temp['num_responses'] = respSnapshot.numChildren();
-              }
-            });
-            this.mySurveys.push(temp);
-            this.all_surveys.push(temp);
-          }else{
-            this.mySurveys_ids.splice(i,1);
-          }
-        });
+      for( i in this.mySurveys_ids){
+        surv = this.configService.getSurveyData(this.mySurveys_ids[i]);
+        if(surv){
+          surv['type'] = '';
+          surv['type'] = 'mySurvey';
+          surv['num_responses'] = 0;
+          surv['num_responses'] = this.configService.getNumResponses(this.mySurveys_ids[i]);
+
+          this.mySurveys.push(surv);
+          this.all_surveys.push(surv);
+        }
       }
 
       for(i in this.survey_invites_ids){
-        const mysurv:firebase.database.Reference = firebase.database().ref('/surveys/'+this.survey_invites_ids[i]);
-        mysurv.on('value', mysurvSnapshot => {
-          temp = mysurvSnapshot.val();
-          if(temp){
-            temp['type'] = '';
-            temp['type'] = 'invites';
-            this.survey_invites.push(temp);
-            this.all_surveys.push(temp);
-          }else{
-            this.survey_invites_ids.splice(i,1);
-          }
-        });
+        surv = this.configService.getSurveyData(this.survey_invites_ids[i]);
+        if(surv){
+          surv['type'] = '';
+          surv['type'] = 'invites';
+          this.survey_invites.push(surv);
+          this.all_surveys.push(surv);
+        }
       }
 
       this.mySurveys.reverse();
@@ -246,53 +216,11 @@ export class SurveyListPage {
     });
 
     loading.present().then(() => {
-
-      firebase.database().ref('/surveys/'+item['id']).remove(
-        function(error) {
-        if(error){
-          console.log("Not able to delete survey on list");
-        }else{
-          console.log("Survey Deleted on survey List!");
-        }
-      });
-
-      // deleting all responses for this survey
-      firebase.database().ref('/responses/'+item['id']).remove(
-        function(error) {
-        if(error){
-          console.log("Not able to delete responses.");
-        }else{
-          console.log("Responses for this survey are deleted!");
-        }
-      });
-
-      // deleting survey id from user_to_survey
-      var mySurvs = [];
-      const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist');
-      surv.on('value', survSnapshot => {
-        mySurvs = survSnapshot.val();
-      });
-
-      var selfBind = this;
-      for (var m in mySurvs){
-        if(item['id'] == mySurvs[m]){
-          firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+m).remove(
-            function(error) {
-              if(error){
-                console.log("Not able to delete survey on user_survey");
-                selfBind.configService.showSimpleConnectionError();
-              }else{
-                console.log("Survey Deleted on user_survey!");
-                try{
-                  // Assume successful delete
-                  selfBind.configService.displayToast('Survey Deleted!');
-                }catch(e){
-                  console.log(e);
-                }
-              }
-            }
-          );
-        }
+      var surveyId = item['id'];
+      if(this.configService.isConnectedToFirebase()){
+        this.configService.deleteSurvey(surveyId);
+      }else{
+        this.configService.showSimpleConnectionError();
       }
 
       this.ionViewWillEnter();
@@ -353,21 +281,11 @@ export class SurveyListPage {
     });
 
     loading.present().then(() => {
-      var thisPrompt = this;
-      // deleting survey id from invitations
-      firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/invitations/'+item['id']).remove(
-        function(error) {
-        if(error){
-          console.log("Not able to delete invitation.");
-        }else{
-          console.log("Survey ID from invitation removed!");
-          try{
-            thisPrompt.configService.displayToast('Invitation Deleted!');
-          }catch(e){
-            console.log(e);
-          }
-        }
-      });
+      if(this.configService.isConnectedToFirebase()){
+        this.configService.deleteSurveyInvitation(item['id']);
+      }else{
+        this.configService.showSimpleConnectionError();
+      }
 
       this.ionViewWillEnter();
       loading.dismiss();
