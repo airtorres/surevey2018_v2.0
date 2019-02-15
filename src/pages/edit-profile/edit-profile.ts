@@ -8,6 +8,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { File } from '@ionic-native/file';
 import { FileChooser } from '@ionic-native/file-chooser';
 
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
+
 /**
  * Generated class for the EditProfilePage page.
  *
@@ -26,6 +28,10 @@ export class EditProfilePage {
   @ViewChild('lastname') lastname;
   @ViewChild('username') username;
 
+  profession;
+  bdate;
+  sex;
+
   userId: string;
   countryName: string;
   stateName: string;
@@ -34,9 +40,6 @@ export class EditProfilePage {
   stateId : string;
   cityId : string;
 
-  profession : any;
-  sex: any;
-  bdate: any;
   country: any;
   state: any;
   city: any;
@@ -46,202 +49,199 @@ export class EditProfilePage {
   states = [];
   cities = [];
 
-  prev_age;
-  prev_birthdate;
-  prev_city;
-  prev_country;
-  prev_first_name;
-  prev_last_name;
-  prev_profession;
-  prev_sex;
-  prev_state;
-  prev_username;
+  prev_birthdate = '';
+  prev_city = '';
+  prev_country = '';
+  prev_first_name = '';
+  prev_last_name = '';
+  prev_profession = '';
+  prev_sex = '';
+  prev_state = '';
+  prev_username = '';
 
-  userCanLeave = true;
+  userCanLeave = false;
+  exitFlag = false;
 
-  
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private file: File, private fileChooser : FileChooser,
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    private alertCtrl: AlertController,
+    private file: File,
+    private fileChooser : FileChooser,
   	private fire: AngularFireAuth,
-  	public toastCtrl : ToastController) {
+  	public toastCtrl : ToastController,
+    public configService: ConfigurationProvider) {
 
   	this.userId = this.fire.auth.currentUser.uid;
   	this.userData = this.navParams.get('userData');
 
-    this.prev_age = this.userData['age'];
-    this.prev_birthdate = this.userData['birthdate'];
-    this.prev_city = this.userData['city'];
-    this.prev_country = this.userData['country'];
-    this.prev_first_name = this.userData['first_name'];
-    this.prev_last_name = this.userData['last_name'];
-    this.prev_profession = this.userData['profession'];
-    this.prev_sex = this.userData['sex'];
-    this.prev_state = this.userData['state'];
-    this.prev_username = this.userData['username'];
+    this.loadUserData();
+
+    if(this.userData){
+      this.prev_first_name = this.userData['first_name'];
+      this.prev_last_name = this.userData['last_name'];
+      this.prev_username = this.userData['username'];
+      this.prev_birthdate = this.userData['birthdate'] == ""? null: this.userData['birthdate'];
+      this.prev_sex = this.userData['sex'];
+      this.prev_profession = this.userData['profession'];
+      this.prev_city = this.userData['city'];
+      this.prev_state = this.userData['state'];
+      this.prev_country = this.userData['country'];
+    }
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad EditProfilePage');
+    console.log('ionViewDidLoad EditProfilePage');   
+  }
 
+  loadUserData(){
     console.log(this.userData);
-   
 
     this.sex = this.userData['sex'];
     this.profession = this.userData['profession'];
 
     try {
-    	if (this.userData['birthdate'] === "" ) {
-    		this.bdate = null;
-	    }
-	    else {
-	    	this.bdate = this.userData['birthdate'];
-	    }
+      if (this.userData['birthdate'] === "" ) {
+        this.bdate = null;
+      }
+      else {
+        this.bdate = this.userData['birthdate'];
+      }
     } catch (error) { console.log(error); }
     
 
     try {
-    	this.countries = countryStateCity.getAllCountries();
+      this.countries = countryStateCity.getAllCountries();
     } catch (error) {
-    	console.log(error);
+      console.log(error);
     }
 
     if (this.userData['country'] != "") {
-    	for (var idx in this.countries) {
-	    	if (this.userData['country'] == this.countries[idx]['name']) {
-	    		this.countryId = this.countries[idx]['id'];
-	    		break;
-	    	}
-	    }
-	    this.country = this.countryId;
-	    this.countryName = this.countries[this.country-1]['name'];
+      for (var idx in this.countries) {
+        if (this.userData['country'] == this.countries[idx]['name']) {
+          this.countryId = this.countries[idx]['id'];
+          break;
+        }
+      }
+      this.country = this.countryId;
+      this.countryName = this.countries[this.country-1]? this.countries[this.country-1]['name']:'';
     } else { 
-    	this.country = null; 
+      this.country = null; 
     }
     
 
     if (this.userData['state'] != "") {
-    	this.states = countryStateCity.getStatesOfCountry(this.countryId);
-    	for (var index in this.states) {
-	    	if (this.userData['state'] == this.states[index]['name']) {
-	    		this.stateId = this.states[index]['id'];
-	    		this.stateName = this.states[index]['name'];
-	    		break;
-	    	}
-	    }
-	    this.state = this.stateId;
+      this.states = countryStateCity.getStatesOfCountry(this.countryId);
+      for (var index in this.states) {
+        if (this.userData['state'] == this.states[index]['name']) {
+          this.stateId = this.states[index]['id'];
+          this.stateName = this.states[index]['name'];
+          break;
+        }
+      }
+      this.state = this.stateId;
     } else { 
-    	this.states = countryStateCity.getStatesOfCountry(this.countryId);
-    	this.state = null; 
+      this.states = countryStateCity.getStatesOfCountry(this.countryId);
+      this.state = null; 
     }
 
 
     if (this.userData['city'] != "") {
-    	this.cities = countryStateCity.getCitiesOfState(this.stateId);
-    	for (var cidx in this.cities) {
-	    	if (this.userData['city'] == this.cities[cidx]['name']) {
-	    		this.cityId = this.cities[cidx]['id'];
-	    		this.cityName = this.cities[cidx]['name'];
-	    		break;
-	    	}
-	    }
-	    this.city = this.cityId;
+      this.cities = countryStateCity.getCitiesOfState(this.stateId);
+      for (var cidx in this.cities) {
+        if (this.userData['city'] == this.cities[cidx]['name']) {
+          this.cityId = this.cities[cidx]['id'];
+          this.cityName = this.cities[cidx]['name'];
+          break;
+        }
+      }
+      this.city = this.cityId;
     } else { 
-    	this.cities = countryStateCity.getCitiesOfState(this.stateId);
-    	this.city = null; 
+      this.cities = countryStateCity.getCitiesOfState(this.stateId);
+      this.city = null; 
     }
 
-    if (this.country == null) { this.countryName = ""; }
-    if (this.state == null) { this.stateName = ""; }
-    if (this.city == null) { this.cityName = ""; }
-
-    console.log(this.prev_country);
-    console.log(this.prev_state);
-    console.log(this.prev_city);
-    console.log(this.countryName);
-    console.log(this.stateName);
-    console.log(this.cityName);
-
-
+    if (!this.country) { this.countryName = ""; }
+    if (!this.state) { this.stateName = ""; }
+    if (!this.city) { this.cityName = ""; }
   }
 
   getCountry() {
-  		console.log(this.country);
+		console.log(this.country);
 
-  		try {
-	    	this.states = countryStateCity.getStatesOfCountry(this.country);
-	    } catch (error) {
-	    	console.log(error);
-	    }
-  		
-  		this.state = null;
-  		this.city = null;
-  		console.log(this.countries[this.country-1]['name']);
-  		this.countryName = this.countries[this.country-1]['name'];
-  		this.stateName = "";
-  		this.cityName = "";
-  	}
+		try {
+    	this.states = countryStateCity.getStatesOfCountry(this.country);
+    } catch (error) {
+    	console.log(error);
+    }
+		
+		this.state = null;
+		this.city = null;
+		console.log(this.countries[this.country-1]['name']);
+		this.countryName = this.countries[this.country-1]['name'];
+		this.stateName = "";
+		this.cityName = "";
+	}
 
-  	getState() {
-  		console.log(this.state);
+	getState() {
+		console.log(this.state);
 
-  		try {
-	    	this.cities = countryStateCity.getCitiesOfState(this.state);
-	    } catch (error) {
-	    	console.log(error);
-	    }
-	    
-	    for (var idx in this.states) {
-	    	if (this.state == this.states[idx]['id']) {
-	    		console.log(this.states[idx]['name']);
-	    		this.stateName = this.states[idx]['name'];
-	    		break;
-	    	}
-	    }
-	    this.city = null;
-	    this.cityName = "";
-  	}
+		try {
+    	this.cities = countryStateCity.getCitiesOfState(this.state);
+    } catch (error) {
+    	console.log(error);
+    }
+    
+    for (var idx in this.states) {
+    	if (this.state == this.states[idx]['id']) {
+    		console.log(this.states[idx]['name']);
+    		this.stateName = this.states[idx]['name'];
+    		break;
+    	}
+    }
+    this.city = null;
+    this.cityName = "";
+	}
 
-  	getCity() {
-  		console.log(this.city);
-  		// console.log(this.cities);
-  		for (var idx in this.cities) {
-  			if (this.city == this.cities[idx]['id']) {
-  				console.log(this.cities[idx]['name']);
-  				this.cityName =this.cities[idx]['name'];
-  				break;
-  			}
-  		}	
-  	}
+	getCity() {
+		console.log(this.city);
+		// console.log(this.cities);
+		for (var idx in this.cities) {
+			if (this.city == this.cities[idx]['id']) {
+				console.log(this.cities[idx]['name']);
+				this.cityName =this.cities[idx]['name'];
+				break;
+			}
+		}	
+	}
 
-  displayToast() {
-    let toast = this.toastCtrl.create({
-        message: 'Success! Profile Updated!',
-        duration: 2000,
-        position: 'bottom'
-      });
+  calculateAge(birthdate){
+    console.log(birthdate);
 
-      toast.present();
+    var today = new Date();
+    var todayYear = today.getFullYear();
+    var todayMonth = today.getMonth()+1;
+    var todayDay = today.getDate();
+    var bday = new Date(birthdate);
+
+    var age = todayYear - bday.getFullYear();
+
+    if (todayMonth < bday.getMonth() - 1) {
+        age--;
+    }
+
+    if (bday.getMonth() - 1 === todayMonth && todayDay < bday.getDate()) {
+        age--;
+    }
+
+    console.log(age);
+    return age;
   }
 
 	saveProfile() {
+    this.exitFlag = true;
 
-		var today = new Date();
-		var todayYear = today.getFullYear();
-		var todayMonth = today.getMonth()+1;
-		var todayDay = today.getDate();
-		var bday = new Date(this.bdate);
-		var age = todayYear - bday.getFullYear();
-
-		if (todayMonth < bday.getMonth() - 1) {
-            age--;
-        }
-
-        if (bday.getMonth() - 1 === todayMonth && todayDay < bday.getDate()) {
-            age--;
-        }
-
+    if(this.configService.isConnectedToFirebase()){
 		  		
-		firebase.database().ref('/users/'+ this.userId + '/first_name/').set(this.firstname.value);
+  	  firebase.database().ref('/users/'+ this.userId + '/first_name/').set(this.firstname.value);
    		firebase.database().ref('/users/'+ this.userId + '/last_name/').set(this.lastname.value);
    		firebase.database().ref('/users/'+ this.userId + '/username/').set(this.username.value);
 
@@ -255,7 +255,7 @@ export class EditProfilePage {
 
    		if (this.bdate != null) {
    			firebase.database().ref('/users/'+ this.userId + '/birthdate/').set(this.bdate);
-   			firebase.database().ref('/users/' + this.userId + '/age/').set(age);
+   			firebase.database().ref('/users/' + this.userId + '/age/').set(this.calculateAge(this.bdate));
    		}
    		
    		if (this.countryName != null) {
@@ -270,18 +270,31 @@ export class EditProfilePage {
    			firebase.database().ref('/users/' + this.userId + '/city/').set(this.cityName);
    		}
 
-      this.displayToast();
-      this.navCtrl.pop();
+      this.configService.displayToast('Success! Profile Updated!');
+    }
+    else{
+      this.configService.showSimpleConnectionError();
+    }
+    this.navCtrl.pop();
 	}
 
   // check if there are changes made before leaving the page
   checkAllChanges() {
+    console.log(this.prev_state == this.stateName);
+    console.log(this.prev_country == this.countryName);
+    console.log(this.prev_city == this.cityName);
+    console.log(this.prev_birthdate == this.bdate);
+    console.log(this.prev_sex == this.sex);
+    console.log(this.prev_profession == this.profession);
 
-    if (this.country == null) { this.countryName = ""; }
-    if (this.state == null) { this.stateName = ""; }
-    if (this.city == null) { this.cityName = ""; }
+    console.log(this.prev_state);
+    console.log(this.stateName);
 
-    if (this.prev_first_name == this.firstname.value && this.prev_last_name == this.lastname.value && this.prev_username == this.username.value && this.prev_profession == this.profession && this.prev_sex == this.sex && this.prev_birthdate == this.bdate && this.prev_country == this.countryName && this.prev_state == this.stateName && this.prev_city == this.cityName) {
+    if (this.prev_first_name == this.firstname.value && this.prev_last_name == this.lastname.value 
+      && this.prev_username == this.username.value && this.prev_profession == this.profession && this.prev_sex == this.sex 
+      && this.prev_birthdate == this.bdate && this.prev_country == this.countryName && this.prev_state == this.stateName 
+      && this.prev_city == this.cityName) {
+
       console.log("NO CHANGES MADE.");
       this.userCanLeave = true;
     } else {
@@ -289,13 +302,16 @@ export class EditProfilePage {
       this.userCanLeave = false;
     }
 
+    // TEMPORARY: WHILE WALA PA NAFIX ANG BUG ABOVE================================
+    this.userCanLeave = true;
+
   }
 
 
   ionViewCanLeave() {
     this.checkAllChanges();
 
-    if (!this.userCanLeave) {
+    if (!this.userCanLeave && !this.exitFlag) {
       return new Promise((resolve, reject) => {
         let alert = this.alertCtrl.create({
           title: 'Changes made',
@@ -324,7 +340,7 @@ export class EditProfilePage {
               role: 'cancel',
               handler: () => {
                 console.log('User stayed');
-                this.userCanLeave = true;
+                this.userCanLeave = false;
                 reject();
               }
             },
@@ -332,7 +348,12 @@ export class EditProfilePage {
         });
         alert.present();
       });
-    } else { return true; }
+    }else if(this.exitFlag){
+      this.exitFlag = false;
+      this.userCanLeave = false;
+      return true;
+    }
+    else { return true; }
 
   }
 
@@ -366,6 +387,10 @@ export class EditProfilePage {
     }).catch((error)=>{
       alert(JSON.stringify(error));
     });
+  }
+
+  public ionViewWillEnter(){
+    this.loadUserData();
   }
 
 }

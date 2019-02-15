@@ -19,6 +19,7 @@ import { Storage } from '@ionic/storage';
 export class ConfigurationProvider {
 
   built_in_templates = [];
+  userData = {};
 
   constructor(public http: HttpClient,
   	private fire: AngularFireAuth,
@@ -109,6 +110,26 @@ export class ConfigurationProvider {
     }
 
     return connectedToFirebaseFlag;
+  }
+
+  getUserDataFromLocalDB(){
+  	this.storage.get('thisUserData').then(userData =>{
+      if(userData){
+      	this.userData = userData;
+      }
+    });
+    return this.userData;
+  }
+
+  getUserData(userId){
+	const data:firebase.database.Reference = firebase.database().ref('/users/' + userId);
+    data.on('value', dataSnapshot => {
+    	this.userData = dataSnapshot.val();
+    });
+
+    // save to local storage
+    this.storage.set('thisUserData', this.userData);
+    return this.userData;
   }
 
   saveUsernameFromFirebaseToLocalDB(){

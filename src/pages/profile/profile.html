@@ -47,15 +47,9 @@
 				<ion-icon name="pin" item-start></ion-icon>
 				<ion-label id="stackedLabel" stacked color="primary">ADDRESS</ion-label>
 
-				<ion-label *ngIf="userData['country'] == '' && userData['state'] == '' && userData['city'] == ''" id="noData">Address</ion-label>
+				<ion-label *ngIf="address == ''" id="noData">Address</ion-label>
 
-				<ion-label *ngIf="userData['country'] != '' && userData['state'] == '' && userData['city'] == ''" id="userData">{{userData['country']}} </ion-label>
-
-				<ion-label *ngIf="userData['country'] != '' && userData['state'] != '' && userData['city'] == ''" id="userData">{{userData['state']}}, {{userData['country']}} </ion-label>
-
-				<ion-label *ngIf="userData['country'] != '' && userData['state'] != '' && userData['city'] != ''" id="userData">{{userData['city']}}, {{userData['state']}}, {{userData['country']}} </ion-label>
-
-				
+				<ion-label *ngIf="address != ''" id="userData">{{ address }} </ion-label>				
 			</ion-item>
 
 			<ion-item no-lines>

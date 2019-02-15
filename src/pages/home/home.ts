@@ -35,6 +35,8 @@ export class HomePage {
 
   invite_status = {};
 
+  userData = {};
+
   constructor(public navCtrl: NavController,
   	private fire: AngularFireAuth,
   	public app: App,
@@ -54,6 +56,13 @@ export class HomePage {
     this.storage.get('username').then(u =>{
       this.username = u;
     });
+
+    if(this.configService.isConnectedToFirebase()){
+      this.userData = this.configService.getUserData(this.fire.auth.currentUser.uid);
+    }
+    else{
+      this.userData = this.configService.getUserDataFromLocalDB();
+    }
 
     this.loadSurveys();
     this.loadTemplates();

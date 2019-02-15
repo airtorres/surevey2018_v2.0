@@ -3,7 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { EditProfilePage } from '../edit-profile/edit-profile';
 
-import * as firebase from 'firebase/app';
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
+
 import { AngularFireAuth } from '@angular/fire/auth';
 
 /**
@@ -23,27 +24,54 @@ export class ProfilePage {
   @ViewChild('firstname') firstname;
   @ViewChild('lastname') lastname;
   @ViewChild('username') username;
-  userId: string;
+
   userData = {};
+  address = '';
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
+    public configService: ConfigurationProvider,
   	private fire: AngularFireAuth) {
 
-  	this.userId = this.fire.auth.currentUser.uid;
-
-  	const data:firebase.database.Reference = firebase.database().ref('/users/' + this.userId);
-    data.on('value', dataSnapshot => {
-    	this.userData = dataSnapshot.val();
-    });
+    if(this.configService.isConnectedToFirebase()){
+      this.userData = this.configService.getUserData(this.fire.auth.currentUser.uid);
+    }
+    else{
+      this.userData = this.configService.getUserDataFromLocalDB();
+    }
+    this.address = this.getAddress();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ProfilePage');
   }
 
+  getAddress(){
+    var country = this.userData['country']? this.userData['country']:'';
+    var state = this.userData['state']? this.userData['state']:'';
+    var city = this.userData['city']? this.userData['city']:'';
+
+    if(city != ''){
+      city = city + ', ';
+    }
+    if(state != ''){
+      state = state + ', ';
+    }
+
+    return city + state + country;
+  }
+
   gotoEditProfile() {
-    console.log(this.userData);
-	this.navCtrl.push(EditProfilePage, {'userData' : this.userData});
+	  this.navCtrl.push(EditProfilePage, {'userData' : this.userData});
+  }
+
+  public ionViewWillEnter(){
+    if(this.configService.isConnectedToFirebase()){
+      this.userData = this.configService.getUserData(this.fire.auth.currentUser.uid);
+    }
+    else{
+      this.userData = this.configService.getUserDataFromLocalDB();
+    }
+    this.address = this.getAddress();
   }
 
 }
