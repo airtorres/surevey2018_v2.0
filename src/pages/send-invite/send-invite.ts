@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 
 import { FiltersPage } from '../filters/filters';
 
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
+
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
@@ -40,7 +42,8 @@ export class SendInvitePage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	private storage: Storage,
     private fire: AngularFireAuth,
-  	private alertCtrl: AlertController) {
+  	private alertCtrl: AlertController,
+    public configService: ConfigurationProvider) {
 
   	this.s_id = this.navParams.get('s_id');
 
@@ -78,7 +81,7 @@ export class SendInvitePage {
       this.loadUsersFromFirebase();
     }
     else{
-      this.showInternetConnectionError();
+      this.configService.showSimpleConnectionError();
     }
   }
 
@@ -99,15 +102,6 @@ export class SendInvitePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SendInvitePage');
-  }
-
-  showInternetConnectionError(){
-    let alert = this.alertCtrl.create({
-      title: 'Oppss! Connection Timeout.',
-      message: 'You must be connected to the internet.',
-      buttons: ['OK']
-    });
-    alert.present();
   }
 
   showSuccessPrompt(){
@@ -163,7 +157,7 @@ export class SendInvitePage {
     if(successFlag){
       this.showSuccessPrompt();
     }else{
-      this.showInternetConnectionError();
+      this.configService.showSimpleConnectionError();
     }
 
   	this.navCtrl.pop();

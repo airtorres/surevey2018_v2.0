@@ -1,7 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, AlertController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 
 import countryStateCity from 'country-state-city';
+
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
@@ -45,7 +47,8 @@ export class FiltersPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	public toastCtrl: ToastController, private storage: Storage,
-    private fire: AngularFireAuth, private alertCtrl: AlertController,
+    private fire: AngularFireAuth,
+    public configService: ConfigurationProvider,
     public loadingCtrl: LoadingController) {
 
   	this.countries = countryStateCity.getAllCountries();
@@ -89,7 +92,7 @@ export class FiltersPage {
       this.loadUsersFromFirebase();
     }
     else{
-      this.showInternetConnectionError();
+      this.configService.showSimpleConnectionError();
     }
   }
 
@@ -108,15 +111,6 @@ export class FiltersPage {
     }
 
     console.log(this.all_users_email);
-  }
-
-  showInternetConnectionError(){
-    let alert = this.alertCtrl.create({
-      title: 'Oppss! Connection Timeout.',
-      message: 'You must be connected to the internet.',
-      buttons: ['OK']
-    });
-    alert.present();
   }
 
 	getCountry() {

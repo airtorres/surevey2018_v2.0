@@ -96,7 +96,7 @@ export class SurveyListPage {
     if(connectedToFirebaseFlag && this.invite_status[item['id']] != 'completed'){
       this.navCtrl.push(AnswerSurveyPage, {'item' : item});
     }else if(this.invite_status[item['id']] != 'completed'){
-      this.showPrompt('Connection Timeout','You must be connected to the internet.');
+      this.configService.showSimpleConnectionError();
     }
   }
 
@@ -240,15 +240,6 @@ export class SurveyListPage {
     }
   }
 
-  showPrompt(thisTitle, msg){
-    let alert = this.alertCtrl.create({
-      title: thisTitle,
-      message: msg,
-      buttons: ['OK']
-    });
-    alert.present();
-  }
-
   confirmDeleteSurvey(item){
     let loading = this.loadingCtrl.create({
       content: 'Deleting survey...'
@@ -282,19 +273,19 @@ export class SurveyListPage {
         mySurvs = survSnapshot.val();
       });
 
-      var thisPrompt = this;
+      var selfBind = this;
       for (var m in mySurvs){
         if(item['id'] == mySurvs[m]){
           firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist/'+m).remove(
             function(error) {
               if(error){
                 console.log("Not able to delete survey on user_survey");
-                thisPrompt.showPrompt('Connection Timeout', 'You must be connected to the Internet.');
+                selfBind.configService.showSimpleConnectionError();
               }else{
                 console.log("Survey Deleted on user_survey!");
                 try{
                   // Assume successful delete
-                  thisPrompt.configService.displayToast('Survey Deleted!');
+                  selfBind.configService.displayToast('Survey Deleted!');
                 }catch(e){
                   console.log(e);
                 }

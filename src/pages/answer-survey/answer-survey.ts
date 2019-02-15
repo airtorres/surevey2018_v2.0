@@ -106,26 +106,7 @@ export class AnswerSurveyPage {
   }
 
   transformAuthorName(authorId, email){
-    var name = email;
-    const user:firebase.database.Reference = firebase.database().ref('/users/'+authorId);
-    user.on('value', userSnapshot => {
-      var u = userSnapshot.val();
-
-      if(u){
-        var firstname = u['first_name'];
-        var lastname = u['last_name'];
-
-        if(u['first_name'] != null && u['last_name'] != null){
-          name = firstname + ' ' + lastname;
-        }
-      }
-    });
-
-    if(name == ' '){
-      name = email;
-    }
-
-    return name;
+    return this.configService.transformAuthorName(authorId, email);
   }
 
   showSubmitError(){

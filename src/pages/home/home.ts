@@ -78,17 +78,8 @@ export class HomePage {
     if(connectedToFirebaseFlag){
       this.navCtrl.push(AnswerSurveyPage, {'item' : item});
     }else{
-      this.showConnectionError();
+      this.configService.showSimpleConnectionError();
     }
-  }
-
-  showConnectionError(){
-    let alert = this.alertCtrl.create({
-      title: 'Connection Timeout',
-      message: 'You must be connected to the internet.',
-      buttons: ['OK']
-    });
-    alert.present();
   }
 
   logout(){
@@ -107,44 +98,11 @@ export class HomePage {
   }
 
   transformDate(isoDate){
-    var date = new Date(isoDate);
-    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    
-    var month = months[date.getMonth()];
-    var day = date.getDate();
-    var year = date.getFullYear();
-
-    var dateVal = month + ' '+ day + ', ' + year;
-
-    if (dateVal){
-      return dateVal;
-    }
-    else{
-      return "No Date Specified";
-    }
+    return this.configService.transformDate(isoDate);
   }
 
   transformAuthorName(authorId, email){
-    var name = email;
-    const user:firebase.database.Reference = firebase.database().ref('/users/'+authorId);
-    user.on('value', userSnapshot => {
-      var u = userSnapshot.val();
-
-      if(u){
-        var firstname = u['first_name'];
-        var lastname = u['last_name'];
-
-        if(u['first_name'] != null && u['last_name'] != null){
-          name = firstname + ' ' + lastname;
-        }
-      }
-    });
-
-    if(name == ' '){
-      name = email;
-    }
-
-    return name;
+    return this.configService.transformAuthorName(authorId, email);
   }
 
   loadSurveysFromLocalDB(){
