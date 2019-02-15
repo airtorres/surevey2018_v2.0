@@ -6,6 +6,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
 
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
+
 import { Storage } from '@ionic/storage';
 
 /**
@@ -49,6 +51,7 @@ export class EditDraftPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private alertCtrl: AlertController,
+    public configService: ConfigurationProvider,
     private fire: AngularFireAuth,
     private storage: Storage) {
 
@@ -95,22 +98,7 @@ export class EditDraftPage {
     this.survey['author'] = this.currUser;
     this.survey['isActive'] = true;//the survey is active upon creation
 
-    // check for Firebase connection
-    var connectedToFirebaseFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Getting data from Firebase...");
-          connectedToFirebaseFlag = true;          
-        }else {
-          console.log("Error loading data from Firebase.");
-          connectedToFirebaseFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
+    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
 	  if(connectedToFirebaseFlag){
 	  //   try{

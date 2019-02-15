@@ -7,6 +7,8 @@ import 'firebase/database';
 
 import { Storage } from '@ionic/storage';
 
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
+
 import { NewMsgPage } from '../new-msg/new-msg';
 
 /**
@@ -51,6 +53,7 @@ export class AnswerSurveyPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private fire: AngularFireAuth,
   	private storage: Storage,
+    public configService: ConfigurationProvider,
   	private alertCtrl: AlertController) {
 
   	this.storage.get('currentUser').then(x =>{
@@ -182,22 +185,7 @@ export class AnswerSurveyPage {
   }
 
   submitResponse(){
-    // check for Firebase connection
-    var connectedToFirebaseFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Getting data from Firebase...");
-          connectedToFirebaseFlag = true;          
-        }else {
-          console.log("Error loading data from Firebase.");
-          connectedToFirebaseFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
+    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     console.log("submitting response ...")
 

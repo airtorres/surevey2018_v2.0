@@ -10,6 +10,8 @@ import { TemplateListPage } from '../template-list/template-list';
 import { SurveySummaryPage } from '../survey-summary/survey-summary';
 import { AnswerSurveyPage } from '../answer-survey/answer-survey';
 
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
+
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
@@ -37,6 +39,7 @@ export class HomePage {
   	private fire: AngularFireAuth,
   	public app: App,
     private alertCtrl: AlertController,
+    public configService: ConfigurationProvider,
     private storage: Storage) {
 
     this.storage.get('currentUser').then(x =>{
@@ -64,22 +67,7 @@ export class HomePage {
   }
 
   gotoAnswer(item){
-    // check for Firebase connection
-    var connectedToFirebaseFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Connected to Firebase.");
-          connectedToFirebaseFlag = true;          
-        }else {
-          console.log("Error connecting to Firebase.");
-          connectedToFirebaseFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
+    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     if(connectedToFirebaseFlag){
       this.navCtrl.push(AnswerSurveyPage, {'item' : item});
@@ -172,21 +160,7 @@ export class HomePage {
   }
 
   loadSurveys(){
-    var connectedToFirebaseFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Getting data from Firebase...");
-          connectedToFirebaseFlag = true;          
-        }else {
-          console.log("Error loading data from Firebase.");
-          connectedToFirebaseFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
+    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
         // fetch mysurveys from firebase
     if(connectedToFirebaseFlag){
@@ -270,21 +244,7 @@ export class HomePage {
   }
 
   loadTemplates(){
-    var connectedToFirebaseFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Getting data from Firebase...");
-          connectedToFirebaseFlag = true;          
-        }else {
-          console.log("Error loading data from Firebase.");
-          connectedToFirebaseFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
+    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     // load built-in surveys from firebase
     try{

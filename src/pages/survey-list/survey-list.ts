@@ -91,21 +91,7 @@ export class SurveyListPage {
 
   gotoRespondentView(item){
     // check for Firebase connection
-    var connectedToFirebaseFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Connected to Firebase.");
-          connectedToFirebaseFlag = true;          
-        }else {
-          console.log("Error connecting to Firebase.");
-          connectedToFirebaseFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
+    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     if(connectedToFirebaseFlag && this.invite_status[item['id']] != 'completed'){
       this.navCtrl.push(AnswerSurveyPage, {'item' : item});
@@ -116,21 +102,7 @@ export class SurveyListPage {
 
   syncResponsesToFirebase(){
     // check for Firebase connection
-    var connectedToFirebaseFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Getting data from Firebase...");
-          connectedToFirebaseFlag = true;          
-        }else {
-          console.log("Error loading data from Firebase.");
-          connectedToFirebaseFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
+   var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     if(connectedToFirebaseFlag){
       for( var survId in this.offline_responses){
@@ -181,21 +153,7 @@ export class SurveyListPage {
 
   fetchSurveys(){
     // check for Firebase connection
-    var connectedToFirebaseFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Getting data from Firebase...");
-          connectedToFirebaseFlag = true;          
-        }else {
-          console.log("Error loading data from Firebase.");
-          connectedToFirebaseFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
+    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     // fetch mysurveys from firebase
     if(connectedToFirebaseFlag){
