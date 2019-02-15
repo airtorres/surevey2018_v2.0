@@ -5,6 +5,8 @@ import { SurveySummaryPage } from '../survey-summary/survey-summary';
 import { AnswerSurveyPage } from '../answer-survey/answer-survey';
 import { EditDraftPage } from '../edit-draft/edit-draft';
 
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
+
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
@@ -48,6 +50,7 @@ export class SurveyListPage {
     private alertCtrl: AlertController,
     public toastCtrl : ToastController,
     public loadingCtrl: LoadingController,
+    public configService: ConfigurationProvider,
     private fire: AngularFireAuth,
     private storage: Storage) {
 
@@ -333,7 +336,7 @@ export class SurveyListPage {
                 console.log("Survey Deleted on user_survey!");
                 try{
                   // Assume successful delete
-                  thisPrompt.displayToast('Survey');
+                  thisPrompt.configService.displayToast('Survey Deleted!');
                 }catch(e){
                   console.log(e);
                 }
@@ -410,7 +413,7 @@ export class SurveyListPage {
         }else{
           console.log("Survey ID from invitation removed!");
           try{
-            thisPrompt.displayToast('Invitation');
+            thisPrompt.configService.displayToast('Invitation Deleted!');
           }catch(e){
             console.log(e);
           }
@@ -445,17 +448,6 @@ export class SurveyListPage {
       }]
     });
     actionSheet.present();
-  }
-
-  displayToast(msg){
-    var m = msg + " Deleted!";
-    let toast = this.toastCtrl.create({
-      message: m,
-      duration: 2000,
-      position: 'bottom'
-    });
-
-    toast.present();
   }
 
   public ionViewWillEnter() {

@@ -6,6 +6,8 @@ import { CreateSurveyPage } from '../create-survey/create-survey';
 import { ResultsPage } from '../results/results';
 import { AnswerSurveyPage } from '../answer-survey/answer-survey';
 
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
+
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
@@ -39,9 +41,10 @@ export class SurveySummaryPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage,
     private fire: AngularFireAuth,
+    public configService: ConfigurationProvider,
     private alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
-    public toastCtrl : ToastController,) {
+    public toastCtrl : ToastController) {
 
     this.thisSurvey = this.navParams.get('item');
 
@@ -118,16 +121,6 @@ export class SurveySummaryPage {
     this.navCtrl.push(ResultsPage, {s_id: this.s_id, responses: this.thisResponses});
   }
 
-  displayToast(){
-    let toast = this.toastCtrl.create({
-      message: 'Survey Deleted!',
-      duration: 2000,
-      position: 'bottom'
-    });
-
-    toast.present();
-  }
-
   confirmDeleteSurvey(){
     let loading = this.loadingCtrl.create({
       content: 'Deleting survey...'
@@ -171,7 +164,7 @@ export class SurveySummaryPage {
                 console.log("Survey Deleted on user_survey!");
                 try{
                   // Assume successful delete
-                  thisPrompt.displayToast();
+                  thisPrompt.configService.displayToast('Survey Deleted!');
                 }catch(e){
                   console.log(e);
                 }

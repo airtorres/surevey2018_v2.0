@@ -40,6 +40,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { File } from '@ionic-native/file';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { LoginProvider } from '../providers/login/login';
+import { ConfigurationProvider } from '../providers/configuration/configuration';
 
  // const firebaseAuth = {
  //    apiKey: "AIzaSyCVS6S7r9Fzou64HzePqZ9JSVZKG0-_LAU",
@@ -129,7 +130,8 @@ import { LoginProvider } from '../providers/login/login';
     File,
     FileChooser,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    LoginProvider
+    LoginProvider,
+    ConfigurationProvider
   ]
 })
 export class AppModule {}
