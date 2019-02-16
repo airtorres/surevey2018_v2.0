@@ -31,7 +31,8 @@ export class SendInvitePage {
   public selected_users = [];
   public generated_users_from_filter = [];
 
-  selAll: boolean = false;
+  selAll : boolean = false;
+  public length;
 
   public s_id;
   thisSurvey = {
@@ -46,17 +47,28 @@ export class SendInvitePage {
     public configService: ConfigurationProvider) {
 
   	this.s_id = this.navParams.get('s_id');
-
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
 
+    // console.log("length:", this.selected_users.length);
+    this.length = this.selected_users.length;
     this.checkConnection();
   }
 
   ionViewWillEnter(){
     this.generated_users_from_filter = this.navParams.get('generated_users') || null;
-    console.log(this.generated_users_from_filter);
+
+    if (this.generated_users_from_filter != null) {
+      this.all_users_email = this.generated_users_from_filter;
+      this.selected_users = [];
+      this.selections = {};
+      this.selAll = true;
+      for (var email in this.all_users_email) {
+        this.selections[this.all_users_email[email]] = true;
+        this.selected_users.push(this.all_users_email[email]);
+      }
+    }
   }
 
   checkConnection(){
@@ -120,6 +132,26 @@ export class SendInvitePage {
         this.selected_users.push(email);
       }
     }
+    console.log(this.selections);
+    console.log(this.selected_users);
+  }
+
+  selectAllUsers() {
+    this.selected_users = [];
+    if (this.selAll == true) {
+      for (var email in this.all_users_email) {
+        this.selections[this.all_users_email[email]] = true;
+        this.selected_users.push(this.all_users_email[email]);
+      }
+    } 
+    if (this.selAll == false) {
+      for (var email in this.all_users_email) {
+        this.selections[this.all_users_email[email]] = false;
+        this.selected_users = [];
+      }
+    }
+    console.log(this.selected_users.length);
+    console.log(this.selected_users);
   }
 
   sendInvitation(){
@@ -162,22 +194,6 @@ export class SendInvitePage {
 
   	this.navCtrl.pop();
   }
-
-  // selectAll() {
-  //   if (this.selAll == true) {
-  //     for (var i=0; i < this.all_users_email.length; i++) {
-  //       this.all_users_email[i]['selected'] = true;
-  //     }
-  //   }
-
-  //   if (this.selAll == false) {
-  //     for (var i=0; i < this.all_users_email.length; i++) {
-  //       this.all_users_email[i]['selected'] = false;
-  //     }
-  //   }
-  // }
-
-
 
   gotoFiltersPage() {
      this.navCtrl.push(FiltersPage);
