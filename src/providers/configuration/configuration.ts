@@ -144,7 +144,9 @@ export class ConfigurationProvider {
   getBuiltInTemplatesFromLocalDB(){
   	try{
 	  	this.storage.get('built_in_templates').then(templates =>{
-	      this.built_in_templates = templates;
+	  		if(templates){
+	      		this.built_in_templates = templates;
+	      	}
 	    });
 	}catch(e){
 		console.log(e);
@@ -308,5 +310,162 @@ export class ConfigurationProvider {
       }
     });
   }
+
+
+// ================= CONFIGURING COUNTRY_STATE_CITY ====================================
+  getCountryStateCityDataFromLocalDB(){
+  	var countries = [];
+  	try{
+	  	this.storage.get('country_state_city').then(data =>{
+	      if(data){
+	      	countries = data;
+	      }
+	    });
+	}catch(e){
+		console.log(e);
+	}
+	return countries;
+  }
+
+  getCountryStateCityDataFromFirebase(){
+  	var countries = [];
+	const surv:firebase.database.Reference = firebase.database().ref('/country_state_city/');
+	surv.on('value', countriesSnapshot => {
+	  countries = countriesSnapshot.val();
+	});
+
+	// savetoLocalDB
+	this.storage.set('country_state_city', countries);
+
+	return countries;
+  }
+
+  getCountryStateCityData(){
+  	if( this.isConnectedToFirebase()){
+  		return this.getCountryStateCityDataFromFirebase();
+  	}else{
+  		return this.getCountryStateCityDataFromLocalDB();
+  	}
+  }
+
+  getAllCountryNames(){
+  	var countries = this.getCountryStateCityData();
+  	var countryNames = [];
+  	for( var c in countries){
+  		countryNames.push(c);
+  	}
+  	return countryNames;
+  }
+
+  // returns details of states (includes cities)
+  getAllStates(){
+  	var states = [];
+  	var all = this.getCountryStateCityData();
+  	for( var country in all){
+  		for( var state in all[country]){
+  			var temp = {};
+	  		temp[state] = '';
+	  		temp[state] = all[country];
+	  		states.push(temp);
+  		}
+  	}
+  	return states;
+  }
+
+  // returns statenames only
+  getAllStateNames(){
+  	var states = [];
+  	var all = this.getCountryStateCityData();
+  	for( var country in all){
+  		for( var state in all[country]){
+	  		states.push(state);
+  		}
+  	}
+  	return states;
+  }
+
+  // returns details of states (includes cities); for given country
+  getStatesOf(countryId){
+  	var states = [];  	
+  	if(countryId && countryId != "Anywhere"){
+	  	if(this.isConnectedToFirebase()){
+			const s:firebase.database.Reference = firebase.database().ref('/country_state_city/'+countryId);
+			s.on('value', statesSnapshot => {
+				if(statesSnapshot.val()){
+			  		var temp = statesSnapshot.val();
+			  		states = temp;
+			  	}
+			});
+			return states;
+	  	}else{
+	  		var all = this.getCountryStateCityDataFromLocalDB();
+	  		if(all[countryId]){
+	  			states = all[countryId];
+	  		}
+	  		return states;
+	  	}
+	}else if(countryId == "Anywhere"){
+		return this.getAllStates();
+	}
+	else{
+  		console.log("Not a valid country.");
+  		return states;
+  	}
+  }
+
+  // returns state names of the given country
+  getStateNamesOf(countryId){
+  	var statenames = [];
+  	if(countryId == "Anywhere"){
+  		statenames = this.getAllStateNames();
+  	}else if(!countryId){
+  		console.log("Not a valid country.");
+  	}else{
+  		for( var state in this.getStatesOf(countryId)){
+  			statenames.push(state);
+  		}
+  	}
+  	return statenames;
+  }
+
+  getAllCityNames(){
+  	var cities = [];
+  	var all = this.getCountryStateCityData();
+  	for (var country in all){
+  		for(var state in all[country]){
+  			for( var cityIdx in all[country][state]){
+  				cities.push(all[country][state][cityIdx]);
+  			}
+  		}
+  	}
+  	return cities;
+  }
+
+  getCitiesOf(stateId, countryId){
+  	var cities = [];
+  	if(stateId && countryId){
+  		if(countryId == "Anywhere"){
+  			return this.getAllCityNames();
+  		}else if(stateId == "Anywhere"){
+  			var states = this.getStatesOf(countryId);
+  			for( var s in states){
+  				for(var city in states[s]){
+  					cities.push(states[s][city]);
+  				}
+  			}
+  		}
+  		else{
+  			var all = this.getCountryStateCityData();
+  			if(all[countryId]){
+  				return all[countryId][stateId];
+  			}
+  		}
+  	}else{
+  		console.log("Invalid country or state.");
+  	}
+  	return cities;
+  }
+
+// ============= ENDOF COUNTRY_STATE_CITY ==========================================
 
 }
