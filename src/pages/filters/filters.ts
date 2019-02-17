@@ -1,8 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 
-import countryStateCity from 'country-state-city';
-
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -33,9 +31,6 @@ export class FiltersPage {
   city: any;
   minimum: string;
   maximum: string;
-  countryName: "";
-  stateName: "";
-  cityName: "";
   countries = [];
   states = [];
   cities = [];
@@ -44,6 +39,7 @@ export class FiltersPage {
   all_users_email = [];
   public generated_users = [];
   currUser;
+  connectedToFirebaseFlag;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	public toastCtrl: ToastController, private storage: Storage,
@@ -51,7 +47,11 @@ export class FiltersPage {
     public configService: ConfigurationProvider,
     public loadingCtrl: LoadingController) {
 
-  	this.countries = countryStateCity.getAllCountries();
+  	this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    if (this.connectedToFirebaseFlag) {
+      this.countries = this.configService.getAllCountryNames();
+      console.log(this.countries);
+    }
 
   	this.sex = "Male & Female";
   	this.profession = "Any";
@@ -115,31 +115,25 @@ export class FiltersPage {
 
 	getCountry() {
 		console.log(this.country);
-		this.states = countryStateCity.getStatesOfCountry(this.country);
-		this.state = "Anywhere";
-		this.countryName = this.countries[this.country-1]['name'];
+
+    this.states = this.configService.getStateNamesOf(this.country);
+    console.log(this.states);
+
+    this.state = "";
+    this.city = "";
 	}
 
 	getState() {
 		console.log(this.state);
-		this.cities = countryStateCity.getCitiesOfState(this.state);
-		for (var idx in this.states) {
-    	if (this.state == this.states[idx]['id']) {
-    		console.log(this.states[idx]['name']);
-    		this.stateName = this.states[idx]['name'];
-    		break;
-    	}
-    }
+
+    this.cities = this.configService.getCitiesOf(this.state, this.country);
+    console.log(this.cities);
+
+    this.city = "";
 	}
 
 	getCity() {
-		for (var idx in this.cities) {
-			if (this.city == this.cities[idx]['id']) {
-				console.log(this.cities[idx]['name']);
-				this.cityName =this.cities[idx]['name'];
-				break;
-			}
-		}
+		console.log(this.city);
 	}
 
 	reset() {
@@ -187,25 +181,25 @@ export class FiltersPage {
 		console.log("max: ", this.max.value);
 		console.log(this.sex);
 		console.log(this.profession);
-		console.log(this.country, this.countryName);
-		console.log(this.state, this.stateName);
-		console.log(this.city, this.cityName);
+		console.log(this.country);
+		console.log(this.state);
+		console.log(this.city);
     console.log("Num Persons: ", this.numPersons.value);
 
-    // if empty tanan nga fields
+    // if empty ang number of respondents
     if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value == '') { 
       let incompleteFieldsToast = this.toastCtrl.create({
-        message: 'Input at least one on the input fields',
+        message: 'Please input the number of respondents to be generated.',
         duration: 2000,
         position: 'bottom'
       });
 
       incompleteFieldsToast.present();
+      this.numPersons.setFocus();
     }
 
     // for random sampling
     if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value != '') {
-
       this.randomSample();
     }
 

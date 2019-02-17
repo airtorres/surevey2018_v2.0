@@ -60,9 +60,9 @@ export class SendInvitePage {
     this.generated_users_from_filter = this.navParams.get('generated_users') || null;
 
     if (this.generated_users_from_filter != null) {
-      this.all_users_email = this.generated_users_from_filter;
       this.selected_users = [];
       this.selections = {};
+      this.all_users_email = this.generated_users_from_filter;
       this.selAll = true;
       for (var email in this.all_users_email) {
         this.selections[this.all_users_email[email]] = true;
@@ -132,8 +132,6 @@ export class SendInvitePage {
         this.selected_users.push(email);
       }
     }
-    console.log(this.selections);
-    console.log(this.selected_users);
   }
 
   selectAllUsers() {
@@ -145,13 +143,11 @@ export class SendInvitePage {
       }
     } 
     if (this.selAll == false) {
-      for (var email in this.all_users_email) {
-        this.selections[this.all_users_email[email]] = false;
+      for (var user_email in this.all_users_email) {
+        this.selections[this.all_users_email[user_email]] = false;
         this.selected_users = [];
       }
     }
-    console.log(this.selected_users.length);
-    console.log(this.selected_users);
   }
 
   sendInvitation(){

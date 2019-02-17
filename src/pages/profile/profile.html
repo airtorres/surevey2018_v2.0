@@ -34,13 +34,13 @@
 				<ion-icon name="contact" item-start></ion-icon>
 				<ion-label id="stackedLabel" stacked color="primary">NAME</ion-label>
 				<ion-label *ngIf="userData['first_name'] == '' && userData['last_name'] == '' " id="noData">Name</ion-label>
-				<ion-label *ngIf="userData['first_name'] != '' || userData['last_name'] != '' " id="userData">{{userData['first_name']}} {{userData['last_name']}}</ion-label>
+				<ion-label *ngIf="userData['first_name'] != '' || userData['last_name'] != '' " id="userData" text-wrap>{{userData['first_name']}} {{userData['last_name']}}</ion-label>
 			</ion-item>
 
 			<ion-item no-lines>
 				<ion-icon name="mail" item-start></ion-icon>
 				<ion-label id="stackedLabel" stacked color="primary">EMAIL</ion-label>
-				<ion-label id="userData">{{userData['email']}}</ion-label>
+				<ion-label id="userData" text-wrap>{{userData['email']}}</ion-label>
 			</ion-item>
 
 			<ion-item no-lines>
@@ -49,7 +49,7 @@
 
 				<ion-label *ngIf="address == ''" id="noData">Address</ion-label>
 
-				<ion-label *ngIf="address != ''" id="userData">{{ address }} </ion-label>				
+				<ion-label *ngIf="address != ''" id="userData" text-wrap>{{ address }} </ion-label>				
 			</ion-item>
 
 			<ion-item no-lines>

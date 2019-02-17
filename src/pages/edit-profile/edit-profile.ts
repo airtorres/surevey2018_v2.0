@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 
-import countryStateCity from 'country-state-city';
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -31,15 +30,9 @@ export class EditProfilePage {
   profession;
   bdate;
   sex;
+  connectedToFirebaseFlag;
 
   userId: string;
-  countryName: string;
-  stateName: string;
-  cityName: string;
-  countryId : string;
-  stateId : string;
-  cityId : string;
-
   country: any;
   state: any;
   city: any;
@@ -107,110 +100,43 @@ export class EditProfilePage {
       }
     } catch (error) { console.log(error); }
     
-
-    try {
-      this.countries = countryStateCity.getAllCountries();
-    } catch (error) {
-      console.log(error);
+    this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    if (this.connectedToFirebaseFlag) {
+      this.countries = this.configService.getAllCountryNames();
+      console.log(this.countries);
     }
 
-    if (this.userData['country'] != "") {
-      for (var idx in this.countries) {
-        if (this.userData['country'] == this.countries[idx]['name']) {
-          this.countryId = this.countries[idx]['id'];
-          break;
-        }
-      }
-      this.country = this.countryId;
-      this.countryName = this.countries[this.country-1]? this.countries[this.country-1]['name']:'';
-    } else { 
-      this.country = null; 
-    }
-    
+    this.country = this.userData['country'];
 
-    if (this.userData['state'] != "") {
-      this.states = countryStateCity.getStatesOfCountry(this.countryId);
-      for (var index in this.states) {
-        if (this.userData['state'] == this.states[index]['name']) {
-          this.stateId = this.states[index]['id'];
-          this.stateName = this.states[index]['name'];
-          break;
-        }
-      }
-      this.state = this.stateId;
-    } else { 
-      this.states = countryStateCity.getStatesOfCountry(this.countryId);
-      this.state = null; 
-    }
+    this.states = this.configService.getStateNamesOf(this.country);
+    this.state = this.userData['state'];
 
+    this.cities = this.configService.getCitiesOf(this.state, this.country);
+    this.city = this.userData['city'];
 
-    if (this.userData['city'] != "") {
-      this.cities = countryStateCity.getCitiesOfState(this.stateId);
-      for (var cidx in this.cities) {
-        if (this.userData['city'] == this.cities[cidx]['name']) {
-          this.cityId = this.cities[cidx]['id'];
-          this.cityName = this.cities[cidx]['name'];
-          break;
-        }
-      }
-      this.city = this.cityId;
-    } else { 
-      this.cities = countryStateCity.getCitiesOfState(this.stateId);
-      this.city = null; 
-    }
-
-    if (!this.country) { this.countryName = ""; }
-    if (!this.state) { this.stateName = ""; }
-    if (!this.city) { this.cityName = ""; }
   }
 
   getCountry() {
 		console.log(this.country);
 
-		try {
-    	this.states = countryStateCity.getStatesOfCountry(this.country);
-    } catch (error) {
-    	console.log(error);
-    }
-		
-		this.state = null;
-		this.city = null;
-		console.log(this.countries[this.country-1]['name']);
-		this.countryName = this.countries[this.country-1]['name'];
-		this.stateName = "";
-		this.cityName = "";
+    this.states = this.configService.getStateNamesOf(this.country);
+    console.log(this.states);
+
+		this.state = "";
+		this.city = "";
 	}
 
 	getState() {
 		console.log(this.state);
 
-		try {
-    	this.cities = countryStateCity.getCitiesOfState(this.state);
-    } catch (error) {
-    	console.log(error);
-    }
-    
-    for (var idx in this.states) {
-    	if (this.state == this.states[idx]['id']) {
-    		console.log(this.states[idx]['name']);
-    		this.stateName = this.states[idx]['name'];
-    		break;
-    	}
-    }
-    this.city = null;
-    this.cityName = "";
+    this.cities = this.configService.getCitiesOf(this.state, this.country);
+    console.log(this.cities);
+
+    this.city = "";
 	}
 
 	getCity() {
 		console.log(this.city);
-		// console.log(this.cities);
-		for (var idx in this.cities) {
-			if (this.city == this.cities[idx]['id']) {
-				console.log(this.cities[idx]['name']);
-				this.cityName =this.cities[idx]['name'];
-				break;
-			}
-		}	
 	}
 
   calculateAge(birthdate){
@@ -257,18 +183,10 @@ export class EditProfilePage {
    			firebase.database().ref('/users/'+ this.userId + '/birthdate/').set(this.bdate);
    			firebase.database().ref('/users/' + this.userId + '/age/').set(this.calculateAge(this.bdate));
    		}
-   		
-   		if (this.countryName != null) {
-   			firebase.database().ref('/users/' + this.userId + '/country/').set(this.countryName);
-   		}
-   		
-   		if (this.stateName != null) {
-   			firebase.database().ref('/users/' + this.userId + '/state/').set(this.stateName);
-   		}
-   		
-   		if (this.cityName != null) {
-   			firebase.database().ref('/users/' + this.userId + '/city/').set(this.cityName);
-   		}
+
+      firebase.database().ref('/users/' + this.userId + '/country/').set(this.country);
+      firebase.database().ref('/users/' + this.userId + '/state/').set(this.state);
+      firebase.database().ref('/users/' + this.userId + '/city/').set(this.city);
 
       this.configService.displayToast('Success! Profile Updated!');
     }
@@ -280,20 +198,10 @@ export class EditProfilePage {
 
   // check if there are changes made before leaving the page
   checkAllChanges() {
-    console.log(this.prev_state == this.stateName);
-    console.log(this.prev_country == this.countryName);
-    console.log(this.prev_city == this.cityName);
-    console.log(this.prev_birthdate == this.bdate);
-    console.log(this.prev_sex == this.sex);
-    console.log(this.prev_profession == this.profession);
-
-    console.log(this.prev_state);
-    console.log(this.stateName);
-
     if (this.prev_first_name == this.firstname.value && this.prev_last_name == this.lastname.value 
       && this.prev_username == this.username.value && this.prev_profession == this.profession && this.prev_sex == this.sex 
-      && this.prev_birthdate == this.bdate && this.prev_country == this.countryName && this.prev_state == this.stateName 
-      && this.prev_city == this.cityName) {
+      && this.prev_birthdate == this.bdate && this.prev_country == this.country && this.prev_state == this.state 
+      && this.prev_city == this.state) {
 
       console.log("NO CHANGES MADE.");
       this.userCanLeave = true;

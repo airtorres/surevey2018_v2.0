@@ -94,7 +94,7 @@
 					<ion-label>Country</ion-label>
 					<ion-select [(ngModel)]="country" (ionChange)="getCountry()">
 						<ion-option value="Anywhere">Anywhere</ion-option>
-						<ion-option *ngFor="let country of countries" value="{{country['id']}}">{{country['name']}}</ion-option>
+						<ion-option *ngFor="let country of countries" value="{{country}}">{{country}}</ion-option>
 					</ion-select>
 				</ion-item>
 
@@ -102,7 +102,7 @@
 					<ion-label>Province/State</ion-label>
 					<ion-select [(ngModel)]="state" (ionChange)="getState()">
 						<ion-option value="Anywhere">Anywhere</ion-option>
-						<ion-option *ngFor="let state of states" value="{{state['id']}}">{{state['name']}}</ion-option>
+						<ion-option *ngFor="let state of states" value="{{state}}">{{state}}</ion-option>
 					</ion-select>
 				</ion-item>
 
@@ -110,7 +110,7 @@
 					<ion-label>Municipality/City</ion-label>
 					<ion-select [(ngModel)]="city" (ionChange)="getCity()">
 						<ion-option value="Anywhere">Anywhere</ion-option>
-						<ion-option *ngFor="let city of cities" value="{{city['id']}}">{{city['name']}}</ion-option>
+						<ion-option *ngFor="let city of cities" value="{{city}}">{{city}}</ion-option>
 					</ion-select>
 				</ion-item>
 
@@ -122,7 +122,8 @@
 	<ion-card class="card">
 		<ion-card-content>
 			<ion-card-title color="primary" class="card-title">NUMBER OF RESPONDENTS</ion-card-title>
-			<ion-input type="number" [(ngModel)]="numberOfPersons" style="width: 40%;" #numPersons></ion-input>
+			<ion-note style="color:gray;">* This field is required.</ion-note>
+			<ion-input required type="number" [(ngModel)]="numberOfPersons" style="width: 40%;" #numPersons></ion-input>
 		</ion-card-content>
 	</ion-card>
 
