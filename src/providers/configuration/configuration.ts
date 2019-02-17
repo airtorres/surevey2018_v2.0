@@ -20,6 +20,7 @@ export class ConfigurationProvider {
 
   built_in_templates = [];
   userData = {};
+  username = '';
   connectedToFirebaseFlag = false;
 
   constructor(public http: HttpClient,
@@ -30,6 +31,15 @@ export class ConfigurationProvider {
   	private alertCtrl: AlertController) {
 
     console.log('Hello ConfigurationProvider Provider');
+
+    if(this.isConnectedToFirebase()){
+      this.userData = this.getUserData(this.fire.auth.currentUser.uid);
+      this.username = this.userData['username'];
+    }
+    else{
+      this.userData = this.getUserDataFromLocalDB();
+      this.username = this.userData['username'];
+    }
   }
 
   displayToast(msg){
@@ -139,6 +149,7 @@ export class ConfigurationProvider {
   	if(this.isConnectedToFirebase()){
   	  const uname:firebase.database.Reference = firebase.database().ref('/users/'+this.fire.auth.currentUser.uid);
       uname.on('value', userSnapshot => {
+      	this.username = userSnapshot.val()['username'];
         this.storage.set('username', userSnapshot.val()['username']);
       });
   	}

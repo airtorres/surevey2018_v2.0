@@ -224,6 +224,8 @@ export class CreateSurveyPage {
         this.navCtrl.pop();
       }
 
+      this.navCtrl.pop();
+
       // redirect to survey-list: showing all surveys
       this.navCtrl.parent.select(1);
 
