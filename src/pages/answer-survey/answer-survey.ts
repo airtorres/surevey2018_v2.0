@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
@@ -54,6 +54,7 @@ export class AnswerSurveyPage {
     private fire: AngularFireAuth,
   	private storage: Storage,
     public configService: ConfigurationProvider,
+    public loadingCtrl: LoadingController,
   	private alertCtrl: AlertController) {
 
   	this.storage.get('currentUser').then(x =>{
@@ -166,75 +167,89 @@ export class AnswerSurveyPage {
   }
 
   submitResponse(){
-    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
 
-    console.log("submitting response ...")
+    loading.present().then(() => {
 
-  	this.response['respondent'] = this.currUser;
-  	this.response['survey_id'] = this.s_id;
-  	this.response['submitted_at'] = new Date().toISOString();
-  	this.response['answers'] = this.answers;
+      var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
-    for( var q in this.questions){
-      if(this.questions[q]['type'] == 'checkbox'){
-        var finalAns = [];
-        for( var a in this.answers[q]){
-          if(this.answers[q][a] == true){
-            finalAns.push(this.questions[q]['options'][a]);
+      console.log("submitting response ...")
+
+    	this.response['respondent'] = this.currUser;
+    	this.response['survey_id'] = this.s_id;
+    	this.response['submitted_at'] = new Date().toISOString();
+    	this.response['answers'] = this.answers;
+
+      for( var q in this.questions){
+        if(this.questions[q]['type'] == 'checkbox'){
+          var finalAns = [];
+          for( var a in this.answers[q]){
+            if(this.answers[q][a] == true){
+              finalAns.push(this.questions[q]['options'][a]);
+            }
           }
+          this.answers[q] = finalAns;
         }
-        this.answers[q] = finalAns;
       }
-    }
 
-    // setting the respondents name through 'manual' input
-    // STORE to localDB
-    if (this.navParams.get('diff_respondent_flag')){
-      // USE NEWLY GENERATED KEY for this unique user...
-      var newUserKey = firebase.database().ref().child('responses/'+this.s_id).push().key;
-      this.response['respondent'] = this.respondent_name? this.respondent_name.value: newUserKey;
+      // setting the respondents name through 'manual' input
+      // STORE to localDB
+      if (this.navParams.get('diff_respondent_flag')){
+        // USE NEWLY GENERATED KEY for this unique user...
+        var newUserKey = firebase.database().ref().child('responses/'+this.s_id).push().key;
+        this.response['respondent'] = this.respondent_name? this.respondent_name.value: newUserKey;
 
-      if(connectedToFirebaseFlag){
-        try{
-          firebase.database().ref("/responses/"+this.s_id+"/"+newUserKey).set(this.response, function(error){
-            if(error){
-              console.log("Not successful pushing response to list of responses."+error);
-            }else{
-              console.log("Successfully added to responses!");
-            }
-          });
-        }catch(e){
-          console.log(e);
-        }
-
-        this.navCtrl.pop();
-      }else{
-        this.saveToLocalDB(this.response);
-      }
-    }
-    else{
-      // store response to firebase
-      if(connectedToFirebaseFlag){
-        try{
-          firebase.database().ref("/responses/"+this.s_id+"/"+this.fire.auth.currentUser.uid).set(this.response, function(error){
-            if(error){
-              console.log("Not successful pushing response to list of responses."+error);
-              this.showSubmitError();
-            }else{
-              console.log("Successfully added to responses!");
-            }
-          });
-
-          // update USER_SURVEYS invitation to COMPLETED
-          this.UpdateInvitationStatus();
-        }catch(e){
-          console.log(e);
+        if(connectedToFirebaseFlag){
+          try{
+            var that = this;
+            firebase.database().ref("/responses/"+this.s_id+"/"+newUserKey).set(this.response, function(error){
+              if(error){
+                console.log("Not successful pushing response to list of responses."+error);
+                loading.dismiss();
+                that.navCtrl.pop();
+              }else{
+                console.log("Successfully added to responses!");
+                loading.dismiss();
+                that.navCtrl.pop();
+              }
+            });
+          }catch(e){
+            console.log(e);
+            loading.dismiss();
+            this.navCtrl.pop();
+          }
+        }else{
+          this.saveToLocalDB(this.response);
+          loading.dismiss();
         }
       }
       else{
-        this.showNetworkError();
+        // store response to firebase
+        if(connectedToFirebaseFlag){
+          try{
+            firebase.database().ref("/responses/"+this.s_id+"/"+this.fire.auth.currentUser.uid).set(this.response, function(error){
+              if(error){
+                console.log("Not successful pushing response to list of responses."+error);
+                this.showSubmitError();
+              }else{
+                console.log("Successfully added to responses!");
+              }
+            });
+
+            // update USER_SURVEYS invitation to COMPLETED
+            this.UpdateInvitationStatus();
+          }catch(e){
+            console.log(e);
+          }
+        }
+        else{
+          this.showNetworkError();
+        }
+        loading.dismiss();
       }
-    }
+    });//endof loadingCtrl
   }
 
   sendMessage(){

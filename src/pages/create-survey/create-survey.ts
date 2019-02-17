@@ -186,7 +186,7 @@ export class CreateSurveyPage {
           this.savingFlag = true;
           this.navCtrl.pop();
           // redirect to survey-list: showing all surveys
-          this.navCtrl.parent.select(1);
+          // this.navCtrl.parent.select(1);
         }catch(e){
           console.log("There's a problem pushing the survey.");
           console.log(e);

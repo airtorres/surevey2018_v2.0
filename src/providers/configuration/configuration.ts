@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { ToastController, AlertController } from 'ionic-angular';
+import { ToastController, AlertController, LoadingController } from 'ionic-angular';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
@@ -20,11 +20,13 @@ export class ConfigurationProvider {
 
   built_in_templates = [];
   userData = {};
+  connectedToFirebaseFlag = false;
 
   constructor(public http: HttpClient,
   	private fire: AngularFireAuth,
   	private storage: Storage,
   	public toastCtrl : ToastController,
+  	public loadingCtrl: LoadingController,
   	private alertCtrl: AlertController) {
 
     console.log('Hello ConfigurationProvider Provider');
@@ -109,6 +111,7 @@ export class ConfigurationProvider {
       console.log(e);
     }
 
+    this.connectedToFirebaseFlag = connectedToFirebaseFlag;
     return connectedToFirebaseFlag;
   }
 
@@ -202,25 +205,33 @@ export class ConfigurationProvider {
   }
 
   deleteSurvey(surveyId){
-  	var bindSelf = this;
-  	firebase.database().ref('/surveys/'+surveyId).remove(
-	  function(error) {
-	  if(error){
-	    console.log("Not able to delete survey on list");
-	  }else{
-	    console.log("Survey Deleted on survey List!");
-	    bindSelf.deleteSurveyFromSurveyList(surveyId);
-	  }
-	});
+  	let loading = this.loadingCtrl.create({
+      content: 'Deleting survey...'
+    });
 
-	// deleting all responses for this survey
-	firebase.database().ref('/responses/'+surveyId).remove(
-	  function(error) {
-	  if(error){
-	    console.log("Not able to delete responses.");
-	  }else{
-	    console.log("Responses for this survey are deleted!");
-	  }
+  	loading.present().then(() => {
+	  	var bindSelf = this;
+	  	firebase.database().ref('/surveys/'+surveyId).remove(
+		  function(error) {
+		  if(error){
+		    console.log("Not able to delete survey on list");
+		    loading.dismiss();
+		  }else{
+		    console.log("Survey Deleted on survey List!");
+		    bindSelf.deleteSurveyFromSurveyList(surveyId);
+		  	loading.dismiss();
+		  }
+		});
+
+		// deleting all responses for this survey
+		firebase.database().ref('/responses/'+surveyId).remove(
+		  function(error) {
+		  if(error){
+		    console.log("Not able to delete responses.");
+		  }else{
+		    console.log("Responses for this survey are deleted!");
+		  }
+		});
 	});
 
 	// this.deleteSentInvitation(surveyId);
@@ -281,7 +292,7 @@ export class ConfigurationProvider {
   }
 
   getNumResponses(surveyId){
-  	var num_responses = 0;
+	var num_responses = 0;
   	const resp:firebase.database.Reference = firebase.database().ref('/responses/'+surveyId);
     resp.on('value', respSnapshot => {
       if(respSnapshot.val()){

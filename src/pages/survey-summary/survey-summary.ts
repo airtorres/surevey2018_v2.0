@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, LoadingController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 
 import { SendInvitePage } from '../send-invite/send-invite';
 import { CreateSurveyPage } from '../create-survey/create-survey';
@@ -41,19 +41,11 @@ export class SurveySummaryPage {
     private storage: Storage,
     public configService: ConfigurationProvider,
     private alertCtrl: AlertController,
-    public loadingCtrl: LoadingController,
-    public toastCtrl : ToastController) {
+    public loadingCtrl: LoadingController) {
 
     this.thisSurvey = this.navParams.get('item');
-
-    this.title = this.thisSurvey['title'];
-    this.isActive = this.thisSurvey['isActive'];
-    this.s_id = this.thisSurvey['id'];
-    this.num_responses = this.thisSurvey['num_responses']? this.thisSurvey['num_responses']:0;
-
-    this.created_date =  this.configService.transformDate(this.thisSurvey['created_at']);
-    this.updated_date =  this.configService.transformDate(this.thisSurvey['updated_at']);
-
+    this.loadData();
+    
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
@@ -71,6 +63,16 @@ export class SurveySummaryPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SurveySummaryPage');
+  }
+
+  loadData(){
+    this.title = this.thisSurvey['title'];
+    this.isActive = this.thisSurvey['isActive'];
+    this.s_id = this.thisSurvey['id'];
+    this.num_responses = this.thisSurvey['num_responses'];
+
+    this.created_date =  this.configService.transformDate(this.thisSurvey['created_at']);
+    this.updated_date =  this.configService.transformDate(this.thisSurvey['updated_at']);
   }
 
   gotoSendInvitePage(){
@@ -115,21 +117,16 @@ export class SurveySummaryPage {
   }
 
   confirmDeleteSurvey(){
-    let loading = this.loadingCtrl.create({
-      content: 'Deleting survey...'
-    });
+    var surveyId = this.s_id;
+    if(this.configService.isConnectedToFirebase()){
+      this.configService.deleteSurvey(surveyId);
+    }else{
+      this.configService.showSimpleConnectionError();
+    }
 
-    loading.present().then(() => {
-      var surveyId = this.s_id;
-      if(this.configService.isConnectedToFirebase()){
-        this.configService.deleteSurvey(surveyId);
-      }else{
-        this.configService.showSimpleConnectionError();
-      }
-
-      loading.dismiss();
+    setTimeout(() => {
       this.navCtrl.pop();
-    });
+    }, 1000);
   }
 
   deleteSurvey(){
@@ -164,6 +161,11 @@ export class SurveySummaryPage {
   public ionViewWillLeave(){
     console.log("leaving survey-summary page ...");
     // this.navCtrl.pop();
+  }
+
+  public ionViewWillEnter(){
+    console.log("entering survey-summary page ...");
+    this.loadData();
   }
 
 }

@@ -61,7 +61,11 @@ export class ProfilePage {
   }
 
   gotoEditProfile() {
-	  this.navCtrl.push(EditProfilePage, {'userData' : this.userData});
+    if(this.configService.isConnectedToFirebase()){
+      this.navCtrl.push(EditProfilePage, {'userData' : this.userData});
+    }else{
+      this.configService.showSimpleConnectionError();
+    }
   }
 
   public ionViewWillEnter(){

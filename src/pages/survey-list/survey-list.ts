@@ -106,10 +106,12 @@ export class SurveyListPage {
 
     if(connectedToFirebaseFlag){
       for( var survId in this.offline_responses){
+        console.log(survId);
         for( var resp in this.offline_responses[survId]){
           var newUserKey = firebase.database().ref().child('responses/'+survId).push().key;
           var thisResponse = this.offline_responses[survId][resp];
           var successFlag = true;
+          console.log(thisResponse);
           firebase.database().ref("/responses/"+survId+"/"+newUserKey).set(thisResponse, function(error){
             if(error){
               console.log("Not successful pushing response to list of responses."+error);
@@ -124,6 +126,9 @@ export class SurveyListPage {
           }
         }
       }
+      console.log(this.offline_responses);
+      // TEMP ONLY
+      this.offline_responses = [];
       this.storage.set('offline_responses', this.offline_responses);
     }
   }
@@ -211,21 +216,16 @@ export class SurveyListPage {
   }
 
   confirmDeleteSurvey(item){
-    let loading = this.loadingCtrl.create({
-      content: 'Deleting survey...'
-    });
+    var surveyId = item['id'];
+    if(this.configService.isConnectedToFirebase()){
+      this.configService.deleteSurvey(surveyId);
+    }else{
+      this.configService.showSimpleConnectionError();
+    }
 
-    loading.present().then(() => {
-      var surveyId = item['id'];
-      if(this.configService.isConnectedToFirebase()){
-        this.configService.deleteSurvey(surveyId);
-      }else{
-        this.configService.showSimpleConnectionError();
-      }
-
+    setTimeout(() => {
       this.ionViewWillEnter();
-      loading.dismiss();
-    });
+    }, 1000);
   }
 
   showDeleteConfirmationAlert(item){
@@ -318,6 +318,7 @@ export class SurveyListPage {
   }
 
   public ionViewWillEnter() {
+    console.log("entering survey-list ...");
     this.surveys = {};
 
     this.mySurveys = [];

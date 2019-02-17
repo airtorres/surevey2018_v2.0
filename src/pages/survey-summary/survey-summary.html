@@ -27,7 +27,7 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-label class="num-title" style="margin: 0" text-center>{{ num_responses }}</ion-label>
+          <ion-label class="num-title" style="margin: 0" text-center>{{ this.configService.connectedToFirebaseFlag? this.configService.getNumResponses(s_id):num_responses }}</ion-label>
           <p style="margin: 0">TOTAL RESPONSES</p>
         </ion-col>
 
@@ -42,7 +42,7 @@
   <!-- MAIN BUTTONS -->
 
   <ion-list>
-    <button ion-item (click)="gotoEdit()" style="padding-left: 0px;" [disabled]="num_responses != 0">
+    <button ion-item (click)="gotoEdit()" style="padding-left: 0px;" [disabled]="num_responses != 0 || this.configService.getNumResponses(s_id) != 0">
       <ion-icon item-left name="create" color="blue" style="font-size: 25px;"></ion-icon>
       Edit
     </button>
@@ -79,7 +79,7 @@
   <ion-list>
     <ion-item style="padding-left: 0px;">
       <ion-label>Respondents</ion-label>
-      <ion-note item-end color="blue" style="font-size: 1.6rem;">{{ num_responses }}</ion-note>
+      <ion-note item-end color="blue" style="font-size: 1.6rem;">{{ this.configService.connectedToFirebaseFlag? this.configService.getNumResponses(s_id):num_responses }}</ion-note>
     </ion-item>
 
     <ion-item style="padding-left: 0px;">
