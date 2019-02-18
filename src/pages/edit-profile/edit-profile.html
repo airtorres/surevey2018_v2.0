@@ -73,21 +73,21 @@
 		<ion-item-group style="padding-left: 16px;">	
 			<ion-item>
 				<ion-label>Country</ion-label>
-				<ion-select [(ngModel)]="country" (ionChange)="getCountry()">
+				<ion-select [(ngModel)]="country" (click)="getCountries()" (ionChange)="getCountry()">
 					<ion-option *ngFor="let country of countries" value="{{country}}"> {{country}} </ion-option>
 				</ion-select>
 			</ion-item>
 
 			<ion-item>
 				<ion-label>Province/State</ion-label>
-				<ion-select [(ngModel)]="state" (ionChange)="getState()">
+				<ion-select [(ngModel)]="state" (click)="getStates(country)" (ionChange)="getState()">
 					<ion-option *ngFor="let state of states" value="{{state}}"> {{state}} </ion-option>
 				</ion-select>
 			</ion-item>
 
 			<ion-item>
 				<ion-label>Municipality/City</ion-label>
-				<ion-select [(ngModel)]="city" (ionChange)="getCity()">
+				<ion-select [(ngModel)]="city" (click)="getCities(state, country)" (ionChange)="getCity()">
 					<ion-option *ngFor="let city of cities" value="{{city}}"> {{city}} </ion-option>
 				</ion-select>
 			</ion-item>

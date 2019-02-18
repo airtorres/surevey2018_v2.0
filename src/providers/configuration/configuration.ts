@@ -86,7 +86,7 @@ export class ConfigurationProvider {
 
   transformDate(isoDate){
     var date = new Date(isoDate);
-    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     
     var month = months[date.getMonth()];
     var day = date.getDate();
@@ -98,6 +98,27 @@ export class ConfigurationProvider {
       return dateVal;
     }
     else{
+      return "No Date Specified";
+    }
+  }
+
+  transformDateNumFormat(isoDate){
+  	var dateVal = "No Date Specified";
+  	if(isoDate){
+  		var date = new Date(isoDate);
+  		var month = date.getMonth()+1;
+	    var day = date.getDate();
+	    var year = date.getFullYear();
+
+	    dateVal = month + '/'+ day + '/' + year;
+
+	    if (dateVal){
+	      return dateVal;
+	    }
+	    else{
+	      return "No Date Specified";
+	    }
+  	}else{
       return "No Date Specified";
     }
   }

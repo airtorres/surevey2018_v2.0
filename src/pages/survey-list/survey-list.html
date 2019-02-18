@@ -53,7 +53,7 @@
 				<button item-end clear style="color: red;" ion-button *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == false" disabled>
 					CLOSED
 				</button>
-				<button *ngIf="invite_status[item['id']] == 'completed'" item-end disabled>Responded</button>
+				<button ion-button clear *ngIf="invite_status[item['id']] == 'completed'" item-end disabled>Responded</button>
 			</ion-item>
 		</ion-list>
 
@@ -96,7 +96,7 @@
 				<button item-end clear style="color: red;" ion-button *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == false" disabled>
 					CLOSED
 				</button>
-				<button *ngIf="invite_status[item['id']] == 'completed'" item-end disabled>Responded</button>
+				<button ion-button clear *ngIf="invite_status[item['id']] == 'completed'" item-end disabled>Responded</button>
 			</ion-item>
 		</ion-list>
   	</div>

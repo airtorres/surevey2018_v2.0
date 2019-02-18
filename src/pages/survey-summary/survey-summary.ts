@@ -71,8 +71,8 @@ export class SurveySummaryPage {
     this.s_id = this.thisSurvey['id'];
     this.num_responses = this.thisSurvey['num_responses'];
 
-    this.created_date =  this.configService.transformDate(this.thisSurvey['created_at']);
-    this.updated_date =  this.configService.transformDate(this.thisSurvey['updated_at']);
+    this.created_date =  this.configService.transformDateNumFormat(this.thisSurvey['created_at']);
+    this.updated_date =  this.configService.transformDateNumFormat(this.thisSurvey['updated_at']);
   }
 
   gotoSendInvitePage(){

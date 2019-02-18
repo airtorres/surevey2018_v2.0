@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, AlertController, LoadingController } from 'ionic-angular';
 
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -61,12 +61,11 @@ export class EditProfilePage {
     private fileChooser : FileChooser,
   	private fire: AngularFireAuth,
   	public toastCtrl : ToastController,
+    public loadingCtrl: LoadingController,
     public configService: ConfigurationProvider) {
 
   	this.userId = this.fire.auth.currentUser.uid;
-  	this.userData = this.navParams.get('userData');
-
-    this.loadUserData();
+  	this.userData = this.navParams.get('userData');    
 
     if(this.userData){
       this.prev_first_name = this.userData['first_name'];
@@ -86,8 +85,6 @@ export class EditProfilePage {
   }
 
   loadUserData(){
-    console.log(this.userData);
-
     this.sex = this.userData['sex'];
     this.profession = this.userData['profession'];
 
@@ -100,20 +97,38 @@ export class EditProfilePage {
       }
     } catch (error) { console.log(error); }
     
-    this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
-    if (this.connectedToFirebaseFlag) {
-      this.countries = this.configService.getAllCountryNames();
-      console.log(this.countries);
-    }
+    
+      this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+      if (this.connectedToFirebaseFlag) {
+        setTimeout(() => {
+          this.countries = this.configService.getAllCountryNames();
+        }, 1000);
+        console.log(this.countries);
+      }
 
-    this.country = this.userData['country'];
+      this.country = this.userData['country'];
 
+      this.states = this.configService.getStateNamesOf(this.country);
+      this.state = this.userData['state'];
+      this.cities = this.configService.getCitiesOf(this.state, this.country);
+      this.city = this.userData['city'];
+
+    console.log(this.country);
+    console.log(this.state);
+    console.log(this.city);
+
+  }
+
+  getCountries(){
+    this.countries = this.configService.getAllCountryNames();
+  }
+
+  getStates(countryId){
     this.states = this.configService.getStateNamesOf(this.country);
-    this.state = this.userData['state'];
+  }
 
+  getCities(stateId, countryId){
     this.cities = this.configService.getCitiesOf(this.state, this.country);
-    this.city = this.userData['city'];
-
   }
 
   getCountry() {
@@ -298,6 +313,7 @@ export class EditProfilePage {
   }
 
   public ionViewWillEnter(){
+    console.log("entering edit-profile page ...");
     this.loadUserData();
   }
 
