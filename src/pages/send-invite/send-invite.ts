@@ -27,6 +27,8 @@ export class SendInvitePage {
   all_users = [];
   all_users_email = [];
 
+  og_all_users_email = [];
+
   public selections = {};
   public selected_users = [];
   public generated_users_from_filter = [];
@@ -110,6 +112,13 @@ export class SendInvitePage {
         this.all_users_email.push(this.all_users[e]['email']);
       }
     }
+
+    this.og_all_users_email = this.all_users_email;
+  }
+
+  initialize() {
+    // getting the emails of all_users
+    this.all_users_email = this.og_all_users_email;
   }
 
   ionViewDidLoad() {
@@ -198,7 +207,7 @@ export class SendInvitePage {
   onInput(ev) {
     // Reset items back to all of the items
     // this.initializeItems();
-    // this.loadUsersFromFirebase();
+    this.initialize();
 
     // set val to the value of the ev target
     var val = ev.target.value;
