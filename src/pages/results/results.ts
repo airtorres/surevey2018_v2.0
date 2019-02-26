@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
-import { Storage } from '@ionic/storage';
 import { Http } from '@angular/http';
 import { File } from '@ionic-native/file';
 import * as papa from 'papaparse';
@@ -41,7 +40,6 @@ export class ResultsPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	private alertCtrl: AlertController,
-  	private storage: Storage,
     public configService: ConfigurationProvider,
   	private file: File,
   	private http: Http) {
@@ -101,21 +99,17 @@ export class ResultsPage {
   }
 
   ionViewDidLoad() {
-  	console.log(this.chartOptions);
     console.log('ionViewDidLoad ResultsPage');
   }
 
   showResult(idx){
   	console.log(this.questions[idx]['type']);
+  	this.chartOptions[idx] = 'pie';
 
   	// for questions with options
   	if (this.questions[idx]['type'] == 'multipleChoice' || this.questions[idx]['type'] == 'checkbox' || this.questions[idx]['type'] == 'dropdown'){
   		try{
 	  		this.showPieChart(idx);
-        var resultsDiv = document.getElementById('graphResult_'+idx);
-        var btn = document.getElementById('view_btn_'+idx);
-        resultsDiv.style.display = 'block';
-        btn.style.display = 'none';
 	  	}
 	  	catch (e){
 	  		this.showInternetConnectionError();
@@ -130,16 +124,52 @@ export class ResultsPage {
   		}
 
   		console.log("OpenEndedAnswers: "+this.openAnswers);
-  		var el = document.getElementById('openAnsDiv_'+idx);
-  		el.style.display = 'block';
   	}
+
+  	var resultsDiv = document.getElementById('resDiv_'+idx);
+    var btn = document.getElementById('view_btn_'+idx);
+    var closebtn = document.getElementById('closeIcon_'+idx);
+    resultsDiv.style.display = 'block';
+    btn.style.display = 'none';
+    closebtn.style.display = 'block';
+
+    this.shiftBgColor(idx);
   }
 
   closeResult(idx) {
-    var resultsDiv = document.getElementById('graphResult_'+idx);
+    var resultsDiv = document.getElementById('resDiv_'+idx);
     var btn = document.getElementById('view_btn_'+idx);
+    var closebtn = document.getElementById('closeIcon_'+idx);
     btn.style.display = 'block';
     resultsDiv.style.display = 'none';
+    closebtn.style.display = 'none';
+
+    this.chartOptions[idx] = 'pie';
+    this.shiftToWhiteBg(idx);
+  }
+
+  shiftBgColor(idx){
+  	var item = document.getElementById('item_'+idx);
+  	item.style.backgroundColor = '#12608A';
+  	item.style.color = 'white';
+
+  	var closebtn = document.getElementById('closeIcon_'+idx);
+  	closebtn.style.color = 'white';
+
+  	var div = document.getElementById('questionAndResultDiv_'+idx);
+  	div.style.borderColor = 'rgba(18, 96, 138, 0.14)';
+  }
+
+  shiftToWhiteBg(idx){
+  	var item = document.getElementById('item_'+idx);
+  	item.style.backgroundColor = 'white';
+  	item.style.color = 'black';
+
+  	var closebtn = document.getElementById('closeIcon_'+idx);
+  	closebtn.style.color = '#12608A';
+
+  	var div = document.getElementById('questionAndResultDiv_'+idx);
+  	div.style.borderColor = '#F0F0F0';
   }
 
   showPieChart(idx){

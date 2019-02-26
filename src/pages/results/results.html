@@ -19,43 +19,44 @@
 
 
 <ion-content padding>
-	<h4>{{ survey_title }}</h4>
-	<p>{{ description }}</p>
+	<div id="title-desc">
+		<h4 text-wrap>{{ survey_title }} Results</h4>
+		<p style="text-align: justify;">{{ description }}</p>
+	</div>
 
-	<div *ngFor="let question of questions; let idx = index">
-		<ion-item text-wrap style="padding-left: 0px;">
+	<div class="qandResDiv" id="questionAndResultDiv_{{idx}}" *ngFor="let question of questions; let idx = index">
+		<ion-item text-wrap style="padding-right: 0; padding-left: 0; border-bottom:none;" id="item_{{idx}}">
 			<ion-label>{{idx+1}}. {{ question['message'] }}</ion-label>
-			<button icon-end item-end clear ion-button (click)="showResult(idx)" id="view_btn_{{idx}}">
+			<button icon-end item-end clear ion-button (click)="showResult(idx)" id="view_btn_{{idx}}" class="viewBtnClass">
 				View 
 				<ion-icon icon-end name="ios-arrow-down"></ion-icon>
 			</button>
+			<button icon-end item-end clear ion-button (click)="closeResult(idx)" style="display: none; margin-right: 5px;" id="closeIcon_{{idx}}">
+				<ion-icon name="close"></ion-icon>
+			</button>
 		</ion-item>
 
-		<div *ngIf="question['type'] == 'multipleChoice' || question['type'] == 'checkbox' || question['type'] == 'date' || question['type'] == 'dropdown' " id="graphResult_{{idx}}">
-		
-			<ion-toolbar style="display: none;" id="opt_{{idx}}">
-				<ion-buttons end>
-					<button icon-start item-end clear ion-button large (click)="closeResult(idx)">
-						<ion-icon name="close"></ion-icon> Close
-					</button>
-				</ion-buttons>
+		<div id="resDiv_{{idx}}" style="display: none;">
+			<div *ngIf="question['type'] == 'multipleChoice' || question['type'] == 'checkbox' || question['type'] == 'date' || question['type'] == 'dropdown' " id="graphResult_{{idx}}" class="graphDivs">
+			
+				<ion-toolbar id="opt_{{idx}}">
+					<ion-segment mode="ios" [(ngModel)]="chartOptions[idx]">
+					    <ion-segment-button value="pie" (click)="showPieChart(idx)">Pie</ion-segment-button>
+					    <ion-segment-button value="donut" (click)="showDonutChart(idx)">Donut</ion-segment-button>
+					    <ion-segment-button value="bar" (click)="showBarChart(idx)">Bar</ion-segment-button>
+					</ion-segment>
+				</ion-toolbar>
 
-				<ion-segment mode="ios" [(ngModel)]="chartOptions[idx]">
-				    <ion-segment-button value="pie" (click)="showPieChart(idx)">Pie</ion-segment-button>
-				    <ion-segment-button value="donut" (click)="showDonutChart(idx)">Donut</ion-segment-button>
-				    <ion-segment-button value="bar" (click)="showBarChart(idx)">Bar</ion-segment-button>
-				</ion-segment>
-			</ion-toolbar>
-
-			<div id="results_div_{{idx}}">
+				<div id="results_div_{{idx}}">
+				</div>
 			</div>
-		</div>
 
-		<div *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' " id="openAnsDiv_{{idx}}" style="display: none; padding-left: 16px;">
-			List of Answers:
-			<ul>
-				<li *ngFor="let ans of openAnswers[idx]">{{ ans }}</li>
-			</ul>
+			<div *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' " id="openAnsDiv_{{idx}}" style=" padding-left: 16px;" class="listOfAnswers">
+				<p id="listTitle">LIST OF ANSWERS</p>
+				<ul>
+					<li *ngFor="let ans of openAnswers[idx]" text-wrap>{{ ans }}</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </ion-content>

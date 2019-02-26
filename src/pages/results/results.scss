@@ -1,3 +1,63 @@
 page-results {
+	ion-label{
+		font-size: 17px;
+	}
 
+	#title-desc{
+		background-color: #F0F0F0;
+		border-radius: 8px;
+		padding: 7px;
+	}
+
+	#listTitle{
+		color: #12608A;
+	}
+
+	ul{
+		padding-left: 10px;
+	}
+
+	li{
+		padding-bottom: 5px;
+	}
+
+	.qandResDiv{
+		border-radius: 10px;
+		border-style: solid;
+		border-color: #F0F0F0;
+		margin-top: 8px;
+		overflow: hidden;
+		background-color: #F7F7F7;
+	}
+
+	.graphDivs{
+		
+	}
+
+	.listOfAnswers{
+		
+	}
+
+	ion-item{
+		
+	}
+
+	/*class inherited*/
+	.item-md.item-block .item-inner{
+		padding-right: 0;
+		border-bottom: none;
+	}
+
+	ion-label{
+		padding-left: 5px;
+	}
+
+	.viewBtnClass{
+
+	}
+
+	/*inherited class*/
+	.item-md .item-button{
+		margin-right: 0;
+	}
 }
