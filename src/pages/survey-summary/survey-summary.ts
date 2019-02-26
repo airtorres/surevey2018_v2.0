@@ -34,7 +34,6 @@ export class SurveySummaryPage {
   num_responses = 0;
 
   currUser;
-  responses;
   thisResponses = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
@@ -48,10 +47,6 @@ export class SurveySummaryPage {
     
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
-    });
-
-    this.storage.get('responses').then(res => {
-      this.responses = res;
     });
 
     try{
@@ -70,6 +65,13 @@ export class SurveySummaryPage {
     this.isActive = this.thisSurvey['isActive'];
     this.s_id = this.thisSurvey['id'];
     this.num_responses = this.thisSurvey['num_responses'];
+
+    const resp:firebase.database.Reference = firebase.database().ref('/responses/'+this.s_id);
+    resp.on('value', respSnapshot => {
+      if(respSnapshot.val()){
+        this.num_responses = respSnapshot.numChildren();
+      }
+    });
 
     this.created_date =  this.configService.transformDateNumFormat(this.thisSurvey['created_at']);
     this.updated_date =  this.configService.transformDateNumFormat(this.thisSurvey['updated_at']);
@@ -102,18 +104,41 @@ export class SurveySummaryPage {
   }
 
   gotoResultsPage(){
-    // generate results from local responses
-    if (this.responses){
-      for( var r in this.responses['responses']){
-        if (this.responses['responses'][r]['survey_id'] == this.s_id) {
-          this.thisResponses.push(this.responses['responses'][r]);
-        }
-      }
+    if(this.configService.isConnectedToFirebase()){
+      let loadingForResults = this.loadingCtrl.create({
+        content: 'Please wait...'
+      });
+
+      // WHEN USING CONFIGSERVICE METHOD
+      // loadingForResults.present();
+      // setTimeout(() => {
+      //   this.thisResponses = this.configService.getResponses(this.s_id);        
+      // }, 1000);
+
+      // setTimeout(() => {
+      //   console.log(this.thisResponses);
+      //   loadingForResults.dismiss();
+      //   this.navCtrl.push(ResultsPage, {s_id: this.s_id, responses: this.thisResponses});
+      // }, 1000);
+
+      loadingForResults.present().then(() => {
+        const s:firebase.database.Reference = firebase.database().ref('/responses/'+this.s_id);
+        s.on('value', responsesSnapshot => {
+          if(responsesSnapshot.val()){
+            this.thisResponses = responsesSnapshot.val();
+            loadingForResults.dismiss();
+            this.navCtrl.push(ResultsPage, {s_id: this.s_id, responses: this.thisResponses});
+          }
+          else{
+            loadingForResults.dismiss();
+            this.configService.noResponsesRetrieved();
+          }
+        });
+      });
     }
-
-    console.log(this.thisResponses);
-
-    this.navCtrl.push(ResultsPage, {s_id: this.s_id, responses: this.thisResponses});
+    else{
+      this.configService.showSimpleConnectionError();
+    }
   }
 
   confirmDeleteSurvey(){

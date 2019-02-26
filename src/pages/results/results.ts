@@ -6,6 +6,8 @@ import { Http } from '@angular/http';
 import { File } from '@ionic-native/file';
 import * as papa from 'papaparse';
 
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
+
 /**
  * Generated class for the ResultsPage page.
  *
@@ -40,6 +42,7 @@ export class ResultsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	private alertCtrl: AlertController,
   	private storage: Storage,
+    public configService: ConfigurationProvider,
   	private file: File,
   	private http: Http) {
 
@@ -51,58 +54,50 @@ export class ResultsPage {
   		this.s_id = this.navParams.get('s_id');
   	}
 
-  	this.storage.get('surveys').then( val => {
-  		for( var v in val['surveys']){
-  			// getting this particular survey
-  			if( v == this.s_id ){
-  				this.survey = val['surveys'][v];
-  				break;
+    this.survey = this.configService.getSurveyData(this.s_id);
+
+		console.log(this.survey);
+
+		this.survey_title = this.survey['title'];
+		this.description = this.survey['description'];
+		this.questions = this.survey['questions'];
+
+		var q_to_opt = [];
+		for ( var q in this.questions){
+			// setting default chart
+			this.chartOptions[q] = '';
+			this.chartOptions[q] = 'pie';
+
+			var opt_to_res = [];
+			for( var opt in this.questions[q]['options']){
+				var option = this.questions[q]['options'][opt];
+
+				// only if a question has options
+				if(option){
+  				opt_to_res[option] = [];
+
+  				for (var rr in this.responses){
+    					// getting the users whose answer is this particular option
+  					if(this.responses[rr]['answers'][q] && this.responses[rr]['answers'][q] == option){
+  						opt_to_res[option].push(this.responses[rr]['respondent']);
+  					}
+  				}
   			}
-  		}
+			}
+			q_to_opt.push(opt_to_res);
+		}
+		// results with the respondent email attached, can be found here
+		console.log(q_to_opt);
 
-  		console.log(this.survey);
+		// tabulating the votes
+		for (var item in q_to_opt){
+			for( var optn in q_to_opt[item]){
+				q_to_opt[item][optn] = q_to_opt[item][optn].length;
+			}
+		}
 
-  		this.survey_title = this.survey['title'];
-  		this.description = this.survey['description'];
-  		this.questions = this.survey['questions'];
-
-  		var q_to_opt = [];
-  		for ( var q in this.questions){
-  			// setting default chart
-  			this.chartOptions[q] = '';
-  			this.chartOptions[q] = 'pie';
-
-  			var opt_to_res = [];
-  			for( var opt in this.questions[q]['options']){
-  				var option = this.questions[q]['options'][opt];
-
-  				// only if a question has options
-  				if(option){
-	  				opt_to_res[option] = [];
-
-	  				for (var rr in this.responses){
-	  					// getting the users whose answer is this particular option
-						if(this.responses[rr]['answers'][q] && this.responses[rr]['answers'][q] == option){
-							opt_to_res[option].push(this.responses[rr]['respondent']);
-						}
-					}
-				}
-  			}
-  			q_to_opt.push(opt_to_res);
-  		}
-  		// results with the respondent email attached, can be found here
-  		console.log(q_to_opt);
-
-  		// tabulating the votes
-  		for (var item in q_to_opt){
-  			for( var optn in q_to_opt[item]){
-  				q_to_opt[item][optn] = q_to_opt[item][optn].length;
-  			}
-  		}
-
-  		this.results = q_to_opt;
-  		console.log(this.results);
-  	});
+		this.results = q_to_opt;
+		console.log(this.results);
   }
 
   ionViewDidLoad() {
@@ -270,7 +265,7 @@ export class ResultsPage {
   }
 
   public ionViewWillEnter(){
-  	console.log("loading charts ...");
+  	console.log("enetering results page & loading charts ...");
   }
 
   public ionViewWillLeave(){

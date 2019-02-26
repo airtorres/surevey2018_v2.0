@@ -134,12 +134,14 @@ export class AnswerSurveyPage {
 
   UpdateInvitationStatus(){
     try{
+      var that = this;
       firebase.database().ref("/user_surveys/"+this.fire.auth.currentUser.uid+"/invitations/"+this.s_id+"/status").set("completed", function(error){
         if(error){
           console.log("Not successful updating invitation status."+error);
-          this.showSubmitError();
+          that.showSubmitError();
         }else{
           console.log("Successfully updated: invitation status to completed!");
+          that.configService.displayToast("Success! Response recorded.");
         }
       });
 
@@ -212,6 +214,7 @@ export class AnswerSurveyPage {
               }else{
                 console.log("Successfully added to responses!");
                 loading.dismiss();
+                that.configService.displayToast("Success! Response recorded.");
                 that.navCtrl.pop();
               }
             });
@@ -255,6 +258,14 @@ export class AnswerSurveyPage {
   sendMessage(){
     console.log("Redirecting to chat...");
     this.navCtrl.push(NewMsgPage, {'chatmate' : this.author});
+  }
+
+  ionViewWillEnter(){
+    console.log("entering anwer-survey page ...");
+  }
+
+  ionViewWillLeave(){
+    console.log("leaving anwer-survey page ...");
   }
 
 }

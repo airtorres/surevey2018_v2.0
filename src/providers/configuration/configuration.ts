@@ -61,6 +61,15 @@ export class ConfigurationProvider {
     alert.present();
   }
 
+  noResponsesRetrieved(){
+  	let alert = this.alertCtrl.create({
+      title: 'Opsss!',
+      message: 'There are no responses recorded yet.',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
   transformAuthorName(authorId, email){
     var name = email;
     const user:firebase.database.Reference = firebase.database().ref('/users/'+authorId);
@@ -510,5 +519,16 @@ export class ConfigurationProvider {
   }
 
 // ============= ENDOF COUNTRY_STATE_CITY ==========================================
+
+  getResponses(surveyId){
+  	var responses = [];
+	const s:firebase.database.Reference = firebase.database().ref('/responses/'+surveyId);
+	s.on('value', responsesSnapshot => {
+	  if(responsesSnapshot.val()){
+	    responses = responsesSnapshot.val();
+	  }
+	});
+	return responses;
+  }
 
 }
