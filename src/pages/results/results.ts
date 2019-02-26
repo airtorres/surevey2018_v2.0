@@ -154,6 +154,7 @@ export class ResultsPage {
   	item.style.color = 'white';
 
   	var closebtn = document.getElementById('closeIcon_'+idx);
+  	closebtn.style.backgroundColor = '#12608A';
   	closebtn.style.color = 'white';
 
   	var div = document.getElementById('questionAndResultDiv_'+idx);
@@ -166,6 +167,7 @@ export class ResultsPage {
   	item.style.color = 'black';
 
   	var closebtn = document.getElementById('closeIcon_'+idx);
+  	closebtn.style.backgroundColor = 'white';
   	closebtn.style.color = '#12608A';
 
   	var div = document.getElementById('questionAndResultDiv_'+idx);
