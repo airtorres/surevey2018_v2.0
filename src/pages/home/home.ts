@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, App } from 'ionic-angular';
+import { NavController, App, LoadingController } from 'ionic-angular';
 
 import { SigninPage } from '../signin/signin';
 import { CreateSurveyPage } from '../create-survey/create-survey';
@@ -41,6 +41,7 @@ export class HomePage {
   	private fire: AngularFireAuth,
   	public app: App,
     public configService: ConfigurationProvider,
+    public loadingCtrl: LoadingController,
     private storage: Storage) {
 
     this.storage.get('currentUser').then(x =>{
@@ -91,14 +92,23 @@ export class HomePage {
   }
 
   logout(){
-  	this.fire.auth.signOut().then()
-  	.catch( function(error) {
-      console.log("got an error:", error);
+    let loadingSignout = this.loadingCtrl.create({
+      content: 'Signing in...'
     });
 
-  	// navigate back to sign-in page
-  	this.navCtrl.popToRoot();
-  	this.app.getRootNav().setRoot(SigninPage);
+    loadingSignout.present().then(() => {
+    	this.fire.auth.signOut().then(() => {
+        loadingSignout.dismiss();
+        // navigate back to sign-in page
+        this.navCtrl.popToRoot();
+        this.app.getRootNav().setRoot(SigninPage);
+      })
+    	.catch( function(error) {
+        loadingSignout.dismiss();
+        this.configService.showSimpleAlert('Unable to Signout', 'Try again later.');
+        console.log("got an error:", error);
+      });
+    });
   }
 
   create_survey(){

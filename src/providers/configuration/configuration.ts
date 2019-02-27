@@ -52,19 +52,19 @@ export class ConfigurationProvider {
     toast.present();
   }
 
-  showSimpleConnectionError(){
-    let alert = this.alertCtrl.create({
-      title: 'Connection Timeout',
-      message: 'You must be connected to the internet.',
+  showSimpleAlert(thisTitle, msg){
+  	let alert = this.alertCtrl.create({
+      title: thisTitle,
+      message: msg,
       buttons: ['OK']
     });
     alert.present();
   }
 
-  noResponsesRetrieved(){
-  	let alert = this.alertCtrl.create({
-      title: 'Opsss!',
-      message: 'There are no responses recorded yet.',
+  showSimpleConnectionError(){
+    let alert = this.alertCtrl.create({
+      title: 'Connection Timeout',
+      message: 'You must be connected to the internet.',
       buttons: ['OK']
     });
     alert.present();

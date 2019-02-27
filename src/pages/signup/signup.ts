@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SigninPage } from '../signin/signin';
@@ -33,6 +33,7 @@ export class SignupPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private formbuilder: FormBuilder,
     public loginService: LoginProvider,
+    public loadingCtrl: LoadingController,
     private storage: Storage,
     private fire: AngularFireAuth) {
 
@@ -55,59 +56,68 @@ export class SignupPage {
 
   signup(){
     console.log(this.email.value);
+    let loading = this.loadingCtrl.create({
+      content: 'Signing up...'
+    });
 
-    // SIGNING UP TO FIREBASE -----------------------------------------
-    this.fire.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
-    .then(data => {
-      console.log("Data got:\n", data);
-      var id;
-      try{
-        id = this.fire.auth.currentUser.uid;
-      }catch(e){
-        console.log(e);
-      }
+    loading.present().then(() => {
+      // SIGNING UP TO FIREBASE -----------------------------------------
+      this.fire.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
+      .then(data => {
+        console.log("Data got:\n", data);
+        var id;
+        try{
+          id = this.fire.auth.currentUser.uid;
+        }catch(e){
+          console.log(e);
+        }
 
-      var hashPassword = this.loginService.md5(this.password.value);
+        var hashPassword = this.loginService.md5(this.password.value);
 
-      var user = {
-        'username': this.username.value,
-        'email': this.email.value,
-        'password': hashPassword,
-        'first_name': '',
-        'last_name': '',
-        'profession': '',
-        'birthdate': '',
-        'gender': '',
-        'sex': '',
-        'age': '',
-        'country': '',
-        'city': '',
-        'state': ''
-      }
+        var user = {
+          'username': this.username.value,
+          'email': this.email.value,
+          'password': hashPassword,
+          'first_name': '',
+          'last_name': '',
+          'profession': '',
+          'birthdate': '',
+          'gender': '',
+          'sex': '',
+          'age': '',
+          'country': '',
+          'city': '',
+          'state': ''
+        }
 
-      var user_survey = {
-        'email': this.email.value,
-        'surveys':[],
-        'invitations': []
-      }
+        var user_survey = {
+          'email': this.email.value,
+          'surveys':[],
+          'invitations': []
+        }
 
-      try{
-        firebase.database().ref("/users/"+id).set(user).then( ()=>{});
-        firebase.database().ref("/user_surveys/"+id).set(user_survey);
+        try{
+          firebase.database().ref("/users/"+id).set(user).then( ()=>{});
+          firebase.database().ref("/user_surveys/"+id).set(user_survey);
 
-        // for offline login
-        this.storage.set('currentUser', this.email.value);
-        this.storage.set('currentUserPSWD', this.loginService.md5(this.password.value));
-        this.storage.set('username', this.username.value);
-        this.navigateToHome();
-      }catch(error){
+          // for offline login
+          this.storage.set('currentUser', this.email.value);
+          this.storage.set('currentUserPSWD', this.loginService.md5(this.password.value));
+          this.storage.set('username', this.username.value);
+
+          loading.dismiss();
+          this.navigateToHome();
+        }catch(error){
+          loading.dismiss();
+          console.log("got an error:", error);
+          document.getElementById('unAbleSignup_div').style.display = "block";
+        }
+      })
+      .catch( function(error) {
+        loading.dismiss();
         console.log("got an error:", error);
         document.getElementById('unAbleSignup_div').style.display = "block";
-      }
-    })
-    .catch( function(error) {
-      console.log("got an error:", error);
-      document.getElementById('unAbleSignup_div').style.display = "block";
+      });
     });
   }
 

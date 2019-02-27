@@ -78,21 +78,24 @@ export class SurveySummaryPage {
   }
 
   gotoSendInvitePage(){
-      let loading = this.loadingCtrl.create({
-        content: 'Please wait...'
-      });
+    let loadingUsers = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
 
-      loading.present();
-
+    loadingUsers.present();
+    if(this.configService.isConnectedToFirebase()){
       setTimeout(() => {
         this.navCtrl.push(SendInvitePage, {s_id: this.s_id});
       }, 1000);
 
       setTimeout(() => {
-        loading.dismiss();
+        loadingUsers.dismiss();
       }, 1000);
-
-  	// this.navCtrl.push(SendInvitePage, {s_id: this.s_id});
+    }
+    else{
+      loadingUsers.dismiss();
+      this.configService.showSimpleConnectionError();
+    }
   }
 
   gotoEdit(){
@@ -131,7 +134,7 @@ export class SurveySummaryPage {
           }
           else{
             loadingForResults.dismiss();
-            this.configService.noResponsesRetrieved();
+            this.configService.showSimpleAlert('Opsss!','There are no responses recorded yet.');
           }
         });
       });

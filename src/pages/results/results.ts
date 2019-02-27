@@ -233,16 +233,16 @@ export class ResultsPage {
 
 	  	// Create the data table.
 	    var data = new google.visualization.DataTable();
-	    data.addColumn('string', 'Topping');
-	    data.addColumn('number', 'Slices');
+	    data.addColumn('string', this.questions[idx]['message']);
+	    data.addColumn('number', 'No. of votes');
 	    data.addRows(question_res);
 
 	    // Set chart options
 	    var options = {
 	    	'title':'',
         // 'isStacked': 'percent',
+        'bar': { groupWidth: "90%" },
         'width':320,
-        'height':375,
         'legend': 'bottom',
         'chartArea': {left:50,right:5,top:10,width:'95%',height:'75%'}
 		};

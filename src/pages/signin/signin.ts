@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { SignupPage } from '../signup/signup';
@@ -34,6 +34,7 @@ export class SigninPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl : ToastController,
     private formbuilder: FormBuilder,
     public loginService: LoginProvider,
+    public loadingCtrl: LoadingController,
     private fire: AngularFireAuth,
     private storage: Storage) {
 
@@ -93,32 +94,41 @@ export class SigninPage {
   }
 
   signin(){
-    try{
-      this.fire.auth.signInWithEmailAndPassword(this.email.value, this.password.value)
-      .then(data => {
-        console.log("Data got:\n", data);
+    let loading = this.loadingCtrl.create({
+      content: 'Signing in...'
+    });
 
-        try{
-          document.getElementById('invalidLogin_div').style.display = "none";
-        }catch(e){}
+    loading.present().then(() => {
+      try{
+        this.fire.auth.signInWithEmailAndPassword(this.email.value, this.password.value)
+        .then(data => {
+          console.log("Data got:\n", data);
 
-        // for offline login
-        this.storage.set('currentUser', this.email.value);
-        this.storage.set('currentUserPSWD', this.loginService.md5(this.password.value));
+          try{
+            document.getElementById('invalidLogin_div').style.display = "none";
+          }catch(e){}
 
-        this.navigateToHome();
-      })
-      .catch( (error) => {
-        console.log("got an error:", error);
-        if (error.code == 'auth/network-request-failed'){
-          this.logInUsingLocalStorage();
-        }
-        else if(error.code == 'auth/wrong-password' || error.code == 'auth/user-not-found' || error.code == 'auth/invalid-email'){
-          this.showInvalidLogin();
-        }
-      });
-    }catch (e){
-      this.logInUsingLocalStorage();
-    }
+          // for offline login
+          this.storage.set('currentUser', this.email.value);
+          this.storage.set('currentUserPSWD', this.loginService.md5(this.password.value));
+
+          loading.dismiss();
+          this.navigateToHome();
+        })
+        .catch( (error) => {
+          console.log("got an error:", error);
+          loading.dismiss();
+          if (error.code == 'auth/network-request-failed'){
+            this.logInUsingLocalStorage();
+          }
+          else if(error.code == 'auth/wrong-password' || error.code == 'auth/user-not-found' || error.code == 'auth/invalid-email'){
+            this.showInvalidLogin();
+          }
+        });
+      }catch (e){
+        loading.dismiss();
+        this.logInUsingLocalStorage();
+      }
+    });
   }
 }
