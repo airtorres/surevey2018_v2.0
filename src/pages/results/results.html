@@ -37,7 +37,7 @@
 		</ion-item>
 
 		<div id="resDiv_{{idx}}" style="display: none;">
-			<div *ngIf="question['type'] == 'multipleChoice' || question['type'] == 'checkbox' || question['type'] == 'date' || question['type'] == 'dropdown' " id="graphResult_{{idx}}" class="graphDivs">
+			<div *ngIf="question['type'] == 'multipleChoice' || question['type'] == 'checkbox' || question['type'] == 'dropdown' " id="graphResult_{{idx}}" class="graphDivs">
 			
 				<ion-toolbar id="opt_{{idx}}">
 					<ion-segment mode="ios" [(ngModel)]="chartOptions[idx]">

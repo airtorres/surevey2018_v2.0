@@ -197,13 +197,13 @@ export class ResultsPage {
 	    // Set chart options
 	    var options = {
 	   	  'title':'',
-	      'width':600,
-	      'height':400,
+	      'width':320,
+	      'height':375,
 	      'legend': {
-	        position: 'bottom', alignment: 'end', maxLines: 10,
-	        textStyle: { fontSize: 16 }
+	        position: 'bottom', alignment: 'start',
+	        textStyle: { fontSize: 12 }
 	      },
-	      'chartArea': {left:15,top:10,width:'50%',height:'75%'}
+	      'chartArea': {left:10,top:10,width:'95%',height:'75%'}
 		};
 
 	  	document.getElementById('opt_'+idx).style.display = "block";
@@ -240,9 +240,11 @@ export class ResultsPage {
 	    // Set chart options
 	    var options = {
 	    	'title':'',
-	        'width':400,
-	        'height':300,
-	        'legend':'bottom',
+        // 'isStacked': 'percent',
+        'width':320,
+        'height':375,
+        'legend': 'bottom',
+        'chartArea': {left:50,right:5,top:10,width:'95%',height:'75%'}
 		};
 
 	    // Instantiate and draw our chart, passing in some options.
@@ -277,14 +279,14 @@ export class ResultsPage {
 	    // Set chart options
 	    var options = {
 	      'title':'',
-	      'width':600,
-	      'height':400,
+	      'width':320,
+        'height':375,
 	      'pieHole':0.4,
 	      'legend': {
-	        position: 'bottom', alignment: 'end', maxLines: 10,
-	        textStyle: { fontSize: 16 }
+	        position: 'bottom', alignment: 'start',
+	        textStyle: { fontSize: 12 }
 	      },
-	      'chartArea': {left:15,top:10,width:'50%',height:'75%'}
+	      'chartArea': {left:10,top:10,width:'95%',height:'75%'}
 	    };
 
 	    // Instantiate and draw our chart, passing in some options.
