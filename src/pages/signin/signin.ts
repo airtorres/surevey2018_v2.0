@@ -95,7 +95,7 @@ export class SigninPage {
 
   signin(){
     let loading = this.loadingCtrl.create({
-      content: 'Signing in...'
+      content: 'Signing in'
     });
 
     loading.present().then(() => {

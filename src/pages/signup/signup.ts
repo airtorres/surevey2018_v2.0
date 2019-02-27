@@ -57,7 +57,7 @@ export class SignupPage {
   signup(){
     console.log(this.email.value);
     let loading = this.loadingCtrl.create({
-      content: 'Signing up...'
+      content: 'Signing up'
     });
 
     loading.present().then(() => {

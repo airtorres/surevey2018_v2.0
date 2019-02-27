@@ -93,7 +93,7 @@ export class HomePage {
 
   logout(){
     let loadingSignout = this.loadingCtrl.create({
-      content: 'Signing in...'
+      content: 'Signing out'
     });
 
     loadingSignout.present().then(() => {
