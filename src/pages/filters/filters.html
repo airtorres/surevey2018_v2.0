@@ -30,12 +30,12 @@
 					<ion-row>
 						<ion-col>
 							<ion-label stacked class="stacked">MIN</ion-label>
-							<ion-input type="number" min="0" #min [(ngModel)]="minimum"></ion-input>
+							<ion-input type="number" min="15" #min [(ngModel)]="minimum"></ion-input>
 						</ion-col>
 
 						<ion-col>
 							<ion-label stacked class="stacked">MAX</ion-label>
-							<ion-input type="number" #max [(ngModel)]="maximum"></ion-input>
+							<ion-input type="number" #max [(ngModel)]="maximum" min="{{minimum}}" max="100"></ion-input>
 						</ion-col>
 					</ion-row>
 				</ion-grid>

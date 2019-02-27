@@ -73,21 +73,7 @@ export class FiltersPage {
 
   checkConnection(){
     // check for Firebase connection
-    var connectFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Getting data from Firebase...");
-          connectFlag = true;          
-        }else {
-          console.log("Error loading data from Firebase.");
-          connectFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
+    var connectFlag = this.configService.isConnectedToFirebase();
 
     if(connectFlag){
       this.loadUsersFromFirebase();
@@ -176,69 +162,94 @@ export class FiltersPage {
   }
 
   clusterSample() {
-    // retrieve sample with age range in any place, profession, sex
-    if (this.min.value != '' && this.max.value != '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value != '') {
-        for ( var e in this.all_users){
-          if(this.all_users[e]['age'] >= this.min.value && this.all_users[e]['age'] <= this.max.value){
-            console.log(this.all_users[e]['age'], this.all_users[e]['email']);
-            this.generated_users.push(this.all_users[e]['email']);
-          }
-        }
-      }
+    this.all_users_email = [];
+    let filteredUsers = [];
+    let ageMin = this.min.value;
+    let ageMax = this.max.value;
+    let sex = this.sex;
+    let profession = this.profession;
+    let country = this.country;
+    let state = this.state;
+    let city = this.city;
 
-    // retrieve sample of males only or females only
-    else if (this.min.value == '' && this.max.value == '' && this.sex != 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value != '') {
-        for ( var s in this.all_users){
-          if(this.all_users[s]['sex'] == this.sex){
-            console.log(this.all_users[s]['sex'], this.all_users[s]['email']);
-            this.generated_users.push(this.all_users[s]['email']);
-          }
+    // retrieve sample with ageMin only
+    if (ageMin != '' && ageMax == '') {
+      for ( var e in this.all_users){
+        if(this.all_users[e]['age'] >= ageMin){
+          console.log(this.all_users[e]['age'], this.all_users[e]['email']);
+          this.all_users_email.push(this.all_users[e]['email']);
         }
       }
+    }
 
-    // retrieve sample by selected profession only
-    else if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession != 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value != '') {
-        for ( var p in this.all_users){
-          if(this.all_users[p]['profession'] == this.profession){
-            console.log(this.all_users[p]['profession'], this.all_users[p]['email']);
-            this.generated_users.push(this.all_users[p]['email']);
-          }
+    // retrieve sample with ageMax only
+    if (ageMin == '' && ageMax != '') {
+      for ( var e in this.all_users){
+        if(this.all_users[e]['age'] <= ageMax && this.all_users[e]['age'] >= 15){
+          console.log(this.all_users[e]['age'], this.all_users[e]['email']);
+          this.all_users_email.push(this.all_users[e]['email']);
         }
       }
+    }
 
-    // retrieve sample of by country only
-    else if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country != 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value == '') {
-        for ( var c in this.all_users){
-          if(this.all_users[c]['country'] == this.country){
-            console.log(this.all_users[c]['country'], this.all_users[c]['email']);
-            this.generated_users.push(this.all_users[c]['email']);
-          }
+    // retrieve sample with given sex only
+    if (sex != 'Male & Female') {
+      for ( var s in this.all_users){
+        if(this.all_users[s]['sex'] == sex){
+          console.log(this.all_users[s]['sex'], this.all_users[s]['email']);
+          this.all_users_email.push(this.all_users[s]['email']);
         }
       }
+    }
 
-    // retrieve sample of by country, state only
-    else if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country != 'Anywhere' && this.state != 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value == '') {
-        for ( var st in this.all_users){
-          if(this.all_users[st]['country'] == this.country && this.all_users[st]['state'] == this.state){
-            console.log(this.all_users[st]['country'], this.all_users[st]['state'], this.all_users[st]['email']);
-            this.generated_users.push(this.all_users[st]['email']);
-          }
+    // retrieve sample with given profession only
+    if (profession != 'Any') {
+      for ( var p in this.all_users){
+        if(this.all_users[p]['profession'] == profession){
+          console.log(this.all_users[p]['profession'], this.all_users[p]['email']);
+          this.all_users_email.push(this.all_users[p]['email']);
         }
       }
+    }
 
-    // retrieve sample of by country, state, city only
-    else if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country != 'Anywhere' && this.state != 'Anywhere' && this.city != 'Anywhere' && this.numPersons.value == '') {
-        for ( var ci in this.all_users){
-          if(this.all_users[ci]['country'] == this.country && this.all_users[ci]['state'] == this.state && this.all_users[ci]['city'] == this.city){
-            console.log(this.all_users[ci]['country'], this.all_users[ci]['state'], this.all_users[ci]['email']);
-            this.generated_users.push(this.all_users[ci]['email']);
-          }
+    if (country != 'Anywhere' && state == 'Anywhere' && city == 'Anywhere') {
+      for ( var c in this.all_users){
+        if(this.all_users[c]['country'] == country){
+          console.log(this.all_users[c]['country'], this.all_users[c]['email']);
+          this.all_users_email.push(this.all_users[c]['email']);
         }
       }
-    // this.all_users_email = [];
-    // this.all_users_email = this.generated_users;
-    this.navCtrl.getPrevious().data.generated_users = this.generated_users;
-    this.navCtrl.pop();
+    }
+
+    if (country != 'Anywhere' && state != 'Anywhere' && city == 'Anywhere') {
+      for ( var st in this.all_users){
+        if(this.all_users[st]['country'] == country && this.all_users[st]['state'] == state){
+          console.log(this.all_users[st]['country'], this.all_users[st]['state'], this.all_users[st]['email']);
+          this.all_users_email.push(this.all_users[st]['email']);
+        }
+      }
+    }
+
+    if (country != 'Anywhere' && state != 'Anywhere' && city != 'Anywhere') {
+      for ( var ci in this.all_users){
+        if(this.all_users[ci]['country'] == this.country && this.all_users[ci]['state'] == this.state && this.all_users[ci]['city'] == this.city){
+          console.log(this.all_users[ci]['country'],  this.all_users[ci]['state'],this.all_users[ci]['city'], this.all_users[ci]['email']);
+          this.all_users_email.push(this.all_users[ci]['email']);
+        }
+      }
+    }
+    this.randomSample();
+  }
+
+  requiredField() {
+    let incompleteFieldsToast = this.toastCtrl.create({
+      message: 'Please input the number of respondents to be generated.',
+      duration: 2000,
+      position: 'bottom'
+    });
+
+    incompleteFieldsToast.present();
+    this.numPersons.setFocus();
   }
 
 	applyFilter() {
@@ -254,26 +265,21 @@ export class FiltersPage {
 
 
     // if empty ang number of respondents
-    if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value == '') { 
-      let incompleteFieldsToast = this.toastCtrl.create({
-        message: 'Please input the number of respondents to be generated.',
-        duration: 2000,
-        position: 'bottom'
-      });
-
-      incompleteFieldsToast.present();
-      this.numPersons.setFocus();
+    if (this.numPersons.value == '') { 
+      this.requiredField();
     }
-
-    // for random sampling
-    if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere' && this.numPersons.value != '') {
-      this.randomSample();
+    else {
+       // for random sampling
+      if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere') {
+        this.randomSample();
+      }   
+      else {
+        // cluster or stratified sampling
+      // if (this.min.value != '' || this.max.value != '' || this.sex != 'Male & Female' || this.profession != 'Any'|| this.country != 'Anywhere' || this.state != 'Anywhere' || this.city != 'Anywhere') {
+        this.clusterSample();
+      }
     }
-
-    else if (this.min.value != '' || this.max.value != '' || this.sex != 'Male & Female' || this.profession != 'Any'|| this.country != 'Anywhere' || this.state != 'Anywhere' || this.city != 'Anywhere' && this.numPersons.value != '') {
-      this.clusterSample();
-    } 
-	}
+  }
 
 	cancelBtn() {
 		this.navCtrl.pop();

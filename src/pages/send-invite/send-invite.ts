@@ -75,21 +75,7 @@ export class SendInvitePage {
 
   checkConnection(){
     // check for Firebase connection
-    var connectFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Getting data from Firebase...");
-          connectFlag = true;          
-        }else {
-          console.log("Error loading data from Firebase.");
-          connectFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
+    var connectFlag = this.configService.isConnectedToFirebase();
 
     if(connectFlag){
       this.loadUsersFromFirebase();
