@@ -163,7 +163,7 @@ export class FiltersPage {
 
   clusterSample() {
     this.all_users_email = [];
-    let filteredUsers = [];
+    // let filteredUsers = [];
     let ageMin = this.min.value;
     let ageMax = this.max.value;
     let sex = this.sex;
@@ -184,10 +184,10 @@ export class FiltersPage {
 
     // retrieve sample with ageMax only
     if (ageMin == '' && ageMax != '') {
-      for ( var e in this.all_users){
-        if(this.all_users[e]['age'] <= ageMax && this.all_users[e]['age'] >= 15){
-          console.log(this.all_users[e]['age'], this.all_users[e]['email']);
-          this.all_users_email.push(this.all_users[e]['email']);
+      for ( var ee in this.all_users){
+        if(this.all_users[ee]['age'] <= ageMax && this.all_users[ee]['age'] >= 15){
+          console.log(this.all_users[ee]['age'], this.all_users[ee]['email']);
+          this.all_users_email.push(this.all_users[ee]['email']);
         }
       }
     }

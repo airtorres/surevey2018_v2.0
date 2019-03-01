@@ -25,7 +25,7 @@
 
   		<!-- ALL -->
   		<ion-list *ngSwitchCase="'all'" text-wrap>
-  			<ion-item *ngIf="all_surveys.length == 0 && drafts.length == 0" text-center>
+  			<ion-item *ngIf="mySurveys.length + survey_invites.length == 0 && drafts.length == 0" text-center>
       			<img width="350" height="350" src="../assets/imgs/noSurveyIllustration.png" style="background: transparent !important; vertical-align: middle;">
 			</ion-item>
 

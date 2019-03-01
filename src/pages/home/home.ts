@@ -25,7 +25,6 @@ import { Storage } from '@ionic/storage';
 export class HomePage {
   currentUser;
   username = '';
-  built_in_templates = [];
 
   mySurveys = [];
   mySurveys_ids = [];
@@ -43,6 +42,9 @@ export class HomePage {
     public configService: ConfigurationProvider,
     public loadingCtrl: LoadingController,
     private storage: Storage) {
+
+    this.configService.getBuiltInTemplates();
+    this.loadSurveys();
 
     this.storage.get('currentUser').then(x =>{
       this.currentUser = x;
@@ -64,9 +66,6 @@ export class HomePage {
     else{
       this.userData = this.configService.getUserDataFromLocalDB();
     }
-
-    this.loadSurveys();
-    this.loadTemplates();
   }
 
   gotoProfile(){
@@ -124,6 +123,9 @@ export class HomePage {
   }
 
   loadSurveysFromLocalDB(){
+    console.log("INSIDE!!!!");
+
+
     this.storage.get("mySurveys").then(mySurv => {
       if(mySurv){
         this.mySurveys = mySurv;
@@ -142,70 +144,64 @@ export class HomePage {
   }
 
   loadSurveys(){
-    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    if(this.configService.isConnectedToFirebase()){
+      try{
+        var i;
+        var surv = [];
 
-    if(connectedToFirebaseFlag){
-      this.mySurveys_ids = this.configService.getUserSurveysList(this.fire.auth.currentUser.uid);
-      var all_invitations = this.configService.getUserInvitationsList(this.fire.auth.currentUser.uid);
+        firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist')
+        .on('value', survSnapshot => {
+          this.mySurveys_ids = survSnapshot.val();
 
-      this.survey_invites_ids = [];
-      for ( var invit in all_invitations){
-        this.survey_invites_ids.push(all_invitations[invit]['s_id']);
-        this.invite_status[invit] = all_invitations[invit]['status'];
+          this.mySurveys = [];
+          for( i in this.mySurveys_ids){
+            surv = this.configService.getSurveyData(this.mySurveys_ids[i]);
+            if(surv){
+              surv['type'] = '';
+              surv['type'] = 'mySurvey';
+              surv['num_responses'] = 0;
+              surv['num_responses'] = this.configService.getNumResponses(this.mySurveys_ids[i]);
+
+              this.mySurveys.push(surv);
+            }
+          }
+
+          this.mySurveys.reverse();
+          this.storage.set('mySurveys', this.mySurveys);
+        });
+
+        firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/invitations')
+        .on('value', survSnapshot => {
+          var all_invitations = survSnapshot.val();
+
+          this.survey_invites_ids = [];
+          for ( var invit in all_invitations){
+            this.survey_invites_ids.push(all_invitations[invit]['s_id']);
+            this.invite_status[invit] = all_invitations[invit]['status'];
+          }
+
+          this.survey_invites = [];
+          for(i in this.survey_invites_ids){
+            surv = this.configService.getSurveyData(this.survey_invites_ids[i]);
+            if(surv){
+              surv['type'] = '';
+              surv['type'] = 'invites';
+              this.survey_invites.push(surv);
+            }
+          }
+
+          if(this.survey_invites && this.invite_status){
+            this.survey_invites.reverse();
+            this.storage.set('survey_invites', this.survey_invites);
+            this.storage.set('invite_status', this.invite_status);
+          }
+        });
+      }catch(e){
+        this.loadSurveysFromLocalDB();
       }
-
-      console.log(this.mySurveys_ids);
-      console.log(this.survey_invites_ids);
-      console.log(this.invite_status);
-
-      var i;
-      var surv = [];
-
-      for( i in this.mySurveys_ids){
-        surv = this.configService.getSurveyData(this.mySurveys_ids[i]);
-        if(surv){
-          surv['type'] = '';
-          surv['type'] = 'mySurvey';
-          surv['num_responses'] = 0;
-          surv['num_responses'] = this.configService.getNumResponses(this.mySurveys_ids[i]);
-
-          this.mySurveys.push(surv);
-        }
-      }
-
-      for(i in this.survey_invites_ids){
-        surv = this.configService.getSurveyData(this.survey_invites_ids[i]);
-        if(surv){
-          surv['type'] = '';
-          surv['type'] = 'invites';
-          this.survey_invites.push(surv);
-        }
-      }
-
-      this.mySurveys.reverse();
-      this.survey_invites.reverse();
-
-      // saving surveys to local storage for offline access
-      this.storage.set('mySurveys', this.mySurveys);
-      this.storage.set('survey_invites', this.survey_invites);
-      this.storage.set('invite_status', this.invite_status);
     }
     else{
-      // getting the survey data from localDB if not connected to Firebase
       this.loadSurveysFromLocalDB();
-    }
-  }
-
-  loadTemplates(){
-    this.built_in_templates = this.configService.getBuiltInTemplates();
-
-    // ADDED: Hoping that it makes loading of data faster. === DEL LATER
-    try{
-      firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid).on('value', u => {});
-      firebase.database().ref('/surveys/').on('value', u => {});
-    }catch(e){
-      console.log("Error occurs while fetching survey list.");
-      console.log(e);
     }
   }
 
@@ -221,15 +217,11 @@ export class HomePage {
   }
 
   public ionViewWillEnter(){
-    this.mySurveys = [];
-    this.mySurveys_ids = [];
-
-    this.survey_invites = [];
-    this.survey_invites_ids = [];
-
-    this.invite_status = {};
-
-    this.loadTemplates();
+    console.log("entering home page ...");
     this.loadSurveys();
+  }
+
+  public ionViewWillLeave(){
+    console.log("leaving home page ...");
   }
 }
