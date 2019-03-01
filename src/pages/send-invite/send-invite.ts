@@ -32,6 +32,7 @@ export class SendInvitePage {
   public selections = {};
   public selected_users = [];
   public generated_users_from_filter = [];
+  public numPersons;
 
   selAll : boolean = false;
   public length;
@@ -60,17 +61,27 @@ export class SendInvitePage {
 
   ionViewWillEnter(){
     this.generated_users_from_filter = this.navParams.get('generated_users') || null;
+    this.numPersons = this.navParams.get('numPersons') || null;
 
-    if (this.generated_users_from_filter != null) {
+    if (this.generated_users_from_filter == null && this.numPersons == null) {
+      this.generated_users_from_filter = [];
+      this.numPersons = 0;
+    }
+    else if (this.generated_users_from_filter != null && this.numPersons != null) {
       this.selected_users = [];
       this.selections = {};
       this.all_users_email = this.generated_users_from_filter;
       this.selAll = true;
+
       for (var email in this.all_users_email) {
         this.selections[this.all_users_email[email]] = true;
         this.selected_users.push(this.all_users_email[email]);
       }
+
+      this.numPersons = parseInt(this.numPersons['value']);
     }
+    console.log(this.generated_users_from_filter.length);
+    console.log(this.numPersons);
   }
 
   checkConnection(){
@@ -204,6 +215,10 @@ export class SendInvitePage {
         return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
       })
     }
+  }
+
+  removeNote() {
+    document.getElementById('noteDiv').style.display = "none";
   }
 
 }

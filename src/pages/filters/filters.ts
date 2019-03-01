@@ -39,6 +39,7 @@ export class FiltersPage {
   all_users = [];
   all_users_email = [];
   public generated_users = [];
+  public numPersons;
   currUser;
   connectedToFirebaseFlag;
 
@@ -145,25 +146,36 @@ export class FiltersPage {
 
   randomSample() {
     let length = 0;
-    while (length != this.numPersons.value) {
-      let user = this.all_users_email[Math.floor(Math.random()*this.all_users_email.length)];
 
-      if (this.generated_users.indexOf(user) !== -1) {
-        console.log('user exists');
-        continue;
-      } else {
-        this.generated_users.push(user);
-        length++;
-      }
+    if (this.all_users_email.length <= this.numPersons.value) {
+      this.navCtrl.getPrevious().data.generated_users = this.all_users_email;
     }
-    console.log(this.generated_users);
-    this.navCtrl.getPrevious().data.generated_users = this.generated_users;
+    else {
+      while (length != this.numPersons.value) {
+        let user = this.all_users_email[Math.floor(Math.random()*this.all_users_email.length)];
+
+        if (this.generated_users.indexOf(user) !== -1) {
+          console.log('user exists');
+          continue;
+        } else {
+          this.generated_users.push(user);
+          length++;
+        }
+      }
+      console.log(this.generated_users);
+      this.navCtrl.getPrevious().data.generated_users = this.generated_users;
+    }
+    this.navCtrl.getPrevious().data.numPersons = this.numPersons;
     this.navCtrl.pop();
   }
 
   clusterSample() {
+    console.log("cluster");
     this.all_users_email = [];
-    // let filteredUsers = [];
+    let filteredUsers = [];
+    filteredUsers = this.all_users;
+    let arrayofUsers = [];
+
     let ageMin = this.min.value;
     let ageMax = this.max.value;
     let sex = this.sex;
@@ -174,71 +186,122 @@ export class FiltersPage {
 
     // retrieve sample with ageMin only
     if (ageMin != '' && ageMax == '') {
-      for ( var e in this.all_users){
-        if(this.all_users[e]['age'] >= ageMin){
-          console.log(this.all_users[e]['age'], this.all_users[e]['email']);
-          this.all_users_email.push(this.all_users[e]['email']);
+      console.log("ageMin");
+      arrayofUsers = [];
+      for ( var e in filteredUsers){
+        if(filteredUsers[e]['age'] >= ageMin){
+          console.log(filteredUsers[e]['age'], filteredUsers[e]['email']);
+          arrayofUsers.push(filteredUsers[e]);
         }
       }
+      filteredUsers = [];
+      filteredUsers = arrayofUsers;
     }
 
     // retrieve sample with ageMax only
     if (ageMin == '' && ageMax != '') {
-      for ( var ee in this.all_users){
-        if(this.all_users[ee]['age'] <= ageMax && this.all_users[ee]['age'] >= 15){
-          console.log(this.all_users[ee]['age'], this.all_users[ee]['email']);
-          this.all_users_email.push(this.all_users[ee]['email']);
+      console.log("ageMax");
+      arrayofUsers = [];
+      for ( var e in filteredUsers){
+        if(filteredUsers[e]['age'] <= ageMax && filteredUsers[e]['age'] >= 15){
+          console.log(filteredUsers[e]['age'], filteredUsers[e]['email']);
+          arrayofUsers.push(filteredUsers[e]);
         }
       }
+      filteredUsers = [];
+      filteredUsers = arrayofUsers;
+    }
+
+    // retrieve sample with ageMin and ageMax only
+    if (ageMin != '' && ageMax != '') {
+      console.log("ageMin and ageMax");
+      arrayofUsers = [];
+      for ( var e in filteredUsers){
+        if(filteredUsers[e]['age'] >= ageMin && filteredUsers[e]['age'] <= ageMax){
+          console.log(filteredUsers[e]['age'], filteredUsers[e]['email']);
+          arrayofUsers.push(filteredUsers[e]);
+        }
+      }
+      filteredUsers = [];
+      filteredUsers = arrayofUsers;
     }
 
     // retrieve sample with given sex only
     if (sex != 'Male & Female') {
-      for ( var s in this.all_users){
-        if(this.all_users[s]['sex'] == sex){
-          console.log(this.all_users[s]['sex'], this.all_users[s]['email']);
-          this.all_users_email.push(this.all_users[s]['email']);
+      console.log("sex: ", sex);
+      arrayofUsers = [];
+      for ( var s in filteredUsers){
+        if(filteredUsers[s]['sex'] == sex){
+          console.log(filteredUsers[s]['sex'], filteredUsers[s]['email']);
+          arrayofUsers.push(filteredUsers[s]);
         }
       }
+      filteredUsers = [];
+      filteredUsers = arrayofUsers;
     }
 
     // retrieve sample with given profession only
     if (profession != 'Any') {
-      for ( var p in this.all_users){
-        if(this.all_users[p]['profession'] == profession){
-          console.log(this.all_users[p]['profession'], this.all_users[p]['email']);
-          this.all_users_email.push(this.all_users[p]['email']);
+      console.log("profession: ", profession);
+      arrayofUsers = [];
+      for ( var p in filteredUsers){
+        if(filteredUsers[p]['profession'] == profession){
+          console.log(filteredUsers[p]['profession'], filteredUsers[p]['email']);
+          arrayofUsers.push(filteredUsers[p]);
         }
       }
+      filteredUsers = [];
+      filteredUsers = arrayofUsers;
     }
 
+    // retrieve sample with given country, state, and city
     if (country != 'Anywhere' && state == 'Anywhere' && city == 'Anywhere') {
-      for ( var c in this.all_users){
-        if(this.all_users[c]['country'] == country){
-          console.log(this.all_users[c]['country'], this.all_users[c]['email']);
-          this.all_users_email.push(this.all_users[c]['email']);
+      console.log("country");
+      arrayofUsers = [];
+      for ( var c in filteredUsers){
+        if(filteredUsers[c]['country'] == country){
+          console.log(filteredUsers[c]['country'], filteredUsers[c]['email']);
+          arrayofUsers.push(filteredUsers[c]);
         }
       }
+      filteredUsers = [];
+      filteredUsers = arrayofUsers;
     }
 
     if (country != 'Anywhere' && state != 'Anywhere' && city == 'Anywhere') {
-      for ( var st in this.all_users){
-        if(this.all_users[st]['country'] == country && this.all_users[st]['state'] == state){
-          console.log(this.all_users[st]['country'], this.all_users[st]['state'], this.all_users[st]['email']);
-          this.all_users_email.push(this.all_users[st]['email']);
+      console.log("country, state");
+      arrayofUsers = [];
+      for ( var st in filteredUsers){
+        if(filteredUsers[st]['country'] == country && filteredUsers[st]['state'] == state){
+          console.log(filteredUsers[st]['country'], filteredUsers[st]['state'], filteredUsers[st]['email']);
+          arrayofUsers.push(filteredUsers[st]);
         }
       }
+      filteredUsers = [];
+      filteredUsers = arrayofUsers;
     }
 
     if (country != 'Anywhere' && state != 'Anywhere' && city != 'Anywhere') {
-      for ( var ci in this.all_users){
-        if(this.all_users[ci]['country'] == this.country && this.all_users[ci]['state'] == this.state && this.all_users[ci]['city'] == this.city){
-          console.log(this.all_users[ci]['country'],  this.all_users[ci]['state'],this.all_users[ci]['city'], this.all_users[ci]['email']);
-          this.all_users_email.push(this.all_users[ci]['email']);
+      console.log("country, state, city");
+      arrayofUsers = [];
+      for ( var ci in filteredUsers){
+        if(filteredUsers[ci]['country'] == country && filteredUsers[ci]['state'] == state && filteredUsers[ci]['city'] == city){
+          console.log(filteredUsers[ci]['country'],  filteredUsers[ci]['state'],filteredUsers[ci]['city'], filteredUsers[ci]['email']);
+          arrayofUsers.push(filteredUsers[ci]);
         }
       }
+      filteredUsers = [];
+      filteredUsers = arrayofUsers;
     }
+
+    // get all emails after filtering from filterdUsers array
+    for (var user in filteredUsers) {
+        this.all_users_email.push(filteredUsers[user]['email']);
+    }
+
     this.randomSample();
+    // console.log(this.all_users_email);
+    // this.navCtrl.pop();
   }
 
   requiredField() {
