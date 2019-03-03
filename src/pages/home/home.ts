@@ -44,8 +44,6 @@ export class HomePage {
     private storage: Storage) {
 
     this.configService.getBuiltInTemplates();
-    this.loadSurveys();
-    this.loadUserData();
 
     this.storage.get('currentUser').then(x =>{
       this.currentUser = x;
@@ -113,9 +111,6 @@ export class HomePage {
   }
 
   loadSurveysFromLocalDB(){
-    console.log("INSIDE!!!!");
-
-
     this.storage.get("mySurveys").then(mySurv => {
       if(mySurv){
         this.mySurveys = mySurv;
@@ -213,10 +208,15 @@ export class HomePage {
     });
   }
 
-  public ionViewWillEnter(){
-    console.log("entering home page ...");
+  public ionViewDidEnter(){
+    console.log("entered home page ...");
+
     this.loadSurveys();
     this.loadUserData();
+  }
+
+  public ionViewWillEnter(){
+    console.log("entering home page ...");
   }
 
   public ionViewWillLeave(){

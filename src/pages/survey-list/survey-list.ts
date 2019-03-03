@@ -71,8 +71,6 @@ export class SurveyListPage {
       console.log(e);
     }
 
-    this.fetchSurveys();
-
     console.log(this.drafts);
   }
 
@@ -310,13 +308,16 @@ export class SurveyListPage {
     actionSheet.present();
   }
 
-  public ionViewWillEnter() {
-    console.log("entering survey-list ...");
-
-    this.fetchSurveys();
+  public ionViewDidEnter(){
+    console.log("yeah survey-list ...");
 
     // save offline responses from localDB to Firebase
     this.syncResponsesToFirebase();
+  }
+
+  public ionViewWillEnter() {
+    console.log("entering survey-list ...");
+    this.fetchSurveys();
   }
 
 }

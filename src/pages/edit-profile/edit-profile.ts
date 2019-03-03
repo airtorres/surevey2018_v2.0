@@ -178,7 +178,7 @@ export class EditProfilePage {
     return age;
   }
 
-	saveProfile() {
+	saveProfile(popFlag) {
     this.exitFlag = true;
 
     if(this.configService.isConnectedToFirebase()){
@@ -209,7 +209,10 @@ export class EditProfilePage {
     else{
       this.configService.showSimpleConnectionError();
     }
-    this.navCtrl.pop();
+
+    if(popFlag){
+      this.navCtrl.pop();
+    }
 	}
 
   // check if there are changes made before leaving the page
@@ -217,7 +220,7 @@ export class EditProfilePage {
     if (this.prev_first_name == this.firstname.value && this.prev_last_name == this.lastname.value 
       && this.prev_username == this.username.value && this.prev_profession == this.profession && this.prev_sex == this.sex 
       && this.prev_birthdate == this.bdate && this.prev_country == this.country && this.prev_state == this.state 
-      && this.prev_city == this.state) {
+      && this.prev_city == this.city) {
 
       console.log("NO CHANGES MADE.");
       this.userCanLeave = true;
@@ -225,10 +228,6 @@ export class EditProfilePage {
       console.log("THERE ARE UNSAVED CHANGES.");
       this.userCanLeave = false;
     }
-
-    // TEMPORARY: WHILE WALA PA NAFIX ANG BUG ABOVE================================
-    this.userCanLeave = true;
-
   }
 
 
@@ -254,7 +253,7 @@ export class EditProfilePage {
               handler: () => {
                 console.log('User saved data');
                 // do saving logic
-                this.saveProfile();
+                this.saveProfile(false);
                 this.userCanLeave = true;
                 resolve();
               }
