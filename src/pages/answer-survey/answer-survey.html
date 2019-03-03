@@ -7,7 +7,8 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Answer</ion-title>
+  	<ion-title *ngIf="viewOnly == false">Answer</ion-title>
+    <ion-title *ngIf="viewOnly == true">Preview</ion-title>
     <ion-buttons *ngIf="thisSurvey['author'] != currUser" end>
       <button ion-button (click)="sendMessage()" style="margin-right: 10px;">
         <ion-icon id="chat-icon-top-right" name="mail"></ion-icon>
@@ -29,11 +30,11 @@
 	<ion-input *ngIf="thisSurvey['author'] == currUser && viewOnly == false" placeholder="Name of Respondent/ Respondent Identifier" style="border-bottom: 1px solid gray;" #respondent_name></ion-input>
 	<!-- <ion-input placeholder="Enter text" style="border-bottom: 1px solid gray;"></ion-input> -->
 
-	<div *ngFor="let question of questions; let idx = index">
-		<ion-label id="qMSg" style="text-align: justify;" text-wrap>{{idx+1}}. {{ question['message'] }}</ion-label>
+	<div *ngFor="let question of questions; let idx = index" class="question_items" id="qItem_{{idx}}">
+		<ion-label class="questions_labels" id="qMSg_{{idx}}" style="text-align: justify;" text-wrap>{{idx+1}}. {{ question['message'] }}</ion-label>
 
 		<!-- MULTIPLE CHOICE -->
-		<div *ngIf="question['type'] == 'multipleChoice'">
+		<div *ngIf="question['type'] == 'multipleChoice'" class="options_div">
 			<ion-list radio-group [(ngModel)]="answers[idx]">
 				<ion-item *ngFor="let opt of question['options']; let idx = index">
 				    <ion-label>{{ opt }}</ion-label>
@@ -43,7 +44,7 @@
 		</div>
 
 		<!-- CHECKBOX -->
-		<div *ngIf="question['type'] == 'checkbox'">
+		<div *ngIf="question['type'] == 'checkbox'" class="options_div">
 			<ion-list>
 				<ion-item *ngFor="let opt of question['options']; let opt_idx = index">
 					<ion-checkbox [(ngModel)]="answers[idx][opt_idx]"></ion-checkbox>
@@ -53,7 +54,7 @@
 		</div>
 
 		<!-- DROPDOWN -->
-		<div *ngIf="question['type'] == 'dropdown'">
+		<div *ngIf="question['type'] == 'dropdown'" class="options_div">
 			<ion-item>
 				<ion-label>Select</ion-label>
 			  	<ion-select [(ngModel)]="answers[idx]">
@@ -63,21 +64,21 @@
 		</div>
 
 		<!-- SHORT ANSWER -->
-		<div *ngIf="question['type'] == 'shortAnswer'">
+		<div *ngIf="question['type'] == 'shortAnswer'" class="options_div">
 			<ion-item>
 				<ion-input type="text" placeholder="Short answer text" [(ngModel)]="answers[idx]"></ion-input>
 			</ion-item>
 		</div>
 
 		<!-- LONG ANSWER -->
-		<div *ngIf="question['type'] == 'longAnswer'">
+		<div *ngIf="question['type'] == 'longAnswer'" class="options_div">
 			<ion-item>
 				<ion-textarea placeholder="Enter answer" rows=3 [(ngModel)]="answers[idx]" style="border: none;"></ion-textarea>
 			</ion-item>
 		</div>
 
 		<!-- DATE -->
-		<div *ngIf="question['type'] == 'date'">
+		<div *ngIf="question['type'] == 'date'" class="options_div">
 			<ion-item>
 				<ion-label>Select Date</ion-label>
 				<ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="answers[idx]"></ion-datetime>
@@ -85,7 +86,7 @@
 		</div>
 
 		<!-- TIME -->
-		<div *ngIf="question['type'] == 'time'">
+		<div *ngIf="question['type'] == 'time'" class="options_div">
 			<ion-item>
 				<ion-label>Select Time</ion-label>
 				<ion-datetime displayFormat="HH:mm" [(ngModel)]="answers[idx]"></ion-datetime>

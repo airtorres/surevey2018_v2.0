@@ -3,11 +3,6 @@ page-answer-survey {
 		font-size: 17px;
 	}
 
-	#qMSg{
-		/*color: #12608A;*/
-		/*background-color: #F7F7F7;*/
-	}
-
 	#title-desc{
 		background-color: #F2F2F2;
 		border-radius: 8px;
@@ -16,5 +11,39 @@ page-answer-survey {
 
 	#chat-icon-top-right{
 		font-size: 26px;
+	}
+
+	.question_items{
+		border-radius: 10px;
+		border-style: solid;
+		border-color: #F0F0F0;
+		margin-top: 8px;
+		background-color: #F7F7F7;
+	}
+
+	.questions_labels{
+		padding-left: 5px;
+	}
+
+	.options_div{
+		
+	}
+
+	.item.item-textarea{
+		padding-left: 1px;
+		border-bottom: none;
+	}
+
+	.item-md.item-block .item-inner{
+		padding-right: 0;
+	}
+
+	.list-md{
+		margin: 0;
+		margin-bottom: 5px;
+	}
+
+	.item-md{
+		padding-left: 12px;
 	}
 }

@@ -72,7 +72,7 @@ export class HomePage {
     var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     if(connectedToFirebaseFlag){
-      this.navCtrl.push(AnswerSurveyPage, {'item' : item});
+      this.navCtrl.push(AnswerSurveyPage, {'item' : item, 'viewOnly': false});
     }else{
       this.configService.showSimpleConnectionError();
     }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ActionSheetController, ToastController, AlertController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ActionSheetController, AlertController, LoadingController } from 'ionic-angular';
 
 import { SurveySummaryPage } from '../survey-summary/survey-summary';
 import { AnswerSurveyPage } from '../answer-survey/answer-survey';
@@ -45,7 +45,6 @@ export class SurveyListPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public actionSheetController: ActionSheetController,
     private alertCtrl: AlertController,
-    public toastCtrl : ToastController,
     public loadingCtrl: LoadingController,
     public configService: ConfigurationProvider,
     private fire: AngularFireAuth,
@@ -91,7 +90,7 @@ export class SurveyListPage {
     var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     if(connectedToFirebaseFlag && this.invite_status[item['id']] != 'completed'){
-      this.navCtrl.push(AnswerSurveyPage, {'item' : item});
+      this.navCtrl.push(AnswerSurveyPage, {'item' : item, 'viewOnly': false});
     }else if(this.invite_status[item['id']] != 'completed'){
       this.configService.showSimpleConnectionError();
     }

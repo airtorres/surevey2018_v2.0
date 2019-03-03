@@ -67,6 +67,14 @@ export class CreateSurveyPage {
     private fire: AngularFireAuth,
     private storage: Storage) {
 
+    this.initializeData();
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad CreateSurveyPage');
+  }
+
+  initializeData(){
     // getting the survey to edit: from survey-summary
     if (this.navParams.get('thisSurvey')){
       this.survey = this.navParams.get('thisSurvey');
@@ -122,10 +130,6 @@ export class CreateSurveyPage {
     this.prev_questions = JSON.stringify(this.survey['questions']);
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad CreateSurveyPage');
-  }
-
   addQuestion(questionType) {
   	let data = {
   		type: questionType
@@ -137,7 +141,7 @@ export class CreateSurveyPage {
   	this.navCtrl.push(QuestionPage, data);
   }
 
-  saveChanges(){
+  saveChanges(popFlag){
     this.survey['title'] = this.surveyTitle.value || "untitled survey";
     this.survey['description'] = this.surveyDescription.value || "No Description to show.";
     this.survey['updated_at'] = new Date().toISOString();
@@ -169,7 +173,7 @@ export class CreateSurveyPage {
           this.showSavingPrompt(true);
         }
 
-        this.saveToUserSurveyList();
+        this.saveToUserSurveyList(popFlag);
       }else{
         console.log("There's a problem pushing the survey.");
         this.showSavingPrompt(true);
@@ -184,7 +188,10 @@ export class CreateSurveyPage {
           this.configService.saveSurveyData(this.survey, this.s_id);
 
           this.savingFlag = true;
-          this.navCtrl.pop();
+          if(popFlag){
+            this.navCtrl.pop();
+            this.configService.displayToast('Success! Survey Saved.');
+          }
           // redirect to survey-list: showing all surveys
           // this.navCtrl.parent.select(1);
         }catch(e){
@@ -199,7 +206,7 @@ export class CreateSurveyPage {
     }
   }
 
-  saveToUserSurveyList(){
+  saveToUserSurveyList(popFlag){
     try{
       var mylist = [];
       var thisSurveyId = this.s_id;
@@ -224,8 +231,11 @@ export class CreateSurveyPage {
         this.navCtrl.pop();
       }
 
-      this.navCtrl.pop();
+      if(popFlag){
+        this.navCtrl.pop();
+      }
 
+      this.configService.displayToast('Success! Survey Saved.');
       // redirect to survey-list: showing all surveys
       this.navCtrl.parent.select(1);
 
@@ -330,6 +340,7 @@ export class CreateSurveyPage {
               text: "Don't Save",
               handler: () => {
                 console.log("User didn't saved data");
+                this.initializeData();
                 this.userCanLeave = true;
                 resolve();
               }
@@ -338,8 +349,7 @@ export class CreateSurveyPage {
               text: 'Save',
               handler: () => {
                 console.log('User saved data');
-                // do saving logic
-                this.saveChanges();
+                this.saveChanges(false);
                 this.userCanLeave = true;
                 resolve();
               }
@@ -380,9 +390,9 @@ export class CreateSurveyPage {
             text: "Try again",
             handler: () => {
               if(saveFromTop){
-                this.saveChanges();
+                this.saveChanges(false);
               }else{
-                this.saveToUserSurveyList();
+                this.saveToUserSurveyList(false);
               }
               resolve();
             }
