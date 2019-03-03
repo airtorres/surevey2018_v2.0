@@ -65,7 +65,15 @@ export class EditProfilePage {
     public configService: ConfigurationProvider) {
 
   	this.userId = this.fire.auth.currentUser.uid;
-  	this.userData = this.navParams.get('userData');    
+  	this.initializeProfileData();
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad EditProfilePage');   
+  }
+
+  initializeProfileData(){
+    this.userData = this.navParams.get('userData');
 
     if(this.userData){
       this.prev_first_name = this.userData['first_name'];
@@ -77,17 +85,15 @@ export class EditProfilePage {
       this.prev_city = this.userData['city'];
       this.prev_state = this.userData['state'];
       this.prev_country = this.userData['country'];
+
+      this.sex = this.userData['sex'];
+      this.profession = this.userData['profession'];
+      this.loadUserData();
+      this.getCountries();
     }
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad EditProfilePage');   
-  }
-
   loadUserData(){
-    this.sex = this.userData['sex'];
-    this.profession = this.userData['profession'];
-
     try {
       if (this.userData['birthdate'] === "" ) {
         this.bdate = null;
@@ -98,25 +104,20 @@ export class EditProfilePage {
     } catch (error) { console.log(error); }
     
     
-      this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
-      if (this.connectedToFirebaseFlag) {
-        setTimeout(() => {
-          this.countries = this.configService.getAllCountryNames();
-        }, 1000);
-        console.log(this.countries);
-      }
+    this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    if (this.connectedToFirebaseFlag) {
+      setTimeout(() => {
+        this.countries = this.configService.getAllCountryNames();
+      }, 1000);
+      console.log(this.countries);
+    }
 
-      this.country = this.userData['country'];
+    this.country = this.userData['country'];
 
-      this.states = this.configService.getStateNamesOf(this.country);
-      this.state = this.userData['state'];
-      this.cities = this.configService.getCitiesOf(this.state, this.country);
-      this.city = this.userData['city'];
-
-    console.log(this.country);
-    console.log(this.state);
-    console.log(this.city);
-
+    this.states = this.configService.getStateNamesOf(this.country);
+    this.state = this.userData['state'];
+    this.cities = this.configService.getCitiesOf(this.state, this.country);
+    this.city = this.userData['city'];
   }
 
   getCountries(){
@@ -314,7 +315,7 @@ export class EditProfilePage {
 
   public ionViewWillEnter(){
     console.log("entering edit-profile page ...");
-    this.loadUserData();
+    this.initializeProfileData();
   }
 
 }

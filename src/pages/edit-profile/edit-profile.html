@@ -73,7 +73,7 @@
 		<ion-item-group style="padding-left: 16px;">	
 			<ion-item>
 				<ion-label>Country</ion-label>
-				<ion-select [(ngModel)]="country" (click)="getCountries()" (ionChange)="getCountry()">
+				<ion-select [(ngModel)]="country" (ionChange)="getCountry()">
 					<ion-option *ngFor="let country of countries" value="{{country}}"> {{country}} </ion-option>
 				</ion-select>
 			</ion-item>

@@ -45,6 +45,7 @@ export class HomePage {
 
     this.configService.getBuiltInTemplates();
     this.loadSurveys();
+    this.loadUserData();
 
     this.storage.get('currentUser').then(x =>{
       this.currentUser = x;
@@ -54,17 +55,6 @@ export class HomePage {
       this.configService.saveUsernameFromFirebaseToLocalDB();
     }catch(e){
       console.log(e);
-    }
-
-    this.storage.get('username').then(u =>{
-      this.username = u;
-    });
-
-    if(this.configService.isConnectedToFirebase()){
-      this.userData = this.configService.getUserData(this.fire.auth.currentUser.uid);
-    }
-    else{
-      this.userData = this.configService.getUserDataFromLocalDB();
     }
   }
 
@@ -209,8 +199,15 @@ export class HomePage {
     this.navCtrl.push(TemplateListPage, {})
   }
 
-  getUsername(){
-    this.configService.saveUsernameFromFirebaseToLocalDB();
+  loadUserData(){
+     if(this.configService.isConnectedToFirebase()){
+      this.userData = this.configService.getUserData(this.fire.auth.currentUser.uid);
+      this.configService.saveUsernameFromFirebaseToLocalDB();
+    }
+    else{
+      this.userData = this.configService.getUserDataFromLocalDB();
+    }
+
     this.storage.get('username').then(u =>{
       this.username = u;
     });
@@ -219,6 +216,7 @@ export class HomePage {
   public ionViewWillEnter(){
     console.log("entering home page ...");
     this.loadSurveys();
+    this.loadUserData();
   }
 
   public ionViewWillLeave(){

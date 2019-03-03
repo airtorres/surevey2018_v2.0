@@ -31,15 +31,6 @@ export class ConfigurationProvider {
   	private alertCtrl: AlertController) {
 
     console.log('Hello ConfigurationProvider Provider');
-
-    if(this.isConnectedToFirebase()){
-      this.userData = this.getUserData(this.fire.auth.currentUser.uid);
-      this.username = this.userData['username'];
-    }
-    else{
-      this.userData = this.getUserDataFromLocalDB();
-      this.username = this.userData['username'];
-    }
   }
 
   displayToast(msg){

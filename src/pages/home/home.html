@@ -1,6 +1,6 @@
 <ion-header class="page-header">
 	<ion-navbar color="white">
-		<button ion-button icon-only clear (click)="getUsername()" menuToggle>
+		<button ion-button icon-only clear menuToggle>
 			<ion-icon name="menu" color="primary"></ion-icon>
 		</button>
 		<ion-title color="primary">Dashboard</ion-title>
@@ -14,7 +14,7 @@
 				<img class="avatar" src="../assets/imgs/profile-avatar.png">
 			</ion-avatar>
 			<ion-label text-center id="usernameTitle">
-				{{ this.configService.username }}
+				{{ username }}
 			</ion-label>
 			<ion-label id="emailTitle">{{ currentUser }}</ion-label>
 		</ion-toolbar>
