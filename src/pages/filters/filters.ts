@@ -39,7 +39,7 @@ export class FiltersPage {
   all_users = [];
   all_users_email = [];
   public generated_users = [];
-  public numPersons;
+  // public numPersons;
   currUser;
   connectedToFirebaseFlag;
 
@@ -137,7 +137,7 @@ export class FiltersPage {
   applyFilterToast() {
     let applyFilter = this.toastCtrl.create({
       message: 'Applied filters successfully!',
-      duration: 2000,
+      duration: 3100,
       position: 'bottom'
     });
 
@@ -166,10 +166,11 @@ export class FiltersPage {
       this.navCtrl.getPrevious().data.generated_users = this.generated_users;
     }
     this.navCtrl.getPrevious().data.numPersons = this.numPersons;
+    this.applyFilterToast();
     this.navCtrl.pop();
   }
 
-  clusterSample() {
+  cluster_stratifiedSample() {
     console.log("cluster");
     this.all_users_email = [];
     let filteredUsers = [];
@@ -202,10 +203,10 @@ export class FiltersPage {
     if (ageMin == '' && ageMax != '') {
       console.log("ageMax");
       arrayofUsers = [];
-      for ( var e in filteredUsers){
-        if(filteredUsers[e]['age'] <= ageMax && filteredUsers[e]['age'] >= 15){
-          console.log(filteredUsers[e]['age'], filteredUsers[e]['email']);
-          arrayofUsers.push(filteredUsers[e]);
+      for ( var m in filteredUsers){
+        if(filteredUsers[m]['age'] <= ageMax && filteredUsers[m]['age'] >= 15){
+          console.log(filteredUsers[m]['age'], filteredUsers[m]['email']);
+          arrayofUsers.push(filteredUsers[m]);
         }
       }
       filteredUsers = [];
@@ -216,10 +217,10 @@ export class FiltersPage {
     if (ageMin != '' && ageMax != '') {
       console.log("ageMin and ageMax");
       arrayofUsers = [];
-      for ( var e in filteredUsers){
-        if(filteredUsers[e]['age'] >= ageMin && filteredUsers[e]['age'] <= ageMax){
-          console.log(filteredUsers[e]['age'], filteredUsers[e]['email']);
-          arrayofUsers.push(filteredUsers[e]);
+      for ( var mn in filteredUsers){
+        if(filteredUsers[mn]['age'] >= ageMin && filteredUsers[mn]['age'] <= ageMax){
+          console.log(filteredUsers[mn]['age'], filteredUsers[mn]['email']);
+          arrayofUsers.push(filteredUsers[mn]);
         }
       }
       filteredUsers = [];
@@ -334,12 +335,25 @@ export class FiltersPage {
     else {
        // for random sampling
       if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere') {
-        this.randomSample();
+        let generateUsersByRandom = this.loadingCtrl.create({
+          content: '\nApplying filters... Please wait'
+        });
+
+        generateUsersByRandom.present().then(() => {
+          this.randomSample();
+          generateUsersByRandom.dismiss();
+        });
       }   
       else {
         // cluster or stratified sampling
-      // if (this.min.value != '' || this.max.value != '' || this.sex != 'Male & Female' || this.profession != 'Any'|| this.country != 'Anywhere' || this.state != 'Anywhere' || this.city != 'Anywhere') {
-        this.clusterSample();
+        let generateUsersByClusterStratified = this.loadingCtrl.create({
+          content: '\nApplying filters... Please wait'
+        });
+
+        generateUsersByClusterStratified.present().then(() => {
+          this.cluster_stratifiedSample();
+          generateUsersByClusterStratified.dismiss();
+        });
       }
     }
   }

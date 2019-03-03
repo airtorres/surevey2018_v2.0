@@ -82,15 +82,11 @@ export class SurveySummaryPage {
       content: 'Please wait...'
     });
 
-    loadingUsers.present();
     if(this.configService.isConnectedToFirebase()){
-      setTimeout(() => {
+      loadingUsers.present().then(() => {
         this.navCtrl.push(SendInvitePage, {s_id: this.s_id});
-      }, 1000);
-
-      setTimeout(() => {
         loadingUsers.dismiss();
-      }, 1000);
+      });
     }
     else{
       loadingUsers.dismiss();
