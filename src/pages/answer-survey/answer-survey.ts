@@ -50,6 +50,8 @@ export class AnswerSurveyPage {
 
   public answers = [];
 
+  viewOnly = false;
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private fire: AngularFireAuth,
   	private storage: Storage,
@@ -262,6 +264,7 @@ export class AnswerSurveyPage {
 
   ionViewWillEnter(){
     console.log("entering anwer-survey page ...");
+    this.viewOnly = this.navParams.get('viewOnly')? this.navParams.get('viewOnly'):false;
   }
 
   ionViewWillLeave(){

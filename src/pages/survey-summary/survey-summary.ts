@@ -99,7 +99,11 @@ export class SurveySummaryPage {
   }
 
   gotoRespondentView(){
-    this.navCtrl.push(AnswerSurveyPage, {'item' : this.thisSurvey, 'diff_respondent_flag': true});
+    this.navCtrl.push(AnswerSurveyPage, {'item' : this.thisSurvey, 'diff_respondent_flag': true, 'viewOnly': false});
+  }
+
+  gotoRespondentViewReadOnly(){
+    this.navCtrl.push(AnswerSurveyPage, {'item' : this.thisSurvey, 'viewOnly': true});
   }
 
   gotoResultsPage(){

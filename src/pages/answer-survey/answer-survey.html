@@ -26,7 +26,7 @@
 	</div>
 
 	<!-- show this only if you know -->
-	<ion-input *ngIf="thisSurvey['author'] == currUser" placeholder="Name of Respondent/ Respondent Identifier" style="border-bottom: 1px solid gray;" #respondent_name></ion-input>
+	<ion-input *ngIf="thisSurvey['author'] == currUser && viewOnly == false" placeholder="Name of Respondent/ Respondent Identifier" style="border-bottom: 1px solid gray;" #respondent_name></ion-input>
 	<!-- <ion-input placeholder="Enter text" style="border-bottom: 1px solid gray;"></ion-input> -->
 
 	<div *ngFor="let question of questions; let idx = index">
@@ -94,7 +94,7 @@
 	</div>
 
 	<div text-center>
-      <button ion-button (click)="submitResponse()">Submit</button>
+      <button ion-button (click)="submitResponse()" [disabled]="viewOnly == true">Submit</button>
     </div>
 	
 </ion-content>
