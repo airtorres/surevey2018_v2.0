@@ -64,9 +64,9 @@
 </ion-content>
 
 <ion-footer>
-	<ion-toolbar *ngIf="selected_users.length > 0">
+	<ion-toolbar *ngIf="selected_users.length > 0" id="toolbar" style="display: block;">
 		<ion-item no-lines>
-			<button item-start clear ion-button>
+			<button item-start clear ion-button (click)="clearSelected()">
 				<ion-icon name="close"></ion-icon>
 			</button>
 			{{ selected_users.length }} selected

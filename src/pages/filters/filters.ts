@@ -301,8 +301,6 @@ export class FiltersPage {
     }
 
     this.randomSample();
-    // console.log(this.all_users_email);
-    // this.navCtrl.pop();
   }
 
   requiredField() {
@@ -336,7 +334,7 @@ export class FiltersPage {
        // for random sampling
       if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere') {
         let generateUsersByRandom = this.loadingCtrl.create({
-          content: '\nApplying filters... Please wait'
+          content: '\nGenerating users... Please wait'
         });
 
         generateUsersByRandom.present().then(() => {
@@ -347,7 +345,7 @@ export class FiltersPage {
       else {
         // cluster or stratified sampling
         let generateUsersByClusterStratified = this.loadingCtrl.create({
-          content: '\nApplying filters... Please wait'
+          content: '\nApplying filters... Generating users... Please wait'
         });
 
         generateUsersByClusterStratified.present().then(() => {

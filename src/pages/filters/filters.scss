@@ -29,4 +29,15 @@ page-filters {
 	#cancelbtn {
 		color: gray;
 	}
+
+	#filterNote {
+		box-shadow: none !important;
+		border-radius: 0px !important;
+		background-color: #F7F7F7;
+		padding: 8px;
+
+		ion-note {
+			color: black;
+		}
+	}
 }
