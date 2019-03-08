@@ -48,7 +48,9 @@
  			<ion-note *ngIf="question['type'] == 'date'">Date</ion-note>
  			<ion-note *ngIf="question['type'] == 'time'">Time</ion-note>
  		</div>
- 		<ion-card-title id="question-title" text-wrap style="text-align: justify;">{{ question['message'] }}</ion-card-title>
+ 		<ion-card-title id="question-title" text-wrap style="text-align: justify;">{{ question['message'] }}
+ 			<span *ngIf="question['isRequired']" style="color: red">*</span>
+ 		</ion-card-title>
 
  		<!-- MULTIPLE CHOICE -->
  		<ion-list radio-group [(ngModel)]="relationship" *ngIf="question['type'] == 'multipleChoice'">
