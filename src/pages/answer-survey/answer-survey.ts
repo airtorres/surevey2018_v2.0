@@ -40,7 +40,6 @@ export class AnswerSurveyPage {
   currUser;
   users = {};
 
-  responses = {};
   response = {
   	'respondent': '',
   	'survey_id': '',
@@ -51,6 +50,7 @@ export class AnswerSurveyPage {
   public answers = [];
 
   viewOnly = false;
+  okayAnswers = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private fire: AngularFireAuth,
@@ -168,6 +168,36 @@ export class AnswerSurveyPage {
 
     this.storage.set('offline_responses', this.offline_responses);
     this.navCtrl.pop();
+  }
+
+  submit(){
+    this.okayAnswers = [];
+
+    var cleanSaveFlag = true;
+    for ( var q in this.questions){
+      if (this.questions[q]['isRequired'] == true && (this.answers[q] == '' || this.answers[q] == null || this.answers[q] == undefined)){
+        cleanSaveFlag = false;
+        this.okayAnswers.push(1);
+      }else{
+        this.okayAnswers.push(0);
+      }
+    }
+
+    if(cleanSaveFlag){
+      this.submitResponse();
+    }else{
+      this.configService.displayToast('Some answers are Empty or Invalid!');
+
+      for ( var idx in this.questions){
+        if( this.okayAnswers[idx] == 1){
+          document.getElementById('qItem_'+idx).classList.add("warning");
+
+        }else{
+          document.getElementById('qItem_'+idx).classList.remove("warning");
+        }
+      }
+    }
+
   }
 
   submitResponse(){

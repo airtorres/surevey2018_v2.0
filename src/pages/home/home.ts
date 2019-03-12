@@ -213,6 +213,7 @@ export class HomePage {
 
     this.loadSurveys();
     this.loadUserData();
+    this.configService.getBuiltInTemplates();
   }
 
   public ionViewWillEnter(){
