@@ -141,6 +141,14 @@ export class CreateSurveyPage {
   	this.navCtrl.push(QuestionPage, data);
   }
 
+  canSave(popFlag){
+    if(this.questions && this.questions.length > 0){
+      this.saveChanges(popFlag);
+    }else{
+      this.configService.displayToast('You must have at least 1 question!');
+    }
+  }
+
   saveChanges(popFlag){
     this.survey['title'] = this.surveyTitle.value || "untitled survey";
     this.survey['description'] = this.surveyDescription.value || "No Description to show.";
