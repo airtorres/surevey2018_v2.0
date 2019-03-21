@@ -52,12 +52,12 @@ export class QuestionPage {
       this.thisQuestion = this.navParams.get('question_data');
       this.type = this.thisQuestion['type'];
 
-      console.log(this.thisQuestion['options'].length);
-
-      for ( var opt = 0; opt < this.thisQuestion['options'].length; opt++ ){
-        if( opt != 0){
-          var val = {'value': this.thisQuestion['options'][opt]};
-          this.anArray.push(val);
+      if( this.thisQuestion['options'] ){
+        for ( var opt = 0; opt < this.thisQuestion['options'].length; opt++ ){
+          if( opt != 0){
+            var val = {'value': this.thisQuestion['options'][opt]};
+            this.anArray.push(val);
+          }
         }
       }
 
@@ -82,7 +82,7 @@ export class QuestionPage {
 
   canAddQuestion(options, type){
     if (this.question && this.question.value != ''){
-      var pattern = new RegExp("^([a-zA-Z0-9]+)([a-zA-Z0-9]+[ \\.\\-\\,\\(\\)\\+\\$\\!\\?]+)*[a-zA-Z0-9]+$");
+      var pattern = new RegExp("^([a-zA-Z0-9]+)([ \\.\\-\\,\\(\\)\\+\\$\\!\\?])*[a-zA-Z0-9]+");
       var isValidTitle = pattern.test(this.question.value);
 
       if(isValidTitle){
@@ -142,8 +142,8 @@ export class QuestionPage {
     else {}
 
     // removing the uncessesary empty item ont thisQuestion['options']
-    var options = this.thisQuestion['options'];
-    if (this.thisQuestion['options'].length == 1){
+    var options = this.thisQuestion['options']? this.thisQuestion['options']: [];
+    if (this.thisQuestion['options'] && this.thisQuestion['options'].length == 1){
       if(this.thisQuestion['options'][0] == ""){
         options = [];
       }

@@ -22,6 +22,7 @@ export class ConfigurationProvider {
   userData = {};
   username = '';
   connectedToFirebaseFlag = false;
+  mysurveylist = [];
 
   constructor(public http: HttpClient,
   	private fire: AngularFireAuth,
@@ -290,37 +291,38 @@ export class ConfigurationProvider {
   getSurveyData(surveyId){
   	var thisSurvey = [];
     const survey:firebase.database.Reference = firebase.database().ref('/surveys/'+surveyId);
-  	survey.on('value', surveySnapshot => {
-	  thisSurvey = surveySnapshot.val();
-	});
-	return thisSurvey;
+    	survey.on('value', surveySnapshot => {
+  	  thisSurvey = surveySnapshot.val();
+  	});
+  	return thisSurvey;
   }
 
   getUserSurveysAllList(userId){
   	var all = [];
-	const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+userId);
-	surv.on('value', survSnapshot => {
-	  all = survSnapshot.val();
-	});
-	return all;
+  	const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+userId);
+  	surv.on('value', survSnapshot => {
+  	  all = survSnapshot.val();
+  	});
+	 return all;
   }
 
   getUserSurveysList(userId){
-  	var mySurvs = [];
-	const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+userId+'/surveylist');
-	surv.on('value', survSnapshot => {
-	  mySurvs = survSnapshot.val();
-	});
-	return mySurvs;
+  	var mySurvs = this.mysurveylist;
+  	const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+userId+'/surveylist');
+  	surv.on('value', survSnapshot => {
+  	  mySurvs = survSnapshot.val();
+      this.mysurveylist = mySurvs? mySurvs:this.mysurveylist;
+  	});
+  	return mySurvs;
   }
 
   getUserInvitationsList(userId){
   	var invits = [];
-	const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+userId+'/invitations');
-	surv.on('value', survSnapshot => {
-	  invits = survSnapshot.val();
-	});
-	return invits;
+  	const surv:firebase.database.Reference = firebase.database().ref('/user_surveys/'+userId+'/invitations');
+  	surv.on('value', survSnapshot => {
+  	  invits = survSnapshot.val();
+  	});
+  	return invits;
   }
 
   getNumResponses(surveyId){
@@ -372,15 +374,15 @@ export class ConfigurationProvider {
 
   getCountryStateCityDataFromFirebase(){
   	var countries = [];
-	const surv:firebase.database.Reference = firebase.database().ref('/country_state_city/');
-	surv.on('value', countriesSnapshot => {
-	  countries = countriesSnapshot.val();
-	});
+  	const surv:firebase.database.Reference = firebase.database().ref('/country_state_city/');
+  	surv.on('value', countriesSnapshot => {
+  	  countries = countriesSnapshot.val();
+  	});
 
-	// savetoLocalDB
-	this.storage.set('country_state_city', countries);
+  	// savetoLocalDB
+  	this.storage.set('country_state_city', countries);
 
-	return countries;
+  	return countries;
   }
 
   getCountryStateCityData(){
@@ -513,13 +515,13 @@ export class ConfigurationProvider {
 
   getResponses(surveyId){
   	var responses = [];
-	const s:firebase.database.Reference = firebase.database().ref('/responses/'+surveyId);
-	s.on('value', responsesSnapshot => {
-	  if(responsesSnapshot.val()){
-	    responses = responsesSnapshot.val();
-	  }
-	});
-	return responses;
+  	const s:firebase.database.Reference = firebase.database().ref('/responses/'+surveyId);
+  	s.on('value', responsesSnapshot => {
+  	  if(responsesSnapshot.val()){
+  	    responses = responsesSnapshot.val();
+  	  }
+  	});
+  	return responses;
   }
 
 }
