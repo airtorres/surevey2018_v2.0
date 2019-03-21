@@ -161,19 +161,62 @@ export class SendInvitePage {
 
     this.thisSurvey['s_id'] = this.s_id;
     var successFlag = true;
-
+    var surveyInvites = [];
+    var survey_invites_ids = [];
+    var unsent = [];
+    var sent = 0;
     // getting all the users
-    for(var s in this.selected_users){
-      for(var u in this.all_users){
-        if(this.all_users[u]['email'] == this.selected_users[s]){
-          console.log("Sending invitation to "+this.all_users[u]['email']+"...");
+    // for(var s in this.selected_users){
+    //   for(var u in this.all_users){
+    //     if(this.all_users[u]['email'] == this.selected_users[s]){
+    //       console.log("Sending invitation to "+this.all_users[u]['email']+"...");
 
-          var inviExist = firebase.database().ref("/user_surveys/"+u+"/invitations")? true:false;
-          // the survey ID is used as the pushed ID for this invitation
-          var newPostKey = this.s_id;
+    //       var inviExist = firebase.database().ref("/user_surveys/"+u+"/invitations")? true:false;
+    //       // the survey ID is used as the pushed ID for this invitation
+    //       var newPostKey = this.s_id;
 
-          if(inviExist){
-            firebase.database().ref("/user_surveys/"+u+"/invitations/"+newPostKey).set(this.thisSurvey, function(error){
+    //       if(inviExist){
+    //         firebase.database().ref("/user_surveys/"+u+"/invitations/"+newPostKey).set(this.thisSurvey, function(error){
+    //           if(error){
+    //             console.log("Not successful pushing to invitations (for some users ONLY)."+error);
+    //             successFlag = false;
+    //           }else{
+    //             console.log("Successfully added the surveyID to invitations!");
+    //             successFlag = true && successFlag;
+    //           }
+    //         });
+    //       }
+    //       break;
+    //     }
+    //   }
+    // }
+
+    for (var s in this.selected_users) {
+      for (var u in this.all_users) {
+
+        var survey_id = this.s_id;
+
+        if(this.all_users[u]['email'] == this.selected_users[s]) {
+          console.log("Sending invitation to " + this.all_users[u]['email'] + "...");
+          
+          const allSurveyInvites:firebase.database.Reference = firebase.database().ref('/user_surveys/'+u+'/invitations');
+          allSurveyInvites.on('value', allSurveySnapshot => {
+            surveyInvites = allSurveySnapshot.val();
+          });
+          for ( var invit in surveyInvites){
+            survey_invites_ids.push(surveyInvites[invit]['s_id']);
+          }
+          console.log(surveyInvites);
+          console.log(survey_invites_ids)
+
+          if (survey_invites_ids.indexOf(survey_id) !== -1) {
+            console.log("You're not allowed to send the survey invitation twice");
+            unsent.push(this.all_users[u]['email']);
+            // successFlag = false;
+            // console.log("unsent: ", unsent);
+          }
+          else {
+            firebase.database().ref("/user_surveys/"+u+"/invitations/"+survey_id).set(this.thisSurvey, function(error){
               if(error){
                 console.log("Not successful pushing to invitations (for some users ONLY)."+error);
                 successFlag = false;
@@ -188,9 +231,37 @@ export class SendInvitePage {
       }
     }
 
-    if(successFlag){
-      this.showSuccessPrompt();
-    }else{
+    console.log("sent:", sent);
+    if (unsent.length > 0) {
+      if (unsent.length == 1) {
+        let oneUnsent = this.alertCtrl.create({
+          title: 'Failed',
+          message: 'Your survey invitation was not sent to ' + unsent[0] + '. This user has already received your survey invite.',
+          buttons: ['OK']
+        });
+        oneUnsent.present();
+      }
+      else {
+        let manyUnsent = this.alertCtrl.create({
+          title: 'Notice',
+          message: 'Failed to send to some users. Users might already have your survey invites.',
+          buttons: ['OK']
+        });
+        manyUnsent.present();
+      }
+      
+    }
+    else if (unsent.length == 0) { 
+      if(successFlag){
+        this.showSuccessPrompt();
+      }else{
+        this.configService.showSimpleConnectionError();
+      }
+    }
+    // if(successFlag){
+    //   this.showSuccessPrompt();
+    // }
+    else{
       this.configService.showSimpleConnectionError();
     }
 
@@ -217,8 +288,5 @@ export class SendInvitePage {
     }
   }
 
-  removeNote() {
-    document.getElementById('noteDiv').style.display = "none";
-  }
 
 }

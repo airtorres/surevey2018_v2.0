@@ -89,6 +89,7 @@ export class FiltersPage {
     const allUsersRef:firebase.database.Reference = firebase.database().ref('/users/');
     allUsersRef.on('value', allUsersSnapshot => {
       this.all_users = allUsersSnapshot.val();
+      
     });
 
     // getting the emails of all_users
