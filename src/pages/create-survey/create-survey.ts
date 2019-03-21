@@ -135,10 +135,23 @@ export class CreateSurveyPage {
   }
 
   canSave(popFlag){
-    if(this.questions && this.questions.length > 0){
-      this.saveChanges(popFlag);
+    var isValidTitle = true;
+    
+    if (this.surveyTitle.value && this.surveyTitle.value != ''){
+      var pattern = new RegExp("^([a-zA-Z0-9]+)([a-zA-Z0-9]+[ \\.\\-\\,\\(\\)\\+\\$\\!\\?]+)*[a-zA-Z0-9]+$");
+      isValidTitle = pattern.test(this.surveyTitle.value);
+
+      if(isValidTitle){
+        if(this.questions && this.questions.length > 0){
+          this.saveChanges(popFlag);
+        }else{
+          this.configService.displayToast('You must have at least 1 question!');
+        }
+      }else{
+        this.configService.displayToast('Invalid Survey Title!');
+      }
     }else{
-      this.configService.displayToast('You must have at least 1 question!');
+      this.configService.displayToast('Empty survey title!');
     }
   }
 

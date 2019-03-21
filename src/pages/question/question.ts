@@ -1,6 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
 
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
+
 /**
  * Generated class for the QuestionPage page.
  *
@@ -41,7 +43,8 @@ export class QuestionPage {
   isRequired = true;
 
  	constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    public configService: ConfigurationProvider) {
 		this.type = this.navParams.get('type');
 
     if(this.navParams.get('question_data')){
@@ -76,6 +79,29 @@ export class QuestionPage {
 	ionViewDidLoad() {
   	console.log('ionViewDidLoad QuestionPage');
 	}
+
+  canAddQuestion(options, type){
+    if (this.question && this.question.value != ''){
+      var pattern = new RegExp("^([a-zA-Z0-9]+)([a-zA-Z0-9]+[ \\.\\-\\,\\(\\)\\+\\$\\!\\?]+)*[a-zA-Z0-9]+$");
+      var isValidTitle = pattern.test(this.question.value);
+
+      if(isValidTitle){
+        if(options && options.length > 0 && (type == 'multipleChoice' || type == 'checkbox' || type == 'dropdown')){
+          return true;
+        }else if(type != 'multipleChoice' && type != 'checkbox' && type != 'dropdown'){
+          return true;
+        }else{
+          this.configService.displayToast('You must have at least 1 option!');
+        }
+      }else{
+        this.configService.displayToast('Invalid Question Message!');
+      }
+    }else{
+      this.configService.displayToast('Empty Question Message!');
+    }
+
+    return false;
+  }
 
   addQuestion(){
     console.log("question: "+ this.question.value);
@@ -115,15 +141,27 @@ export class QuestionPage {
     else if ( this.type == 'date'){}
     else {}
 
-    this.navCtrl.getPrevious().data.question_data = (this.thisQuestion? this.thisQuestion : null);
-    this.navCtrl.getPrevious().data.push_flag = true;
-    if(this.navParams.get('question_data')){
-      this.navCtrl.getPrevious().data.replace_flag = true;
-      this.navCtrl.getPrevious().data.qID = this.navParams.get('qID_fromEdit');
+    // removing the uncessesary empty item ont thisQuestion['options']
+    var options = this.thisQuestion['options'];
+    if (this.thisQuestion['options'].length == 1){
+      if(this.thisQuestion['options'][0] == ""){
+        options = [];
+      }
     }
 
-    if(this.leaveNowFlag){
-      this.navCtrl.pop();
+    var valid = this.canAddQuestion(options, this.type);
+
+    if(valid){
+      this.navCtrl.getPrevious().data.question_data = (this.thisQuestion? this.thisQuestion : null);
+      this.navCtrl.getPrevious().data.push_flag = true;
+      if(this.navParams.get('question_data')){
+        this.navCtrl.getPrevious().data.replace_flag = true;
+        this.navCtrl.getPrevious().data.qID = this.navParams.get('qID_fromEdit');
+      }
+
+      if(this.leaveNowFlag){
+        this.navCtrl.pop();
+      }
     }
   }
     
