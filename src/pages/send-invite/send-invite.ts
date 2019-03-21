@@ -24,6 +24,7 @@ import { Storage } from '@ionic/storage';
 })
 export class SendInvitePage {
   currUser;
+  users = [];
   all_users = [];
   all_users_email = [];
 
@@ -100,8 +101,15 @@ export class SendInvitePage {
     // getting all users from firebase
     const allUsersRef:firebase.database.Reference = firebase.database().ref('/users/');
     allUsersRef.on('value', allUsersSnapshot => {
-      this.all_users = allUsersSnapshot.val();
+      this.users = allUsersSnapshot.val();
     });
+
+    // getting all users excluding the current logged in user
+    for ( var u in this.users){
+      if(this.users[u]['email'] != this.fire.auth.currentUser.email){
+        this.all_users.push(u);
+      }
+    }
 
     // getting the emails of all_users
     for ( var e in this.all_users){
@@ -164,32 +172,6 @@ export class SendInvitePage {
     var surveyInvites = [];
     var survey_invites_ids = [];
     var unsent = [];
-    var sent = 0;
-    // getting all the users
-    // for(var s in this.selected_users){
-    //   for(var u in this.all_users){
-    //     if(this.all_users[u]['email'] == this.selected_users[s]){
-    //       console.log("Sending invitation to "+this.all_users[u]['email']+"...");
-
-    //       var inviExist = firebase.database().ref("/user_surveys/"+u+"/invitations")? true:false;
-    //       // the survey ID is used as the pushed ID for this invitation
-    //       var newPostKey = this.s_id;
-
-    //       if(inviExist){
-    //         firebase.database().ref("/user_surveys/"+u+"/invitations/"+newPostKey).set(this.thisSurvey, function(error){
-    //           if(error){
-    //             console.log("Not successful pushing to invitations (for some users ONLY)."+error);
-    //             successFlag = false;
-    //           }else{
-    //             console.log("Successfully added the surveyID to invitations!");
-    //             successFlag = true && successFlag;
-    //           }
-    //         });
-    //       }
-    //       break;
-    //     }
-    //   }
-    // }
 
     for (var s in this.selected_users) {
       for (var u in this.all_users) {
@@ -231,7 +213,6 @@ export class SendInvitePage {
       }
     }
 
-    console.log("sent:", sent);
     if (unsent.length > 0) {
       if (unsent.length == 1) {
         let oneUnsent = this.alertCtrl.create({
