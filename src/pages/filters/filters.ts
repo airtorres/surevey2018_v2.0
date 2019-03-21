@@ -36,6 +36,7 @@ export class FiltersPage {
   states = [];
   cities = [];
 
+  users = [];
   all_users = [];
   all_users_email = [];
   public generated_users = [];
@@ -88,10 +89,17 @@ export class FiltersPage {
     // getting all users from firebase
     const allUsersRef:firebase.database.Reference = firebase.database().ref('/users/');
     allUsersRef.on('value', allUsersSnapshot => {
-      this.all_users = allUsersSnapshot.val();
+      this.users = allUsersSnapshot.val();
       
     });
 
+    // getting all users excluding the current logged in user
+    for ( var u in this.users){
+      if(this.users[u]['email'] != this.fire.auth.currentUser.email){
+        this.all_users.push(this.users[u]);
+      }
+    }
+    
     // getting the emails of all_users
     for ( var e in this.all_users){
       if(this.all_users[e]['email'] != this.fire.auth.currentUser.email){

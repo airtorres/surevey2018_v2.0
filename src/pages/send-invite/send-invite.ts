@@ -24,7 +24,6 @@ import { Storage } from '@ionic/storage';
 })
 export class SendInvitePage {
   currUser;
-  users = [];
   all_users = [];
   all_users_email = [];
 
@@ -101,15 +100,8 @@ export class SendInvitePage {
     // getting all users from firebase
     const allUsersRef:firebase.database.Reference = firebase.database().ref('/users/');
     allUsersRef.on('value', allUsersSnapshot => {
-      this.users = allUsersSnapshot.val();
+      this.all_users = allUsersSnapshot.val();
     });
-
-    // getting all users excluding the current logged in user
-    for ( var u in this.users){
-      if(this.users[u]['email'] != this.fire.auth.currentUser.email){
-        this.all_users.push(u);
-      }
-    }
 
     // getting the emails of all_users
     for ( var e in this.all_users){
