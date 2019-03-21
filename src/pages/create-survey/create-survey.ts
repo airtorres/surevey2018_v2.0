@@ -134,6 +134,28 @@ export class CreateSurveyPage {
   	this.navCtrl.push(QuestionPage, data);
   }
 
+  checkIfSameTitle(surveyTitle){
+    var mysurveylist = this.configService.getUserSurveysList(this.fire.auth.currentUser.uid);
+
+    var equal = true;
+    if(mysurveylist){
+      for (var i in mysurveylist){
+        const survey:firebase.database.Reference = firebase.database().ref('/surveys/'+mysurveylist[i]);
+          survey.once('value', surveySnapshot => {
+          var isEqualTitle = surveySnapshot.child('title').val() == surveyTitle;
+          if (isEqualTitle){
+            equal = false;
+          }
+        });
+        // break when duplicate is already found.
+        if (!equal){
+          break;
+        }
+      }
+    }
+    return equal;
+  }
+
   canSave(popFlag){
     var isValidTitle = true;
     
@@ -141,12 +163,17 @@ export class CreateSurveyPage {
       var pattern = new RegExp("^([a-zA-Z0-9]+)([a-zA-Z0-9]+[ \\.\\-\\,\\(\\)\\+\\$\\!\\?]+)*[a-zA-Z0-9]+$");
       isValidTitle = pattern.test(this.surveyTitle.value);
 
-      if(isValidTitle){
+      var noDuplicate = this.checkIfSameTitle(this.surveyTitle.value);
+      console.log(noDuplicate);
+
+      if(isValidTitle && noDuplicate){
         if(this.questions && this.questions.length > 0){
           this.saveChanges(popFlag);
         }else{
           this.configService.displayToast('You must have at least 1 question!');
         }
+      }else if(!noDuplicate){
+        this.configService.showSimpleAlert('Duplicate Title','Try another title for this survey.');
       }else{
         this.configService.displayToast('Invalid Survey Title!');
       }

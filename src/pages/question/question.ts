@@ -37,6 +37,7 @@ export class QuestionPage {
   prev_first_opt;
   prev_qMsg;
   prev_anArray = [];
+  prev_isRequired = true;
 
 	public type;
   public anArray = [];
@@ -51,6 +52,7 @@ export class QuestionPage {
       console.log(this.navParams.get('question_data'));
       this.thisQuestion = this.navParams.get('question_data');
       this.type = this.thisQuestion['type'];
+      this.isRequired = this.thisQuestion['isRequired'];
 
       if( this.thisQuestion['options'] ){
         for ( var opt = 0; opt < this.thisQuestion['options'].length; opt++ ){
@@ -66,6 +68,7 @@ export class QuestionPage {
 
     // storing the previous values to check the changes
     this.prev_array = this.anArray;
+    this.prev_isRequired = this.thisQuestion['isRequired'];
     this.prev_qMsg = this.thisQuestion? this.thisQuestion['message']: '';
     this.prev_anArray = this.anArray;
     if(this.type == "multipleChoice" || this.type == "checkbox" || this.type == "dropdown"){
@@ -202,7 +205,7 @@ export class QuestionPage {
       exitFlag = true;
     }
 
-    if (exitFlag && this.prev_qMsg == this.question.value){
+    if (exitFlag && this.prev_qMsg == this.question.value && this.prev_isRequired == this.isRequired){
       console.log("NO CHANGES MADE.");
       this.userCanLeave = true;
     }else{
