@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 
 import { Http } from '@angular/http';
 import { File } from '@ionic-native/file';
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
+import { FileTransfer } from '@ionic-native/file-transfer';
 import * as papa from 'papaparse';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
@@ -352,34 +352,6 @@ export class ResultsPage {
   	document.body.appendChild(a);
   	a.click();
 		document.body.removeChild(a);
-
-		const location = 'file:///android_asset/www/assets/' + filename;
-
-		var options = {
-			fileKey: "file",
-			fileName: filename,
-			chunkedMode: false,
-			mimeType: "text/csv"
-		};
-
-		const fileTransfer: FileTransferObject = this.fileTransfer.create();
-		fileTransfer.download(this.file.dataDirectory + filename, options).then((entry) => {
-			console.log('download complete' + entry.toURL());
-			const alertSuccess = this.alertCtrl.create({
-				title: 'Download Succeeded!',
-				buttons: ['Ok']
-			});
-
-			alertSuccess.present();
-		}, (error) => {
-			console.log('error downloading');
-			const alertFailure = this.alertCtrl.create({
-				title: 'Download Failed!',
-				buttons: ['Ok']
-			});
-
-			alertFailure.present();
-		});
   }
 
   showInternetConnectionError(){
