@@ -7,7 +7,6 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 import * as papa from 'papaparse';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
-import { isTrueProperty } from 'ionic-angular/umd/util/util';
 
 /**
  * Generated class for the ResultsPage page.
@@ -18,6 +17,7 @@ import { isTrueProperty } from 'ionic-angular/umd/util/util';
 
  declare var google;
  // google.charts.load('current', {packages: ['table']});
+ declare var cordova: any;
 
 @IonicPage()
 @Component({
@@ -315,7 +315,7 @@ export class ResultsPage {
   	// 	err => this.handleError(err)
   	// );
   	// let csvData = data['_body'] || '';
-  	// let parseData = papa.parse(csvData).data;
+		// let parseData = papa.parse(csvData).data;
 
   	var csvHeader = [];
   	for ( var q in this.questions){
@@ -352,12 +352,33 @@ export class ResultsPage {
   	document.body.appendChild(a);
   	a.click();
 		document.body.removeChild(a);
-		
+
+		const location = 'file:///android_asset/www/assets/' + filename;
+
+		var options = {
+			fileKey: "file",
+			fileName: filename,
+			chunkedMode: false,
+			mimeType: "text/csv"
+		};
+
 		const fileTransfer: FileTransferObject = this.fileTransfer.create();
-		fileTransfer.download(filename, this.file.dataDirectory + filename).then((entry) => {
+		fileTransfer.download(this.file.dataDirectory + filename, options).then((entry) => {
 			console.log('download complete' + entry.toURL());
+			const alertSuccess = this.alertCtrl.create({
+				title: 'Download Succeeded!',
+				buttons: ['Ok']
+			});
+
+			alertSuccess.present();
 		}, (error) => {
 			console.log('error downloading');
+			const alertFailure = this.alertCtrl.create({
+				title: 'Download Failed!',
+				buttons: ['Ok']
+			});
+
+			alertFailure.present();
 		});
   }
 
