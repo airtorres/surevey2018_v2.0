@@ -39,6 +39,7 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http'; 
 import { File } from '@ionic-native/file';
 import { FileChooser } from '@ionic-native/file-chooser';
+import { FileTransfer } from '@ionic-native/file-transfer';
 import { LoginProvider } from '../providers/login/login';
 import { ConfigurationProvider } from '../providers/configuration/configuration';
 
@@ -129,6 +130,7 @@ import { ConfigurationProvider } from '../providers/configuration/configuration'
     SplashScreen,
     File,
     FileChooser,
+    FileTransfer,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     LoginProvider,
     ConfigurationProvider
