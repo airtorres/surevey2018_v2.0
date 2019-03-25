@@ -14,15 +14,21 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'chat.html',
 })
 export class ChatPage {
-	// public sender;
+	chatmate = "(Missing Receiver Info)";
+  userId;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-  	// this.sender = this.navParams.get('sender');
+  	this.chatmate = this.navParams.get('chatmate')? this.navParams.get('chatmate'):"(Missing Receiver Info)";
+    this.userId = this.navParams.get('uid')? this.navParams.get('uid'):"(Missing Receiver Info)";
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatPage');
-    // console.log(sender);
+    console.log(this.chatmate);
   }
 
+  sendMessage(){
+    console.log("Sending to "+this.chatmate);
+    console.log("From: "+this.userId)
+  }
 }

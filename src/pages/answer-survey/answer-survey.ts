@@ -9,7 +9,7 @@ import { Storage } from '@ionic/storage';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
-import { NewMsgPage } from '../new-msg/new-msg';
+import { ChatPage } from '../chat/chat';
 
 /**
  * Generated class for the AnswerSurveyPage page.
@@ -289,7 +289,7 @@ export class AnswerSurveyPage {
 
   sendMessage(){
     console.log("Redirecting to chat...");
-    this.navCtrl.push(NewMsgPage, {'chatmate' : this.author});
+    this.navCtrl.push(ChatPage, {'chatmate' : this.author_name, 'uid':this.fire.auth.currentUser.uid});
   }
 
   ionViewWillEnter(){

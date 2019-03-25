@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>name</ion-title>
+    <ion-title>{{ chatmate }}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -16,13 +16,13 @@
 <ion-content #content padding id="chatPage">
 	<ion-list text-wrap>
 		<!-- sent messages -->
-		<ion-item class="sent-msg" text-wrap>
+		<ion-item class="sent-msg" text-wrap no-lines>
 			<ion-label>This is the message you sent.</ion-label>
 		</ion-item>
 
 
 		<!-- received messages -->
-		<ion-item class="received-msg" text-wrap>
+		<ion-item class="received-msg" text-wrap no-lines>
 			<ion-label>This is the message you received.</ion-label>
 		</ion-item>
 	</ion-list>
