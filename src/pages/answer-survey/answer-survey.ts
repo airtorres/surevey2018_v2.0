@@ -289,7 +289,7 @@ export class AnswerSurveyPage {
 
   sendMessage(){
     console.log("Redirecting to chat...");
-    this.navCtrl.push(ChatPage, {'chatmate' : this.author_name, 'uid':this.fire.auth.currentUser.uid});
+    this.navCtrl.push(ChatPage, {'chatmate' : this.author_name,'author_id': this.author_id, 'uid':this.fire.auth.currentUser.uid});
   }
 
   ionViewWillEnter(){

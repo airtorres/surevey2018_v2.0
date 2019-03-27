@@ -103,6 +103,14 @@ export class ConfigurationProvider {
     }
   }
 
+  transformTime(isoDate){
+    var time = new Date(isoDate);
+    time = time.toTimeString().split(' ');
+    time = time[0];
+
+    return time
+  }
+
   transformDateNumFormat(isoDate){
   	var dateVal = "No Date Specified";
   	if(isoDate){

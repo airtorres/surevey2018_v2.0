@@ -15,16 +15,20 @@
 <!-- CHAT -->
 <ion-content #content padding id="chatPage">
 	<ion-list text-wrap>
-		<!-- sent messages -->
-		<ion-item class="sent-msg" text-wrap no-lines>
-			<ion-label>This is the message you sent.</ion-label>
-		</ion-item>
+		<div *ngFor="let msg of allmessages" class="allmessages">
+			<!-- sent messages -->
+			<ion-item *ngIf="msg['sender'] == userId" class="message sent-msg" text-wrap no-lines>
+				<ion-label>{{ msg['content'] }}</ion-label>
+				<ion-label class="dateTimeLabels">{{ transformDate(msg['date_sent']) }}</ion-label>
+			</ion-item>
 
 
-		<!-- received messages -->
-		<ion-item class="received-msg" text-wrap no-lines>
-			<ion-label>This is the message you received.</ion-label>
-		</ion-item>
+			<!-- received messages -->
+			<ion-item *ngIf="msg['sender'] == authorId" class="message received-msg" text-wrap no-lines>
+				<ion-label>{{ msg['content'] }}</ion-label>
+				<ion-label class="dateTimeLabels">{{ transformDate(msg['date_sent']) }}</ion-label>
+			</ion-item>
+		</div>
 	</ion-list>
 </ion-content>
 
@@ -33,7 +37,7 @@
 	<ion-toolbar>
 		<ion-row>
 			<ion-col col-10>
-				<ion-input type="text" [(ngModel)]="chatMessage" placeholder="Type your message..."></ion-input>
+				<ion-input type="text" placeholder="Type your message..." #chatMessage></ion-input>
 			</ion-col>
 
 			<ion-col col-2>
