@@ -89,12 +89,15 @@ export class ChatPage {
     firebase.database().ref('/chat_messages/')
     .once('value', chatSnapshot => {
       
+      var that = this;
       var newMessageKey = firebase.database().ref().child(newPostKey).push().key;
       firebase.database().ref("/chat_messages/"+newPostKey+"/"+newMessageKey).set(message, function(error){
         if(error){
           console.log("Message not sent!"+error);
+          this.configService.displayToast('Sending Failed! Try Again.');
         }else{
           console.log("Message sent!!");
+          that.chatMessage.value = "";
         }
       });
 

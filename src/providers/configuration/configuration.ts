@@ -85,6 +85,31 @@ export class ConfigurationProvider {
     return name;
   }
 
+  transformAuthorNameNoEmail(authorId){
+    var name = '';
+    var email = '';
+    const user:firebase.database.Reference = firebase.database().ref('/users/'+authorId);
+    user.on('value', userSnapshot => {
+      var u = userSnapshot.val();
+
+      if(u){
+        email = u['email'];
+        var firstname = u['first_name'];
+        var lastname = u['last_name'];
+
+        if(u['first_name'] != null && u['last_name'] != null){
+          name = firstname + ' ' + lastname;
+        }
+      }
+    });
+
+    if(name == ' '){
+      name = email;
+    }
+
+    return name;
+  }
+
   transformDate(isoDate){
     var date = new Date(isoDate);
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -104,9 +129,8 @@ export class ConfigurationProvider {
   }
 
   transformTime(isoDate){
-    var time = new Date(isoDate);
-    time = time.toTimeString().split(' ');
-    time = time[0];
+    var date = new Date(isoDate);
+    var time = date.toTimeString().split(' ')[0];
 
     return time
   }
