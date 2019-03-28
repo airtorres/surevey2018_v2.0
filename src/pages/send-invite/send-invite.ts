@@ -38,9 +38,13 @@ export class SendInvitePage {
   public length;
 
   public s_id;
+  public author;
+  public title;
   thisSurvey = {
   	's_id':'',
-  	'status':'pending' //status: cancelled/deleted/pending/incomplete/completed
+    'status':'pending', //status: cancelled/deleted/pending/incomplete/completed
+    'author': '',
+    'title': ''
   }
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
@@ -49,7 +53,9 @@ export class SendInvitePage {
   	private alertCtrl: AlertController,
     public configService: ConfigurationProvider) {
 
-  	this.s_id = this.navParams.get('s_id');
+    this.s_id = this.navParams.get('s_id');
+    this.author = this.navParams.get('author');
+    this.title = this.navParams.get('title');
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
@@ -160,6 +166,8 @@ export class SendInvitePage {
     console.log(this.selected_users);
 
     this.thisSurvey['s_id'] = this.s_id;
+    this.thisSurvey['author'] = this.author;
+    this.thisSurvey['title'] = this.title;
     var successFlag = true;
     var surveyInvites = [];
     var survey_invites_ids = [];

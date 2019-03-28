@@ -29,6 +29,7 @@ export class SurveySummaryPage {
   thisSurvey;
   title;
   s_id;
+  author;
   created_date;
   updated_date;
   num_responses = 0;
@@ -65,6 +66,7 @@ export class SurveySummaryPage {
     this.isActive = this.thisSurvey['isActive'];
     this.s_id = this.thisSurvey['id'];
     this.num_responses = this.thisSurvey['num_responses'];
+    this.author = this.thisSurvey['author'];
 
     const resp:firebase.database.Reference = firebase.database().ref('/responses/'+this.s_id);
     resp.on('value', respSnapshot => {
@@ -84,7 +86,7 @@ export class SurveySummaryPage {
 
     if(this.configService.isConnectedToFirebase()){
       loadingUsers.present().then(() => {
-        this.navCtrl.push(SendInvitePage, {s_id: this.s_id});
+        this.navCtrl.push(SendInvitePage, {s_id: this.s_id, title: this.title, author: this.author});
         loadingUsers.dismiss();
       });
     }

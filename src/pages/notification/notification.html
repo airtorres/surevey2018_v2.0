@@ -15,54 +15,74 @@
 
 <ion-content>
 	<ion-list text-wrap>
+		<ion-item-sliding>
 
-		<!-- UNREAD NOTIFICATIONS -->
-		<ion-item style="background-color: #E6EEF2;">
-			<ion-icon item-left name="ios-undo" style="font-size: 25px;" color="blue"></ion-icon>
-			Jesiah Neely responded to "Music for the Brain"
-		</ion-item>
+			<!-- UNREAD NOTIFICATIONS -->
+			<!-- <ion-item style="background-color: #E6EEF2;">
+				<ion-icon item-left name="ios-undo" style="font-size: 25px;" color="blue"></ion-icon>
+				Jesiah Neely responded to "Music for the Brain"
+			</ion-item> -->
 
-		<!-- RESPONDED NOTIFICATIONS -->
-		<ion-item>
-			<ion-icon item-left name="ios-undo" style="font-size: 25px;" color="blue"></ion-icon>
-			Nathan Sykes responded to "Music for the Brain"
-		</ion-item>
+			<!-- RESPONDED NOTIFICATIONS -->
+			<!-- <ion-item>
+				<ion-icon item-left name="ios-undo" style="font-size: 25px;" color="blue"></ion-icon>
+				Nathan Sykes responded to "Music for the Brain"
+			</ion-item> -->
 
-		<!-- INVITES NOTIFICATIONS -->
-		<ion-item>
-			<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
-			Aliah Pitts invited you to respond to "Computer Science: Course of the Future"
+			<!-- INVITES NOTIFICATIONS -->
+			<!-- <ion-item>
+				<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
+				Aliah Pitts invited you to respond to "Computer Science: Course of the Future"
 
-			<ion-buttons end>
-				<button ion-button round  small color="green">ACCEPT</button>
-				<button ion-button round  small color="red">DECLINE</button>
-			</ion-buttons>
-		</ion-item>
+				<ion-buttons end>
+					<button ion-button round  small color="green" (click)="answer()">ANSWER</button>
+					<button ion-button round  small color="red">DELETE</button>
+				</ion-buttons>
+			</ion-item> -->
 
-		<!-- USER DECLINED SURVEY INVITES -->
-		<ion-item>
-			<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
-			Aliah Pitts invited you to respond to "Social Media Pros and Cons"
-			<ion-note item-end color="red">Declined</ion-note>
-		</ion-item>
+			<ion-item *ngFor="let survey of allSurveyInvi" id="invi" no-lines (press)=showItemOption(survey)>
+				<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
+				{{ survey['author'] }} invited you to respond to "{{ survey['title'] }}"
 
-		<!-- USER ACCEPTED SURVEY INVITES -->
-		<ion-item>
-			<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
-			Aayden Smith invited you to respond to "E-Learning for Students"
-			<ion-note item-end color="green">Accepted</ion-note>
-		</ion-item>
+				<ion-buttons end *ngIf="survey['status'] == 'pending'">
+					<button ion-button round  small color="green" (click)="answerInvi(survey)">ANSWER</button>
+					<button ion-button round  small color="red" (click)="deleteInvi(survey)">DELETE</button>
+				</ion-buttons>
 
-		<!-- DECLINED INVITES OF USER SURVEY -->
-		<ion-item>
-			<ion-icon item-left name="close-circle" style="font-size: 25px;" color="red"></ion-icon>
-			Sophia Rose declined your survey invitation to "Music for the Brain"
-		</ion-item>
+				<p style="font-size:12px; color:dimgray;" *ngIf="survey['status'] == 'completed'">You have finished answering this survey.</p>
+			</ion-item>
 
-		<!-- ACCEPTED INVITES OF USER SURVEY -->
-		<ion-item>
-			<ion-icon item-left name="checkmark-circle" style="font-size: 25px;" color="green"></ion-icon>
-			Alex Lee accepted your survey invitatiion to "Music for the Brain"
-		</ion-item>
+			<!-- USER DECLINED SURVEY INVITES -->
+			<!-- <ion-item>
+				<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
+				Aliah Pitts invited you to respond to "Social Media Pros and Cons"
+				<ion-note item-end color="red">Declined</ion-note>
+			</ion-item> -->
+
+			<!-- USER ACCEPTED SURVEY INVITES -->
+			<!-- <ion-item>
+				<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
+				Aayden Smith invited you to respond to "E-Learning for Students"
+				<ion-note item-end color="green">Accepted</ion-note>
+			</ion-item> -->
+
+			<!-- DECLINED INVITES OF USER SURVEY -->
+			<!-- <ion-item>
+				<ion-icon item-left name="close-circle" style="font-size: 25px;" color="red"></ion-icon>
+				Sophia Rose declined your survey invitation to "Music for the Brain"
+			</ion-item> -->
+
+			<!-- ACCEPTED INVITES OF USER SURVEY -->
+			<!-- <ion-item>
+				<ion-icon item-left name="checkmark-circle" style="font-size: 25px;" color="green"></ion-icon>
+				Alex Lee accepted your survey invitatiion to "Music for the Brain"
+			</ion-item> -->
+			<ion-item-options side="left">
+				<button ion-button color="primary">
+					<ion-icon name="trash"></ion-icon>
+					Delete
+				</button>
+				</ion-item-options>
+		</ion-item-sliding>
 	</ion-list>
 </ion-content>
