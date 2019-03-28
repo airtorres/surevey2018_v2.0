@@ -71,6 +71,14 @@ export class ChatPage {
         console.log("Chatmate Added!");
       }
     });
+
+    firebase.database().ref("/chatmates/"+authorId+"/"+this.userId).set(authorId, function(error){
+      if(error){
+        console.log("Not successful saving chatmate!"+error);
+      }else{
+        console.log("Chatmate Added!");
+      }
+    });
   }
 
   sendMessage(){
