@@ -32,9 +32,9 @@ export class TabsPage {
   }
 
   checkChildAdded() {
-    const allSurveyInvitesRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.userID+'/invitations/');
-    allSurveyInvitesRef.on('child_added', allSurveyInvitesSnapshot => {
-      this.user_notif = allSurveyInvitesSnapshot.val();
+    const allUserNotifRef:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID);
+    allUserNotifRef.on('child_added', allUserNotifSnapshot => {
+      this.user_notif = allUserNotifSnapshot.val();
       console.log(this.user_notif);
     });
     

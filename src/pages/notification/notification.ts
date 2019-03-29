@@ -55,22 +55,9 @@ export class NotificationPage {
     this.fetchNotifFromFirebase();
   }
 
-  // loadSurveyInviFromLocalDB(){
-  //   this.storage.get("survey_invites").then(invites => {
-  //     if(invites){
-  //       this.allSurveyInvi = invites;
-  //     }
-  //   });
-  // }
-
   fetchNotifFromFirebase() {
     var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
-    // try{
       if (connectedToFirebaseFlag) {
-        // const allSurveyInvitesRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.userID+'/invitations/');
-        // allSurveyInvitesRef.on('value', allSurveyInvitesSnapshot => {
-        //   this.user_survey_invites = allSurveyInvitesSnapshot.val();
-        // });
 
         const userNotif:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID);
         userNotif.on('value', allUserNotif => {
@@ -85,14 +72,6 @@ export class NotificationPage {
         this.allUserNotif.reverse();
         console.log(this.allUserNotif);
       }
-      else {
-        // this.loadSurveyInviFromLocalDB();
-
-      }
-    // }
-    // catch(e) {
-    //   this.loadSurveyInviFromLocalDB();
-    // }
   }
 
   showItemOption(survey){

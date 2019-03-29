@@ -54,20 +54,26 @@
 			You have no notifications
 		</ion-item>
 
-		<ion-item *ngIf="allUserNotif.length!=0" id="invi" no-lines>
+		<div *ngIf="allUserNotif.length!=0">
 			<div *ngFor="let notif of allUserNotif">
-				<ion-icon item-left name="mail-open" style="font-size:25px;" color="yellow"></ion-icon>
-				{{ notif['s_author'] }} invited you to respond to "{{ notif['s_title'] }}"
+				<ion-item *ngIf="notif['type'] == 'invitation'" id="invi" no-lines>
+						<ion-icon item-left name="mail-open" style="font-size:25px;" color="yellow"></ion-icon>
+						{{ notif['s_author'] }} invited you to respond to "{{ notif['s_title'] }}"
 
-				<ion-buttons *ngIf="notif['s_status'] == 'pending'">
-					<button ion-button round small color="green" (click)="answerInvi(notif)">ANSWER</button>
-					<button ion-button round small color="red" (click)="deleteInvi(notif)">DELETE</button>
-				</ion-buttons>
+						<ion-buttons end *ngIf="notif['s_status'] == 'pending'">
+							<button ion-button round small color="green" (click)="answerInvi(notif)">ANSWER</button>
+							<button ion-button round small color="red" (click)="deleteInvi(notif)">DELETE</button>
+						</ion-buttons>
 
-				<p style="font-size:12px; color:dimgray;" *ngIf="notif['s_status'] == 'completed'">You have finished answering this survey.</p>
+						<p style="font-size:12px; color:dimgray;" *ngIf="notif['s_status'] == 'completed'">You have finished answering this survey.</p>
+				</ion-item>
+
+				<ion-item *ngIf="notif['type'] == 'respond'" id="invi" no-lines>
+					<ion-icon item-left name="ios-undo" style="font-size: 25px;" color="blue"></ion-icon>
+					{{ notif['s_respondent'] }} responded to your "{{ notif['s_title'] }}"
+				</ion-item>
 			</div>
-		</ion-item>
-
+		</div>
 		<!-- USER DECLINED SURVEY INVITES -->
 		<!-- <ion-item>
 			<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>

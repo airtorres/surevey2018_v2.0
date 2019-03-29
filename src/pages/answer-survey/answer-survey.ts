@@ -47,6 +47,17 @@ export class AnswerSurveyPage {
   	'submitted_at': ''
   };
 
+  notification = {
+    'type':'respond',
+    's_id':'',
+    's_status':'',
+    's_author':'',
+    's_author_id': '',
+    's_title':'',
+    's_respondent':'',
+    'isSeen': false
+  }
+
   public answers = [];
 
   viewOnly = false;
@@ -154,6 +165,22 @@ export class AnswerSurveyPage {
     }
   }
 
+  UpdateNotifSurveyStatus(){
+    try{
+      var that = this;
+      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+this.s_id+"/s_status").set("completed", function(error){
+        if(error){
+          console.log("Not successful updating invitation status in notifications."+error);
+          that.showSubmitError();
+        }else{
+          console.log("Successfully updated: invitation status to completed in notifications!");
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   saveToLocalDB(response){
     console.log("saving response to local storage...");
 
@@ -208,6 +235,7 @@ export class AnswerSurveyPage {
     loading.present().then(() => {
 
       var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+      var bindSelf = this;
 
       console.log("submitting response ...")
 
@@ -215,6 +243,13 @@ export class AnswerSurveyPage {
     	this.response['survey_id'] = this.s_id;
     	this.response['submitted_at'] = new Date().toISOString();
     	this.response['answers'] = this.answers;
+
+      this.notification['s_id'] = this.s_id;
+      this.notification['s_author'] = this.thisSurvey['author'];
+      this.notification['s_author_id'] = this.thisSurvey['author_id'];
+      this.notification['s_title'] = this.thisSurvey['title'];
+      this.notification['s_respondent'] = this.currUser;
+
 
       for( var q in this.questions){
         if(this.questions[q]['type'] == 'checkbox'){
@@ -269,10 +304,15 @@ export class AnswerSurveyPage {
                 console.log("Not successful pushing response to list of responses."+error);
                 this.showSubmitError();
               }else{
+                bindSelf.notification['s_status'] = 'completed';
+                firebase.database().ref('/notifications/'+ bindSelf.thisSurvey['author_id'] + '/' + bindSelf.fire.auth.currentUser.uid).set(bindSelf.notification);
                 console.log("Successfully added to responses!");
               }
             });
 
+
+            // update survey status in notifications
+            this.UpdateNotifSurveyStatus();
             // update USER_SURVEYS invitation to COMPLETED
             this.UpdateInvitationStatus();
           }catch(e){

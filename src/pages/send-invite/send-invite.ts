@@ -24,6 +24,7 @@ import { Storage } from '@ionic/storage';
 })
 export class SendInvitePage {
   currUser;
+  userID;
   all_users = [];
   all_users_email = [];
 
@@ -43,14 +44,15 @@ export class SendInvitePage {
   thisSurvey = {
   	's_id':'',
     'status':'pending', //status: cancelled/deleted/pending/incomplete/completed
-    'author': '',
-    'title': ''
   }
   notification = {
+    'type':'invitation',
     's_id':'',
     's_status':'pending',
     's_author':'',
+    's_author_id': '',
     's_title':'',
+    's_respondent':'',
     'isSeen': false
   }
 
@@ -69,6 +71,7 @@ export class SendInvitePage {
 
     // console.log("length:", this.selected_users.length);
     this.length = this.selected_users.length;
+    this.userID = this.fire.auth.currentUser.uid;
     this.checkConnection();
   }
 
@@ -171,13 +174,13 @@ export class SendInvitePage {
 
   sendInvitation(){
     console.log(this.selected_users);
+    var bindSelf = this;
 
     this.thisSurvey['s_id'] = this.s_id;
-    this.thisSurvey['author'] = this.author;
-    this.thisSurvey['title'] = this.title;
 
     this.notification['s_id'] = this.s_id;
     this.notification['s_author'] = this.author;
+    this.notification['s_author_id'] = this.userID;
     this.notification['s_title'] = this.title;
 
     var successFlag = true;
@@ -200,8 +203,8 @@ export class SendInvitePage {
           for ( var invit in surveyInvites){
             survey_invites_ids.push(surveyInvites[invit]['s_id']);
           }
-          console.log(surveyInvites);
           console.log(survey_invites_ids)
+          this.notification['s_respondent'] = this.all_users[u]['email'];
 
           if (survey_invites_ids.indexOf(survey_id) !== -1) {
             console.log("You're not allowed to send the survey invitation twice");
@@ -215,7 +218,7 @@ export class SendInvitePage {
                 console.log("Not successful pushing to invitations (for some users ONLY)."+error);
                 successFlag = false;
               }else{
-                firebase.database().ref('/notfications/'+ u).set(this.notification);
+                firebase.database().ref('/notifications/'+ u + '/' + survey_id).set(bindSelf.notification);
                 console.log("Successfully added the surveyID to invitations!");
                 successFlag = true && successFlag;
               }
