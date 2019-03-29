@@ -17,16 +17,16 @@
 	<ion-list text-wrap>
 		<div *ngFor="let msg of allmessages" class="allmessages">
 			<!-- sent messages -->
-			<ion-item *ngIf="msg['sender'] == userId" class="message sent-msg" text-wrap no-lines>
-				<ion-label>{{ msg['content'] }}</ion-label>
-				<ion-label class="dateTimeLabels">{{ transformDate(msg['date_sent']) }}</ion-label>
+			<ion-item *ngIf="msg['sender'] == userId" class="sent-msg" text-wrap no-lines>
+					{{ msg['content'] }}
+					<p class="dateTimeLabels" style="color:white;">{{ transformDate(msg['date_sent']) }}</p>
 			</ion-item>
 
 
 			<!-- received messages -->
-			<ion-item *ngIf="msg['sender'] == authorId" class="message received-msg" text-wrap no-lines>
-				<ion-label>{{ msg['content'] }}</ion-label>
-				<ion-label class="dateTimeLabels">{{ transformDate(msg['date_sent']) }}</ion-label>
+			<ion-item *ngIf="msg['sender'] == authorId" class="received-msg" text-wrap no-lines>
+					{{ msg['content'] }}
+					<p class="dateTimeLabels">{{ transformDate(msg['date_sent']) }}</p>
 			</ion-item>
 		</div>
 	</ion-list>
