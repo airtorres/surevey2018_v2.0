@@ -74,7 +74,7 @@ export class ChatBoxPage {
 
   gotoChat(chatmateId){
     this.markAsRead(chatmateId);
-  	this.navCtrl.push(ChatPage, {'chatmate' : this.chatmateNames[chatmateId]['name'],'author_id': chatmateId, 'uid':this.userId});
+  	this.navCtrl.push(ChatPage, {'chatmate' : this.chatmateNames[chatmateId]? this.chatmateNames[chatmateId]['name']:'','author_id': chatmateId, 'uid':this.userId});
   }
 
   gotoNewMsg(){
