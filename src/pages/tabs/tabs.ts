@@ -22,7 +22,7 @@ export class TabsPage {
   tab3Root = NotificationPage;
   tab4Root = ChatBoxPage;
 
-  user_survey_invites = [];
+  user_notif = [];
   userID;
   public badgeCount:number = 0;
 
@@ -34,11 +34,11 @@ export class TabsPage {
   checkChildAdded() {
     const allSurveyInvitesRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.userID+'/invitations/');
     allSurveyInvitesRef.on('child_added', allSurveyInvitesSnapshot => {
-      this.user_survey_invites = allSurveyInvitesSnapshot.val();
-      console.log(this.user_survey_invites);
+      this.user_notif = allSurveyInvitesSnapshot.val();
+      console.log(this.user_notif);
     });
     
-    this.badgeCount = this.user_survey_invites.length;
+    this.badgeCount = this.user_notif.length;
   }
   
 }

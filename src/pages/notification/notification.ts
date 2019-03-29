@@ -29,6 +29,8 @@ export class NotificationPage {
   surveys = [];
   public user_survey_invites = [];
   public allSurveyInvi = [];
+  public user_notif = [];
+  public allUserNotif = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public actionSheetController: ActionSheetController,
@@ -50,41 +52,47 @@ export class NotificationPage {
 
   public ionViewWillEnter() {
     console.log("entering notifications ...");
-    this.fetchSurveyInvis();
+    this.fetchNotifFromFirebase();
   }
 
-  loadSurveyInviFromLocalDB(){
-    this.storage.get("survey_invites").then(invites => {
-      if(invites){
-        this.allSurveyInvi = invites;
-      }
-    });
-  }
+  // loadSurveyInviFromLocalDB(){
+  //   this.storage.get("survey_invites").then(invites => {
+  //     if(invites){
+  //       this.allSurveyInvi = invites;
+  //     }
+  //   });
+  // }
 
-  fetchSurveyInvis() {
+  fetchNotifFromFirebase() {
     var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
-    try{
+    // try{
       if (connectedToFirebaseFlag) {
-        const allSurveyInvitesRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.userID+'/invitations/');
-        allSurveyInvitesRef.on('value', allSurveyInvitesSnapshot => {
-          this.user_survey_invites = allSurveyInvitesSnapshot.val();
+        // const allSurveyInvitesRef:firebase.database.Reference = firebase.database().ref('/user_surveys/'+this.userID+'/invitations/');
+        // allSurveyInvitesRef.on('value', allSurveyInvitesSnapshot => {
+        //   this.user_survey_invites = allSurveyInvitesSnapshot.val();
+        // });
+
+        const userNotif:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID);
+        userNotif.on('value', allUserNotif => {
+          this.user_notif = allUserNotif.val();
         });
 
-        this.allSurveyInvi=[];
-        console.log("surveys:", this.user_survey_invites);
-        for (var i in this.user_survey_invites) {
-          this.allSurveyInvi.push(this.user_survey_invites[i]);
+        this.allUserNotif=[];
+        console.log("surveys:", this.user_notif);
+        for (var i in this.user_notif) {
+          this.allUserNotif.push(this.user_notif[i]);
         }
-        this.allSurveyInvi.reverse();
-        console.log(this.allSurveyInvi);
+        this.allUserNotif.reverse();
+        console.log(this.allUserNotif);
       }
       else {
-        this.loadSurveyInviFromLocalDB();
+        // this.loadSurveyInviFromLocalDB();
+
       }
-    }
-    catch(e) {
-      this.loadSurveyInviFromLocalDB();
-    }
+    // }
+    // catch(e) {
+    //   this.loadSurveyInviFromLocalDB();
+    // }
   }
 
   showItemOption(survey){

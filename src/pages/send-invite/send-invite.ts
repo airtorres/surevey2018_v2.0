@@ -46,6 +46,13 @@ export class SendInvitePage {
     'author': '',
     'title': ''
   }
+  notification = {
+    's_id':'',
+    's_status':'pending',
+    's_author':'',
+    's_title':'',
+    'isSeen': false
+  }
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	private storage: Storage,
@@ -168,6 +175,11 @@ export class SendInvitePage {
     this.thisSurvey['s_id'] = this.s_id;
     this.thisSurvey['author'] = this.author;
     this.thisSurvey['title'] = this.title;
+
+    this.notification['s_id'] = this.s_id;
+    this.notification['s_author'] = this.author;
+    this.notification['s_title'] = this.title;
+
     var successFlag = true;
     var surveyInvites = [];
     var survey_invites_ids = [];
@@ -203,6 +215,7 @@ export class SendInvitePage {
                 console.log("Not successful pushing to invitations (for some users ONLY)."+error);
                 successFlag = false;
               }else{
+                firebase.database().ref('/notfications/'+ u).set(this.notification);
                 console.log("Successfully added the surveyID to invitations!");
                 successFlag = true && successFlag;
               }
