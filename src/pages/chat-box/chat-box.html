@@ -16,6 +16,10 @@
 <ion-content>
 	<!-- CHAT MESSAGES HERE -->
 
+	<div *ngIf="chatmatelist.length == 0">
+		<ion-label>No Messages</ion-label>
+	</div>
+
 	<ion-list>
 
 		<!-- UNREAD MESSAGES WILL HAVE A BACKGROUND COLOR : LIGHT BLUE -->
@@ -44,7 +48,7 @@
 	       		<ion-img src="https://images.unsplash.com/photo-1495472772658-b1d6f8472877?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=cc54f503d674e8b9dfc8cc6a0703d9dd&auto=format&fit=crop&w=400&q=60"></ion-img>
 	      	</ion-avatar>
 	      	<h3 #name>{{ getChatmateName(chatmateId) }}</h3>
-	      	<p>Thanks so much. :)</p>
+	      	<p>{{ getLatestMessageForDisplay(chatmateId) }}</p>
 	    </button>
 	</ion-list>
 

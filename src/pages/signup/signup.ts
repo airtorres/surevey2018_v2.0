@@ -7,6 +7,7 @@ import { WelcomePage } from '../welcome/welcome';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { LoginProvider } from '../../providers/login/login';
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
 import * as firebase from 'firebase/app';
 import 'firebase/database'
@@ -34,6 +35,7 @@ export class SignupPage {
     private formbuilder: FormBuilder,
     public loginService: LoginProvider,
     public loadingCtrl: LoadingController,
+    public configService: ConfigurationProvider,
     private storage: Storage,
     private fire: AngularFireAuth) {
 
@@ -59,6 +61,8 @@ export class SignupPage {
     let loading = this.loadingCtrl.create({
       content: 'Signing up'
     });
+
+    var that = this;
 
     loading.present().then(() => {
       // SIGNING UP TO FIREBASE -----------------------------------------
@@ -110,13 +114,18 @@ export class SignupPage {
         }catch(error){
           loading.dismiss();
           console.log("got an error:", error);
-          document.getElementById('unAbleSignup_div').style.display = "block";
+          that.configService.displayToast('Unable to signup. Connection failed! Try again later.');
         }
       })
       .catch( function(error) {
         loading.dismiss();
         console.log("got an error:", error);
-        document.getElementById('unAbleSignup_div').style.display = "block";
+
+        if(error.code == 'auth/email-already-in-use'){
+          that.configService.showSimpleAlert('Failed', 'The email is already in use. Try different email.');
+        }else{
+          that.configService.showSimpleAlert('Failed', 'Please contact the developer for unexpected errors.');
+        }
       });
     });
   }

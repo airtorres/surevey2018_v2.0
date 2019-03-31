@@ -28,6 +28,7 @@ export class ChatBoxPage {
   chatmatelist = [];
   chatmateNames = {};
   userId;
+  connectedToFirebaseFlag = true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private fire: AngularFireAuth,
@@ -42,18 +43,23 @@ export class ChatBoxPage {
   }
 
   loadChatMessages(){
-    firebase.database().ref('/chatmates/'+this.userId)
-    .on('value', chatmatesSnapshot => {
-      var allChatmates = chatmatesSnapshot.val();
-      if (allChatmates){
-        this.chatmatelist = [];
-        for (var id in allChatmates){
-          this.chatmatelist.push(allChatmates[id]);
+    // check for Firebase connection
+    this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+
+    if(this.connectedToFirebaseFlag){
+      firebase.database().ref('/chatmates/'+this.userId)
+      .on('value', chatmatesSnapshot => {
+        var allChatmates = chatmatesSnapshot.val();
+        if (allChatmates){
+          this.chatmatelist = [];
+          for (var id in allChatmates){
+            this.chatmatelist.push(allChatmates[id]);
+          }
         }
-      }
-      console.log(this.chatmatelist);
-      console.log(this.userId);
-    });
+      });
+    }else{
+      console.log("SHOW NO INTERNET CONNECTION MSG");
+    }
   }
 
   getChatmateName(cid){
@@ -61,6 +67,31 @@ export class ChatBoxPage {
     this.chatmateNames[cid] = '';
     this.chatmateNames[cid] = name;
     return name;
+  }
+
+  getConvoId(uid1, uid2){
+    if (uid1 < uid2){
+      return uid1+uid2;
+    }else{
+      return uid2+uid1;
+    }
+  }
+
+  getLatestMessageForDisplay(chatmateId){
+    var convoId = this.getConvoId(chatmateId, this.userId);
+    var last = '';
+    firebase.database().ref('/chat_messages/'+ convoId).orderByChild('date_sent')
+    .on('value', chatSnapshot => {
+      var allMsg = chatSnapshot.val();
+      if (allMsg){
+        var msg = [];
+        for (var m in allMsg){
+          msg.push(allMsg[m]['content']);
+        }
+          last = msg[msg.length-1];
+        }
+    });
+    return last;
   }
 
   markAsRead(id){
