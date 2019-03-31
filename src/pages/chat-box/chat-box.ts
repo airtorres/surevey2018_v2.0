@@ -49,23 +49,18 @@ export class ChatBoxPage {
         this.chatmatelist = [];
         for (var id in allChatmates){
           this.chatmatelist.push(allChatmates[id]);
-          var mate = {
-            'name': this.getChatmateName(allChatmates[id]),
-            'id': allChatmates[id],
-            'isRead': false
-          };
-
-          this.chatmateNames[id] = '';
-          this.chatmateNames[id] = mate;
         }
       }
-
-      console.log(this.chatmateNames);
+      console.log(this.chatmatelist);
+      console.log(this.userId);
     });
   }
 
   getChatmateName(cid){
-    return this.configService.transformAuthorNameNoEmail(cid);
+    var name = this.configService.transformAuthorNameNoEmail(cid);
+    this.chatmateNames[cid] = '';
+    this.chatmateNames[cid] = name;
+    return name;
   }
 
   markAsRead(id){
@@ -74,7 +69,7 @@ export class ChatBoxPage {
 
   gotoChat(chatmateId){
     this.markAsRead(chatmateId);
-  	this.navCtrl.push(ChatPage, {'chatmate' : this.chatmateNames[chatmateId]? this.chatmateNames[chatmateId]['name']:'','author_id': chatmateId, 'uid':this.userId});
+  	this.navCtrl.push(ChatPage, {'chatmate' : this.chatmateNames[chatmateId]? this.chatmateNames[chatmateId]:'','author_id': chatmateId, 'uid':this.userId});
   }
 
   gotoNewMsg(){

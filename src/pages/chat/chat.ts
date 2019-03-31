@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import * as firebase from 'firebase/app';
 import 'firebase/database';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
@@ -27,6 +28,7 @@ export class ChatPage {
   allmessages = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
+    private fire: AngularFireAuth,
     public configService: ConfigurationProvider) {
   	this.chatmate = this.navParams.get('chatmate')? this.navParams.get('chatmate'):"(Missing Receiver Info)";
     this.authorId = this.navParams.get('author_id');
@@ -37,11 +39,10 @@ export class ChatPage {
     }else{
       this.conversationId = this.userId+this.authorId;
     }
-
-    this.loadMessages();
   }
 
   ionViewDidLoad() {
+    this.loadMessages();
     console.log('ionViewDidLoad ChatPage');
   }
 
@@ -72,7 +73,7 @@ export class ChatPage {
       }
     });
 
-    firebase.database().ref("/chatmates/"+authorId+"/"+this.userId).set(authorId, function(error){
+    firebase.database().ref("/chatmates/"+authorId+"/"+this.userId).set(this.userId, function(error){
       if(error){
         console.log("Not successful saving chatmate!"+error);
       }else{
@@ -85,6 +86,7 @@ export class ChatPage {
     console.log("Sending to "+this.chatmate);
     console.log(this.authorId);
     console.log("From: "+this.userId)
+    console.log("myEmail"+this.fire.auth.currentUser.email)
 
     var newPostKey = this.conversationId;
     var message = {
