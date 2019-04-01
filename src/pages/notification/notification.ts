@@ -74,7 +74,7 @@ export class NotificationPage {
       }
   }
 
-  showItemOption(survey){
+  showItemOption(notif){
     const actionSheet = this.actionSheetController.create({
       cssClass: 'action-sheets-basic-page',
       buttons: [{
@@ -82,7 +82,7 @@ export class NotificationPage {
         role: 'destructive',
         icon: 'trash',
         handler: () => {
-          this.showDeleteConfirmationAlert(survey);
+          this.showDeleteConfirmationAlert(notif);
         }
       }, {
         text: 'Cancel',
@@ -117,6 +117,8 @@ export class NotificationPage {
         text: 'Delete',
         handler: () => {
           console.log(survey['s_id']);
+          this.configService.deleteSurveyInvitation(survey['s_id']);
+          this.deleteNotification(survey['type'], survey['s_author_id'], survey['s_id'])
         }
       }
     ]
@@ -124,7 +126,7 @@ export class NotificationPage {
     alert.present();
   }
 
-  showDeleteConfirmationAlert(survey){
+  showDeleteConfirmationAlert(notif){
     var msg = 'Are you sure to delete this notification?';
 
     let alert = this.alertCtrl.create({
@@ -141,7 +143,7 @@ export class NotificationPage {
       {
         text: 'Delete',
         handler: () => {
-          console.log(survey['s_id']);
+          this.deleteNotification(notif['type'], notif['s_author_id'], notif['s_id']);
         }
       }
     ]
@@ -149,4 +151,28 @@ export class NotificationPage {
     alert.present();
   }
 
+  deleteNotification(type, authorID, surveyID) {
+    var bindSelf = this;
+    if (type == 'invitation') {
+      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+surveyID).remove(
+      function(error) {
+        if(error){
+          console.log("Not able to delete notifications.");
+        }else{
+          console.log("Notification deleted!");
+        }
+      }
+    }
+
+    else if (type == 'respond') {
+      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+authorID).remove(
+      function(error) {
+        if(error){
+          console.log("Not able to delete notifications.");
+        }else{
+          console.log("Notification deleted!");
+        }
+      }
+    }
+  }
 }
