@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController,ActionSheetController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController,ActionSheetController,LoadingController } from 'ionic-angular';
 
 import { AnswerSurveyPage } from '../answer-survey/answer-survey';
 
@@ -34,7 +34,7 @@ export class NotificationPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public actionSheetController: ActionSheetController,
-    public alertCtrl: AlertController,
+    public alertCtrl: AlertController, public loadingCtrl: LoadingController,
     private storage: Storage,
     private fire: AngularFireAuth,
     private configService: ConfigurationProvider) {
@@ -48,30 +48,22 @@ export class NotificationPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad NotificationPage');
     console.log(this.userID);
-  }
-
-  public ionViewWillEnter() {
-    console.log("entering notifications ...");
     this.fetchNotifFromFirebase();
   }
 
   fetchNotifFromFirebase() {
-    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
-      if (connectedToFirebaseFlag) {
+    const userNotif:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID);
+    userNotif.on('value', allUserNotif => {
+      this.user_notif = allUserNotif.val();
 
-        const userNotif:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID);
-        userNotif.on('value', allUserNotif => {
-          this.user_notif = allUserNotif.val();
-        });
-
-        this.allUserNotif=[];
-        console.log("surveys:", this.user_notif);
-        for (var i in this.user_notif) {
-          this.allUserNotif.push(this.user_notif[i]);
-        }
-        this.allUserNotif.reverse();
-        console.log(this.allUserNotif);
+      this.allUserNotif=[];
+      console.log("surveys:", this.user_notif);
+      for (var i in this.user_notif) {
+        this.allUserNotif.push(this.user_notif[i]);
       }
+      this.allUserNotif.reverse();
+    });
+    console.log(this.allUserNotif);
   }
 
   showItemOption(notif){
@@ -118,7 +110,7 @@ export class NotificationPage {
         handler: () => {
           console.log(survey['s_id']);
           this.configService.deleteSurveyInvitation(survey['s_id']);
-          this.deleteNotification(survey['type'], survey['s_author_id'], survey['s_id'])
+          this.deleteNotification(survey)
         }
       }
     ]
@@ -143,7 +135,7 @@ export class NotificationPage {
       {
         text: 'Delete',
         handler: () => {
-          this.deleteNotification(notif['type'], notif['s_author_id'], notif['s_id']);
+          this.deleteNotification(notif);
         }
       }
     ]
@@ -151,28 +143,39 @@ export class NotificationPage {
     alert.present();
   }
 
-  deleteNotification(type, authorID, surveyID) {
-    var bindSelf = this;
-    if (type == 'invitation') {
-      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+surveyID).remove(
-      function(error) {
-        if(error){
-          console.log("Not able to delete notifications.");
-        }else{
-          console.log("Notification deleted!");
-        }
-      }
-    }
+  deleteNotification(notif) {
+    let loading = this.loadingCtrl.create({
+      content: 'Deleting survey...'
+    });
 
-    else if (type == 'respond') {
-      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+authorID).remove(
-      function(error) {
-        if(error){
-          console.log("Not able to delete notifications.");
-        }else{
-          console.log("Notification deleted!");
-        }
+
+    loading.present().then(() => {
+      var bindSelf = this;
+      if (notif['type'] == 'invitation') {
+        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+notif['s_id']).remove(
+        function(error) {
+          if(error){
+            console.log("Not able to delete notifications.");
+            loading.dismiss();
+          }else{
+            console.log("Notification deleted!");
+            loading.dismiss();
+          }
+        });
       }
-    }
+
+      else if (notif['type'] == 'respond') {
+        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+notif['s_respondent_id']).remove(
+        function(error) {
+          if(error){
+            console.log("Not able to delete notifications.");
+            loading.dismiss();
+          }else{
+            console.log("Notification deleted!");
+            loading.dismiss();
+          }
+        });
+      }
+    });
   }
 }

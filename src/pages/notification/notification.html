@@ -41,7 +41,7 @@
 				</ion-item>
 
 				<!-- RESPONDED TO SURVEY NOTIFICATION (@ RESPONDENT) -->
-				<ion-item *ngIf="notif['type'] == 'invitation' && notif['s_status'] == 'completed'" id="invi" no-lines (press)=showItemOption(survey)>
+				<ion-item *ngIf="notif['type'] == 'invitation' && notif['s_status'] == 'completed'" id="invi" no-lines (press)=showItemOption(notif)>
 						<ion-icon item-left name="mail-open" style="font-size:25px;" color="yellow"></ion-icon>
 						{{ notif['s_author'] }} invited you to respond to "{{ notif['s_title'] }}"
 
@@ -49,7 +49,7 @@
 				</ion-item>
 
 				<!-- RESPONDED TO SURVEY NOTIFICATION (@ SURVEYOR) -->
-				<ion-item *ngIf="notif['type'] == 'respond'" id="invi" no-lines (press)=showItemOption(survey)>
+				<ion-item *ngIf="notif['type'] == 'respond'" id="invi" no-lines (press)=showItemOption(notif)>
 					<ion-icon item-left name="ios-undo" style="font-size: 25px;" color="blue"></ion-icon>
 					{{ notif['s_respondent'] }} responded to your "{{ notif['s_title'] }}"
 				</ion-item>

@@ -55,6 +55,7 @@ export class AnswerSurveyPage {
     's_author_id': '',
     's_title':'',
     's_respondent':'',
+    's_respondent_id':'',
     'isSeen': false
   }
 
@@ -249,6 +250,7 @@ export class AnswerSurveyPage {
       this.notification['s_author_id'] = this.thisSurvey['author_id'];
       this.notification['s_title'] = this.thisSurvey['title'];
       this.notification['s_respondent'] = this.currUser;
+      this.notification['s_respondent_id'] = this.fire.auth.currentUser.uid;
 
 
       for( var q in this.questions){
