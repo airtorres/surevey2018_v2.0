@@ -66,7 +66,7 @@ export class ResultsPage {
   load(){
     // this.survey = this.configService.getSurveyData(this.s_id);
 
-    const survey:firebase.database.Reference = firebase.database().ref('/surveys/'+surveyId);
+    const survey:firebase.database.Reference = firebase.database().ref('/surveys/'+this.s_id);
       survey.on('value', surveySnapshot => {
       this.survey = surveySnapshot.val();
     });
