@@ -148,63 +148,57 @@ export class SurveyListPage {
   }
 
   fetchSurveys(){
+    var i;
+    var surv = [];
+
+    firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist')
+    .on('value', survSnapshot => {
+      this.mySurveys_ids = survSnapshot.val();
+
+      this.mySurveys = [];
+      for( i in this.mySurveys_ids){
+        surv = this.configService.getSurveyData(this.mySurveys_ids[i]);
+        if(surv){
+          surv['type'] = '';
+          surv['type'] = 'mySurvey';
+          surv['num_responses'] = 0;
+          surv['num_responses'] = this.configService.getNumResponses(this.mySurveys_ids[i]);
+
+          this.mySurveys.push(surv);
+        }
+      }
+
+      this.mySurveys.reverse();
+    });
+
+    firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/invitations')
+    .on('value', survSnapshot => {
+      var all_invitations = survSnapshot.val();
+
+      this.survey_invites_ids = [];
+      for ( var invit in all_invitations){
+        this.survey_invites_ids.push(all_invitations[invit]['s_id']);
+        this.invite_status[invit] = all_invitations[invit]['status'];
+      }
+
+      this.survey_invites = [];
+      for(i in this.survey_invites_ids){
+        surv = this.configService.getSurveyData(this.survey_invites_ids[i]);
+        if(surv){
+          surv['type'] = '';
+          surv['type'] = 'invites';
+          this.survey_invites.push(surv);
+        }
+      }
+
+      if(this.survey_invites && this.invite_status){
+        this.survey_invites.reverse();
+      }
+    });
+
     var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
-
-    try{
-      if(connectedToFirebaseFlag){
-        var i;
-        var surv = [];
-
-        firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/surveylist')
-        .on('value', survSnapshot => {
-          this.mySurveys_ids = survSnapshot.val();
-
-          this.mySurveys = [];
-          for( i in this.mySurveys_ids){
-            surv = this.configService.getSurveyData(this.mySurveys_ids[i]);
-            if(surv){
-              surv['type'] = '';
-              surv['type'] = 'mySurvey';
-              surv['num_responses'] = 0;
-              surv['num_responses'] = this.configService.getNumResponses(this.mySurveys_ids[i]);
-
-              this.mySurveys.push(surv);
-            }
-          }
-
-          this.mySurveys.reverse();
-        });
-
-        firebase.database().ref('/user_surveys/'+this.fire.auth.currentUser.uid+'/invitations')
-        .on('value', survSnapshot => {
-          var all_invitations = survSnapshot.val();
-
-          this.survey_invites_ids = [];
-          for ( var invit in all_invitations){
-            this.survey_invites_ids.push(all_invitations[invit]['s_id']);
-            this.invite_status[invit] = all_invitations[invit]['status'];
-          }
-
-          this.survey_invites = [];
-          for(i in this.survey_invites_ids){
-            surv = this.configService.getSurveyData(this.survey_invites_ids[i]);
-            if(surv){
-              surv['type'] = '';
-              surv['type'] = 'invites';
-              this.survey_invites.push(surv);
-            }
-          }
-
-          if(this.survey_invites && this.invite_status){
-            this.survey_invites.reverse();
-          }
-        });
-      }
-      else{
-        // getting the survey data from localDB if not connected to Firebase
-        this.loadSurveysFromLocalDB();
-      }
-    }catch(e){
+    if(!connectedToFirebaseFlag){
+      // getting the survey data from localDB if not connected to Firebase
       this.loadSurveysFromLocalDB();
     }
   }
