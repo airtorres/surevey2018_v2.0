@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Platform } from 'ionic-angular';
 
-import { Http } from '@angular/http';
 import { File } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import * as papa from 'papaparse';
+
+import  * as FileSaver  from 'file-saver';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
@@ -43,8 +44,8 @@ export class ResultsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	private alertCtrl: AlertController,
     public configService: ConfigurationProvider,
-  	private file: File, private fileTransfer: FileTransfer,
-  	private http: Http) {
+  	private file: File,
+    public platform: Platform) {
 
   	if(this.navParams.get('responses')){
   		this.responses = this.navParams.get('responses');
@@ -309,49 +310,53 @@ export class ResultsPage {
   }
 
   downloadCSV(){
-  	// SAMPLE ONLY - But I'd already deleted the sample.csv file.
-  	// this.http.get('assets/sample.csv').subscribe(
-  	// 	data => this.extractData(data),
-  	// 	err => this.handleError(err)
-  	// );
-  	// let csvData = data['_body'] || '';
-		// let parseData = papa.parse(csvData).data;
+    var csvHeader = [];
+    for ( var q in this.questions){
+      csvHeader.push(this.questions[q]['message']);
+    }
 
-  	var csvHeader = [];
-  	for ( var q in this.questions){
-  		csvHeader.push(this.questions[q]['message']);
-  	}
+    // getting rows of results
+    var resultsData = [];
+    for ( var r in this.responses){
+      resultsData.push(this.responses[r]['answers']);
+    }
 
-  	// getting rows of results
-  	var resultsData = [];
-  	for ( var r in this.responses){
-  		resultsData.push(this.responses[r]['answers']);
-  	}
+    let csv = papa.unparse({
+      fields: csvHeader,
+      data: resultsData
+    });
 
-  	let csv = papa.unparse({
-  		fields: csvHeader,
-  		data: resultsData
-  	});
+    var filename = this.survey_title + " - RESULTS.csv";
+    // var filename = this.survey_title + " - RESULTS.xls"; // binary file format
+    let blob = new Blob([csv]);
+    // {type: 'application/octet-stream'}
+    // { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;' }
 
-  	// this.file.checkDir(this.file.dataDirectory, 'mydir').then(_ =>
-  	// 	console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist');
-  	// );
-  	// cordova.file.externalRootDirectory + '/Download/'
-	
-  	// generating CSV file using Blob
-  	var blob = new Blob([csv]);
-		var filename = this.survey_title + " - RESULTS.csv";
+  	if (this.platform.is('android')) {
+        console.log("ANDROID");
 
-  	// this.file.createFile(cordova.file.externalRootDirectory + '/Download/', filename, false);
-  	// BELOW: use to download CSV on mobile
-  	// this.file.writeFile(this.file.externalRootDirectory + '/Download/', filename, blob, {replace: true});
+        let filePath = this.file.externalRootDirectory? this.file.externalRootDirectory : this.file.cacheDirectory;
+        // let filePath = cordova.file.externalDataDirectory;
 
-  	var a = window.document.createElement("a");
-  	a.href = window.URL.createObjectURL(blob);
-  	a.download = filename;
-  	document.body.appendChild(a);
-  	a.click();
-		document.body.removeChild(a);
+        this.file.writeFile(filePath, filename, blob, {replace: false}).then(()=> {
+            console.log("Donwloaded: "+filePath);
+        }).catch( err =>{
+          console.log(err);
+        });
+
+        // FileSaver.saveAs(blob, filename);
+    }else{
+      console.log("NOTTTT ANDROID");
+
+      // FileSaver.saveAs(blob, filename);
+    }
+
+    var a = window.document.createElement("a");
+    a.href = window.URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   showInternetConnectionError(){

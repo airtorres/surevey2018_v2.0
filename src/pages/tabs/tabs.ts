@@ -5,12 +5,9 @@ import { SurveyListPage } from '../survey-list/survey-list';
 import { NotificationPage } from '../notification/notification';
 import { ChatBoxPage } from '../chat-box/chat-box';
 
-import { ConfigurationProvider } from '../../providers/configuration/configuration';
-
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
-import { Storage } from '@ionic/storage';
 
 @Component({
   templateUrl: 'tabs.html'

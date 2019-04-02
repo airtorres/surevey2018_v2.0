@@ -35,31 +35,24 @@ export class ChatBoxPage {
     public configService: ConfigurationProvider) {
 
     this.userId = this.fire.auth.currentUser.uid;
-    this.loadChatMessages();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatBoxPage');
+    this.loadChatMessages();
   }
 
   loadChatMessages(){
-    // check for Firebase connection
-    this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
-
-    if(this.connectedToFirebaseFlag){
-      firebase.database().ref('/chatmates/'+this.userId)
-      .on('value', chatmatesSnapshot => {
-        var allChatmates = chatmatesSnapshot.val();
-        if (allChatmates){
-          this.chatmatelist = [];
-          for (var id in allChatmates){
-            this.chatmatelist.push(allChatmates[id]);
-          }
+    firebase.database().ref('/chatmates/'+this.userId)
+    .on('value', chatmatesSnapshot => {
+      var allChatmates = chatmatesSnapshot.val();
+      if (allChatmates){
+        this.chatmatelist = [];
+        for (var id in allChatmates){
+          this.chatmatelist.push(allChatmates[id]);
         }
-      });
-    }else{
-      console.log("SHOW NO INTERNET CONNECTION MSG");
-    }
+      }
+    });
   }
 
   getChatmateName(cid){
@@ -105,6 +98,15 @@ export class ChatBoxPage {
 
   gotoNewMsg(){
     this.navCtrl.push(NewMsgPage, {});
+  }
+
+  ionViewDidEnter(){
+    // check for Firebase connection
+    this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+
+    if(!this.connectedToFirebaseFlag){
+      this.configService.displayToast('Cannot load messages. No Internet Connection.');
+    }
   }
 
 }
