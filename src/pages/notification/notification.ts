@@ -90,7 +90,15 @@ export class NotificationPage {
 
   answerInvi(survey) {
     // check for Firebase connection
-    console.log('Answer');
+    var surveyID = survey['s_id'];
+    var item = this.configService.getSurveyData(surveyID);
+
+    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    if(connectedToFirebaseFlag && survey['s_status'] != 'completed'){
+      this.navCtrl.push(AnswerSurveyPage, {'item' : item, 'viewOnly': false});
+    }else if(survey['s_status'] != 'completed'){
+      this.configService.showSimpleConnectionError();
+    }
   }
 
   deleteInvi(survey) {
