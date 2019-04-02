@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 
 import { File } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
@@ -42,7 +42,6 @@ export class ResultsPage {
   results = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-  	private alertCtrl: AlertController,
     public configService: ConfigurationProvider,
   	private file: File,
     public platform: Platform) {
@@ -115,7 +114,7 @@ export class ResultsPage {
 	  		this.showPieChart(idx);
 	  	}
 	  	catch (e){
-	  		this.showInternetConnectionError();
+	  		this.configService.showSimpleConnectionError();
 	  	}
   	}
   	else{
@@ -216,7 +215,7 @@ export class ResultsPage {
 	    chart.draw(data, options);
 	}
 	catch (e){
-		this.showInternetConnectionError();
+		this.configService.showSimpleConnectionError();
 	}
   }
 
@@ -255,7 +254,7 @@ export class ResultsPage {
 	    chart.draw(data, options);
 	}
 	catch (e){
-		this.showInternetConnectionError();
+		this.configService.showSimpleConnectionError();
 	}
   }
 
@@ -297,7 +296,7 @@ export class ResultsPage {
 	    chart.draw(data, options);
 	}
 	catch (e){
-		this.showInternetConnectionError();
+		this.configService.showSimpleConnectionError();
 	}
   }
 
@@ -357,15 +356,6 @@ export class ResultsPage {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-  }
-
-  showInternetConnectionError(){
-  	let alert = this.alertCtrl.create({
-      title: 'Oppss!',
-      message: 'You must be connected to the internet.',
-      buttons: ['OK']
-    });
-    alert.present();
   }
 
 }
