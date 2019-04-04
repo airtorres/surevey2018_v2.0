@@ -21,9 +21,12 @@ export class TabsPage {
   tab3Root = NotificationPage;
   tab4Root = ChatBoxPage;
 
+  userID;
   public badgeCount:number = 0;
 
   constructor(private fire: AngularFireAuth, public configService: ConfigurationProvider) {
+
+    this.userID = this.fire.auth.currentUser.uid;
     this.checkChildAdded();
   }
 
