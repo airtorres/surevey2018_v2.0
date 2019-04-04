@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, LoadingController } from 'ionic-angular';
 
 import { File } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
@@ -47,6 +47,7 @@ export class ResultsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public configService: ConfigurationProvider,
   	private file: File,
+    public loadingCtrl: LoadingController,
     public platform: Platform) {
 
   	if(this.navParams.get('responses')){
@@ -367,6 +368,17 @@ export class ResultsPage {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+
+    let loadingDownload = this.loadingCtrl.create({
+      content: 'Downloading...'
+    });
+
+    loadingDownload.present().then(() => {});
+
+    setTimeout(() => {
+      loadingDownload.dismiss();
+      this.configService.displayToast('Download Complete!');
+    }, 1000);
   }
 
 }
