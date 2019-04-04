@@ -32,6 +32,18 @@ export class ConfigurationProvider {
   	private alertCtrl: AlertController) {
 
     console.log('Hello ConfigurationProvider Provider');
+
+    var that = this;
+    firebase.database().ref('/')
+    .child('.info/connected').on('value', function(connectedSnap) {
+      if (connectedSnap.val() === true) {
+        console.log("Connected to Firebase.");
+        that.connectedToFirebaseFlag = true;          
+      }else {
+        console.log("Error connecting to Firebase.");
+        that.connectedToFirebaseFlag = false;
+      }
+    });
   }
 
   displayToast(msg){
@@ -157,26 +169,7 @@ export class ConfigurationProvider {
   }
 
   isConnectedToFirebase(){
-  	// check for Firebase connection
-  	console.log("checking for connection...");
-    var connectedToFirebaseFlag = false;
-    try{
-      const firebaseRef:firebase.database.Reference = firebase.database().ref('/');
-      firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          console.log("Connected to Firebase.");
-          connectedToFirebaseFlag = true;          
-        }else {
-          console.log("Error connecting to Firebase.");
-          connectedToFirebaseFlag = false;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
-
-    this.connectedToFirebaseFlag = connectedToFirebaseFlag;
-    return connectedToFirebaseFlag;
+    return this.connectedToFirebaseFlag;
   }
 
   getUserDataFromLocalDB(){

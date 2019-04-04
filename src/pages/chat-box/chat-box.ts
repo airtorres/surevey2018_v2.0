@@ -102,7 +102,7 @@ export class ChatBoxPage {
 
   ionViewDidEnter(){
     // check for Firebase connection
-    this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    this.connectedToFirebaseFlag = this.configService.connectedToFirebaseFlag;
 
     if(!this.connectedToFirebaseFlag){
       this.configService.displayToast('Cannot load messages. No Internet Connection.');

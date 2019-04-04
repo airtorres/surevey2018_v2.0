@@ -47,6 +47,7 @@ export class ResultsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public configService: ConfigurationProvider,
   	private file: File,
+    public transfer: FileTransfer,
     public loadingCtrl: LoadingController,
     public platform: Platform) {
 
@@ -343,24 +344,40 @@ export class ResultsPage {
     // {type: 'application/octet-stream'}
     // { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;' }
 
-  	if (this.platform.is('android')) {
-        console.log("ANDROID");
+  	// if (this.platform.is('android')) {
+   //      console.log("ANDROID");
 
-        let filePath = this.file.externalRootDirectory? this.file.externalRootDirectory : this.file.cacheDirectory;
-        // let filePath = cordova.file.externalDataDirectory;
+   //      let filePath = this.file.externalRootDirectory? this.file.externalRootDirectory : this.file.cacheDirectory;
+   //      // let filePath = cordova.file.externalDataDirectory;
 
-        this.file.writeFile(filePath, filename, blob, {replace: false}).then(()=> {
-            console.log("Donwloaded: "+filePath);
-        }).catch( err =>{
-          console.log(err);
-        });
+   //      this.file.writeFile(filePath, filename, blob, {replace: false}).then(()=> {
+   //          console.log("Donwloaded: "+filePath);
+   //      }).catch( err =>{
+   //        console.log(err);
+   //      });
 
-        // FileSaver.saveAs(blob, filename);
+   //      // FileSaver.saveAs(blob, filename);
+   //  }else{
+   //    console.log("NOTTTT ANDROID");
+
+   //    // FileSaver.saveAs(blob, filename);
+   //  }
+
+    let path = null;
+
+    if(this.platform.is('android')){
+      path = this.file.documentsDirectory;
     }else{
-      console.log("NOTTTT ANDROID");
-
-      // FileSaver.saveAs(blob, filename);
+      path = this.file.dataDirectory;
     }
+
+    const transfer = this.transfer.create();
+    transfer.download('file:///android_asset/www/assets/', path+filename).then( entry=>{
+      let url = entry.toURL();
+      // this.document.viewDocument(url, 'application/pdf',{});
+    });
+
+    // console.log(this.file.getAbsolutePath());
 
     var a = window.document.createElement("a");
     a.href = window.URL.createObjectURL(blob);
