@@ -140,16 +140,18 @@ export class CreateSurveyPage {
     var equal = true;
     if(mysurveylist){
       for (var i in mysurveylist){
-        const survey:firebase.database.Reference = firebase.database().ref('/surveys/'+mysurveylist[i]);
-          survey.once('value', surveySnapshot => {
-          var isEqualTitle = surveySnapshot.child('title').val() == surveyTitle;
-          if (isEqualTitle){
-            equal = false;
+        if(mysurveylist[i] != this.s_id){
+          const survey:firebase.database.Reference = firebase.database().ref('/surveys/'+mysurveylist[i]);
+            survey.once('value', surveySnapshot => {
+            var isEqualTitle = surveySnapshot.child('title').val() == surveyTitle;
+            if (isEqualTitle){
+              equal = false;
+            }
+          });
+          // break when duplicate is already found.
+          if (!equal){
+            break;
           }
-        });
-        // break when duplicate is already found.
-        if (!equal){
-          break;
         }
       }
     }
@@ -390,7 +392,7 @@ export class CreateSurveyPage {
               text: 'Save',
               handler: () => {
                 console.log('User saved data');
-                this.saveChanges(false);
+                this.canSave(false);
                 this.userCanLeave = true;
                 resolve();
               }
