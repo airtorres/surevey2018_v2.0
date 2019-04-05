@@ -62,23 +62,21 @@ export class ResultsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ResultsPage');
-    this.load();
-  }
-
-  load(){
-    // this.survey = this.configService.getSurveyData(this.s_id);
 
     const survey:firebase.database.Reference = firebase.database().ref('/surveys/'+this.s_id);
       survey.on('value', surveySnapshot => {
       this.survey = surveySnapshot.val();
-    });
 
+      this.survey_title = this.survey['title'];
+      this.description = this.survey['description'];
+      this.questions = this.survey['questions'];
+    });
     console.log(this.survey);
 
-    this.survey_title = this.survey['title'];
-    this.description = this.survey['description'];
-    this.questions = this.survey['questions'];
+    this.load();
+  }
 
+  load(){
     var q_to_opt = [];
     for ( var q in this.questions){
       // setting default chart
@@ -344,38 +342,38 @@ export class ResultsPage {
     // {type: 'application/octet-stream'}
     // { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;' }
 
-  	// if (this.platform.is('android')) {
-   //      console.log("ANDROID");
+  	if (this.platform.is('android')) {
+        console.log("ANDROID");
 
-   //      let filePath = this.file.externalRootDirectory? this.file.externalRootDirectory : this.file.cacheDirectory;
-   //      // let filePath = cordova.file.externalDataDirectory;
+        let filePath = this.file.externalRootDirectory? this.file.externalRootDirectory : this.file.cacheDirectory;
+        // let filePath = cordova.file.externalDataDirectory;
 
-   //      this.file.writeFile(filePath, filename, blob, {replace: false}).then(()=> {
-   //          console.log("Donwloaded: "+filePath);
-   //      }).catch( err =>{
-   //        console.log(err);
-   //      });
+        this.file.writeFile(filePath, filename, blob, {replace: false}).then(()=> {
+            console.log("Donwloaded: "+filePath);
+        }).catch( err =>{
+          console.log(err);
+        });
 
-   //      // FileSaver.saveAs(blob, filename);
-   //  }else{
-   //    console.log("NOTTTT ANDROID");
-
-   //    // FileSaver.saveAs(blob, filename);
-   //  }
-
-    let path = null;
-
-    if(this.platform.is('android')){
-      path = this.file.documentsDirectory;
+        // FileSaver.saveAs(blob, filename);
     }else{
-      path = this.file.dataDirectory;
+      console.log("NOTTTT ANDROID");
+
+      // FileSaver.saveAs(blob, filename);
     }
 
-    const transfer = this.transfer.create();
-    transfer.download('file:///android_asset/www/assets/', path+filename).then( entry=>{
-      let url = entry.toURL();
-      // this.document.viewDocument(url, 'application/pdf',{});
-    });
+    // let path = null;
+
+    // if(this.platform.is('android')){
+    //   path = this.file.documentsDirectory;
+    // }else{
+    //   path = this.file.dataDirectory;
+    // }
+
+    // const transfer = this.transfer.create();
+    // transfer.download('file:///android_asset/www/assets/', path+filename).then( entry=>{
+    //   let url = entry.toURL();
+    //   // this.document.viewDocument(url, 'application/pdf',{});
+    // });
 
     // console.log(this.file.getAbsolutePath());
 

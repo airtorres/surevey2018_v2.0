@@ -158,9 +158,6 @@ export class AnswerSurveyPage {
           that.configService.displayToast("Success! Response recorded.");
         }
       });
-
-      // pop this page
-      this.navCtrl.pop();
     }catch(e){
       console.log(e);
     }
@@ -229,11 +226,11 @@ export class AnswerSurveyPage {
   }
 
   submitResponse(){
-    let loading = this.loadingCtrl.create({
+    let loadingSubmitting = this.loadingCtrl.create({
       content: 'Please wait...'
     });
 
-    loading.present().then(() => {
+    loadingSubmitting.present().then(() => {
 
       var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
       var bindSelf = this;
@@ -278,23 +275,23 @@ export class AnswerSurveyPage {
             firebase.database().ref("/responses/"+this.s_id+"/"+newUserKey).set(this.response, function(error){
               if(error){
                 console.log("Not successful pushing response to list of responses."+error);
-                loading.dismiss();
+                loadingSubmitting.dismiss();
                 that.navCtrl.pop();
               }else{
                 console.log("Successfully added to responses!");
-                loading.dismiss();
+                loadingSubmitting.dismiss();
                 that.configService.displayToast("Success! Response recorded.");
                 that.navCtrl.pop();
               }
             });
           }catch(e){
             console.log(e);
-            loading.dismiss();
+            loadingSubmitting.dismiss();
             this.navCtrl.pop();
           }
         }else{
           this.saveToLocalDB(this.response);
-          loading.dismiss();
+          loadingSubmitting.dismiss();
         }
       }
       else{
@@ -309,14 +306,15 @@ export class AnswerSurveyPage {
                 bindSelf.notification['s_status'] = 'completed';
                 firebase.database().ref('/notifications/'+ bindSelf.thisSurvey['author_id'] + '/' + bindSelf.fire.auth.currentUser.uid).set(bindSelf.notification);
                 console.log("Successfully added to responses!");
+
+                // update survey status in notifications
+                this.UpdateNotifSurveyStatus();
+                // update USER_SURVEYS invitation to COMPLETED
+                this.UpdateInvitationStatus();
+                // pop this page
+                this.navCtrl.pop();
               }
             });
-
-
-            // update survey status in notifications
-            this.UpdateNotifSurveyStatus();
-            // update USER_SURVEYS invitation to COMPLETED
-            this.UpdateInvitationStatus();
           }catch(e){
             console.log(e);
           }
@@ -324,7 +322,7 @@ export class AnswerSurveyPage {
         else{
           this.showNetworkError();
         }
-        loading.dismiss();
+        loadingSubmitting.dismiss();
       }
     });//endof loadingCtrl
   }

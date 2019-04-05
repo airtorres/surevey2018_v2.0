@@ -41,10 +41,9 @@ export class SurveySummaryPage {
     private storage: Storage,
     public configService: ConfigurationProvider,
     private alertCtrl: AlertController,
-    public loadingCtrl: LoadingController) {
+    public loadingForResultsCtrl: LoadingController) {
 
     this.thisSurvey = this.navParams.get('item');
-    this.loadData();
     
     this.storage.get('currentUser').then(x =>{
       this.currUser = x;
@@ -59,9 +58,6 @@ export class SurveySummaryPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SurveySummaryPage');
-  }
-
-  loadData(){
     this.title = this.thisSurvey['title'];
     this.isActive = this.thisSurvey['isActive'];
     this.s_id = this.thisSurvey['id'];
@@ -80,14 +76,14 @@ export class SurveySummaryPage {
   }
 
   gotoSendInvitePage(){
-    let loadingUsers = this.loadingCtrl.create({
+    let loadingUsers = this.loadingForResultsCtrl.create({
       content: 'Please wait...'
     });
 
     if(this.configService.isConnectedToFirebase()){
       loadingUsers.present().then(() => {
-        this.navCtrl.push(SendInvitePage, {s_id: this.s_id, title: this.title, author: this.author});
         loadingUsers.dismiss();
+        this.navCtrl.push(SendInvitePage, {s_id: this.s_id, title: this.title, author: this.author});
       });
     }
     else{
@@ -110,25 +106,13 @@ export class SurveySummaryPage {
 
   gotoResultsPage(){
     if(this.configService.isConnectedToFirebase()){
-      let loadingForResults = this.loadingCtrl.create({
+      let loadingForResults = this.loadingForResultsCtrl.create({
         content: 'Please wait...'
       });
 
-      // WHEN USING CONFIGSERVICE METHOD
-      // loadingForResults.present();
-      // setTimeout(() => {
-      //   this.thisResponses = this.configService.getResponses(this.s_id);        
-      // }, 1000);
-
-      // setTimeout(() => {
-      //   console.log(this.thisResponses);
-      //   loadingForResults.dismiss();
-      //   this.navCtrl.push(ResultsPage, {s_id: this.s_id, responses: this.thisResponses});
-      // }, 1000);
-
       loadingForResults.present().then(() => {
         const s:firebase.database.Reference = firebase.database().ref('/responses/'+this.s_id);
-        s.on('value', responsesSnapshot => {
+        s.once('value', responsesSnapshot => {
           if(responsesSnapshot.val()){
             this.thisResponses = responsesSnapshot.val();
             loadingForResults.dismiss();
@@ -195,7 +179,6 @@ export class SurveySummaryPage {
 
   public ionViewWillEnter(){
     console.log("entering survey-summary page ...");
-    this.loadData();
   }
 
 }
