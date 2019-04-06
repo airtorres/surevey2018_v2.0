@@ -234,6 +234,7 @@ export class AnswerSurveyPage {
 
       var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
       var bindSelf = this;
+      var date = new Date();
 
       console.log("submitting response ...")
 
@@ -248,6 +249,7 @@ export class AnswerSurveyPage {
       this.notification['s_title'] = this.thisSurvey['title'];
       this.notification['s_respondent'] = this.currUser;
       this.notification['s_respondent_id'] = this.fire.auth.currentUser.uid;
+      this.notification['timestamp'] = date.getTime();
 
 
       for( var q in this.questions){

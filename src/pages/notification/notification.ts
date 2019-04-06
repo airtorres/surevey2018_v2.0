@@ -47,23 +47,47 @@ export class NotificationPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad NotificationPage');
-    console.log(this.userID);
     this.fetchNotifFromFirebase();
   }
 
+  ionViewDidEnter() {
+    this.updateIsSeen();
+  }
+
   fetchNotifFromFirebase() {
-    const userNotif:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID);
-    userNotif.on('value', allUserNotif => {
-      this.user_notif = allUserNotif.val();
+    firebase.database().ref('/notifications/'+this.userID).orderByChild('timestamp').on('value', allUserNotifRef => {
+      this.user_notif = allUserNotifRef.val();
 
       this.allUserNotif=[];
-      console.log("surveys:", this.user_notif);
       for (var i in this.user_notif) {
         this.allUserNotif.push(this.user_notif[i]);
       }
       this.allUserNotif.reverse();
     });
-    console.log(this.allUserNotif);
+  }
+
+  showSubmitError(){
+    console.log("ERROR");
+  }
+
+
+  updateIsSeen() {
+    var that = this;
+    const userNotifIsSeenRef:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID);
+    userNotifIsSeenRef.on('value', allUserNotifSnap => {
+      var notif = allUserNotifSnap.val();
+      for (var n in notif) {
+        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+n+"/isSeen").set("true", function(error){
+          if(error){
+            console.log("Not successful updating isSeen to True."+error);
+            that.showSubmitError();
+          }else{
+            console.log("Successfully updated: isSeen to True");
+          }
+        });
+      }
+
+    });
   }
 
   showItemOption(notif){
@@ -88,6 +112,22 @@ export class NotificationPage {
     actionSheet.present();
   }
 
+  updateIsSeenStatusToTrue(surveyID){
+    try{
+      var that = this;
+      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+surveyID+"/isSeen").set("true", function(error){
+        if(error){
+          console.log("Not successful updating isSeen to True."+error);
+          that.showSubmitError();
+        }else{
+          console.log("Successfully updated: isSeen to True");
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   answerInvi(survey) {
     // check for Firebase connection
     var surveyID = survey['s_id'];
@@ -95,6 +135,7 @@ export class NotificationPage {
 
     var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
     if(connectedToFirebaseFlag && survey['s_status'] != 'completed'){
+      this.updateIsSeenStatusToTrue(surveyID);
       this.navCtrl.push(AnswerSurveyPage, {'item' : item, 'viewOnly': false});
     }else if(survey['s_status'] != 'completed'){
       this.configService.showSimpleConnectionError();

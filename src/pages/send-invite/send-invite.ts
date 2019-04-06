@@ -175,6 +175,7 @@ export class SendInvitePage {
   sendInvitation(){
     console.log(this.selected_users);
     var bindSelf = this;
+    var date = new Date();
 
     this.thisSurvey['s_id'] = this.s_id;
 
@@ -182,6 +183,7 @@ export class SendInvitePage {
     this.notification['s_author'] = this.author;
     this.notification['s_author_id'] = this.userID;
     this.notification['s_title'] = this.title;
+    this.notification['timestamp'] = date.getTime();
 
     var successFlag = true;
     var surveyInvites = [];
@@ -205,6 +207,7 @@ export class SendInvitePage {
           }
           console.log(survey_invites_ids)
           this.notification['s_respondent'] = this.all_users[u]['email'];
+          this.notification['s_respondent_id'] = u;
 
           if (survey_invites_ids.indexOf(survey_id) !== -1) {
             console.log("You're not allowed to send the survey invitation twice");

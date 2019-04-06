@@ -23,6 +23,7 @@ export class TabsPage {
 
   userID;
   public badgeCount:number = 0;
+  userNotifs = [];
 
   constructor(private fire: AngularFireAuth, public configService: ConfigurationProvider) {
 
@@ -32,8 +33,27 @@ export class TabsPage {
 
   checkChildAdded() {
     const allUserNotifRef:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID);
-    allUserNotifRef.on('child_added', allUserNotifSnapshot => {
-      this.badgeCount ++;
+    allUserNotifRef.on('value', allUserNotifSnapshot => {
+      var notif = allUserNotifSnapshot.val();
+      // console.log(notif);
+      // if (notif['isSeen'] == false) {
+      //   this.badgeCount ++;
+      // }
+      this.userNotifs = [];
+      this.badgeCount = 0;
+      for (var i in notif) {
+        this.userNotifs.push(notif[i]);
+      }
+      console.log(notif);
+
+      for (var n in this.userNotifs) {
+        if (this.userNotifs[n]['isSeen'] == false) {
+          this.badgeCount++;
+        }
+        else {
+          this.badgeCount = 0;
+        }
+      }
     });
 
 
