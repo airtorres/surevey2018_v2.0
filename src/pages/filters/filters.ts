@@ -106,8 +106,6 @@ export class FiltersPage {
         this.all_users_email.push(this.all_users[e]['email']);
       }
     }
-
-    console.log(this.all_users_email);
   }
 
 	getCountry() {

@@ -154,6 +154,16 @@ export class SendInvitePage {
         this.selected_users.push(email);
       }
     }
+
+    console.log(this.selected_users);
+
+    if ( (this.selected_users.length < this.numPersons && this.selAll == true) || (this.selected_users.length < this.all_users_email.length && this.selAll == true) ) {
+      this.selAll = false;
+    }
+    else if ( (this.selected_users.length == this.numPersons) || (this.selected_users.length == this.all_users_email.length) ) {
+      this.selAll = true;
+    }
+    
   }
 
   selectAllUsers() {
