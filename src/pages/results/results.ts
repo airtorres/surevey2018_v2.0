@@ -8,20 +8,11 @@ import * as papa from 'papaparse';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
 
-import  * as FileSaver  from 'file-saver';
-
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
-
-/**
- * Generated class for the ResultsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
  declare var google;
  // google.charts.load('current', {packages: ['table']});
- declare var cordova: any;
+ // declare var cordova: any;
 
 @IonicPage()
 @Component({
@@ -135,8 +126,6 @@ export class ResultsPage {
   				this.openAnswers[idx].push(this.responses[ans]['answers'][idx]);
   			}
   		}
-
-  		console.log("OpenEndedAnswers: "+this.openAnswers);
   	}
 
   	var resultsDiv = document.getElementById('resDiv_'+idx);
@@ -226,6 +215,7 @@ export class ResultsPage {
 	    chart.draw(data, options);
 	}
 	catch (e){
+    console.log(e);
 		this.configService.showSimpleConnectionError();
 	}
   }
@@ -265,6 +255,7 @@ export class ResultsPage {
 	    chart.draw(data, options);
 	}
 	catch (e){
+    console.log(e);
 		this.configService.showSimpleConnectionError();
 	}
   }
@@ -307,6 +298,7 @@ export class ResultsPage {
 	    chart.draw(data, options);
 	}
 	catch (e){
+    console.log(e);
 		this.configService.showSimpleConnectionError();
 	}
   }
@@ -320,6 +312,12 @@ export class ResultsPage {
   }
 
   downloadCSV(){
+    let loadingDownload = this.loadingCtrl.create({
+      content: 'Downloading...'
+    });
+
+    loadingDownload.present().then(() => {});
+
     var csvHeader = [];
     for ( var q in this.questions){
       csvHeader.push(this.questions[q]['message']);
@@ -337,45 +335,28 @@ export class ResultsPage {
     });
 
     var filename = this.survey_title + " - RESULTS.csv";
-    // var filename = this.survey_title + " - RESULTS.xls"; // binary file format
+    // var filename2 = this.survey_title + " - TRY.xls"; // binary file format
     let blob = new Blob([csv]);
-    // {type: 'application/octet-stream'}
-    // { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;' }
 
   	if (this.platform.is('android')) {
         console.log("ANDROID");
 
-        let filePath = this.file.externalRootDirectory? this.file.externalRootDirectory : this.file.cacheDirectory;
-        // let filePath = cordova.file.externalDataDirectory;
+        try{
+          let filePath = this.file.externalRootDirectory? this.file.externalRootDirectory : this.file.cacheDirectory;
+          // let filePath = cordova.file.externalDataDirectory;
 
-        this.file.writeFile(filePath, filename, blob, {replace: false}).then(()=> {
+          this.file.writeFile(filePath, filename, blob, {replace: true}).then(()=> {
             console.log("Donwloaded: "+filePath);
-        }).catch( err =>{
-          console.log(err);
-        });
-
-        // FileSaver.saveAs(blob, filename);
+            loadingDownload.dismiss();
+          }).catch( err =>{
+            console.log(err);
+          });
+        }catch(error){
+          console.log(error);
+        }
     }else{
       console.log("NOTTTT ANDROID");
-
-      // FileSaver.saveAs(blob, filename);
     }
-
-    // let path = null;
-
-    // if(this.platform.is('android')){
-    //   path = this.file.documentsDirectory;
-    // }else{
-    //   path = this.file.dataDirectory;
-    // }
-
-    // const transfer = this.transfer.create();
-    // transfer.download('file:///android_asset/www/assets/', path+filename).then( entry=>{
-    //   let url = entry.toURL();
-    //   // this.document.viewDocument(url, 'application/pdf',{});
-    // });
-
-    // console.log(this.file.getAbsolutePath());
 
     var a = window.document.createElement("a");
     a.href = window.URL.createObjectURL(blob);
@@ -384,16 +365,12 @@ export class ResultsPage {
     a.click();
     document.body.removeChild(a);
 
-    let loadingDownload = this.loadingCtrl.create({
-      content: 'Downloading...'
-    });
-
-    loadingDownload.present().then(() => {});
-
-    setTimeout(() => {
-      loadingDownload.dismiss();
-      this.configService.displayToast('Download Complete!');
-    }, 1000);
+    if(loadingDownload){
+      setTimeout(() => {
+        loadingDownload.dismiss();
+        this.configService.displayToast('Download Complete!');
+      }, 1000);
+    }
   }
 
 }
