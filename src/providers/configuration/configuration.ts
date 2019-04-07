@@ -181,27 +181,6 @@ export class ConfigurationProvider {
     return this.userData;
   }
 
-  getUserData(userId){
-	const data:firebase.database.Reference = firebase.database().ref('/users/' + userId);
-    data.on('value', dataSnapshot => {
-    	this.userData = dataSnapshot.val();
-    });
-
-    // save to local storage
-    this.storage.set('thisUserData', this.userData);
-    return this.userData;
-  }
-
-  saveUsernameFromFirebaseToLocalDB(){
-  	if(this.isConnectedToFirebase()){
-  	  const uname:firebase.database.Reference = firebase.database().ref('/users/'+this.fire.auth.currentUser.uid);
-      uname.once('value', userSnapshot => {
-      	this.username = userSnapshot.val()['username'];
-        this.storage.set('username', userSnapshot.val()['username']);
-      });
-  	}
-  }
-
   getBuiltInTemplatesFromLocalDB(){
   	try{
 	  	this.storage.get('built_in_templates').then(templates =>{
@@ -400,7 +379,7 @@ export class ConfigurationProvider {
   getCountryStateCityDataFromFirebase(){
   	var countries = [];
   	const surv:firebase.database.Reference = firebase.database().ref('/country_state_city/');
-  	surv.on('value', countriesSnapshot => {
+  	surv.once('value', countriesSnapshot => {
   	  countries = countriesSnapshot.val();
   	});
 
@@ -460,7 +439,7 @@ export class ConfigurationProvider {
   	if(countryId && countryId != "Anywhere"){
 	  	if(this.isConnectedToFirebase()){
 			const s:firebase.database.Reference = firebase.database().ref('/country_state_city/'+countryId);
-			s.on('value', statesSnapshot => {
+			s.once('value', statesSnapshot => {
 				if(statesSnapshot.val()){
 			  		var temp = statesSnapshot.val();
 			  		states = temp;
@@ -537,16 +516,4 @@ export class ConfigurationProvider {
   }
 
 // ============= ENDOF COUNTRY_STATE_CITY ==========================================
-
-  getResponses(surveyId){
-  	var responses = [];
-  	const s:firebase.database.Reference = firebase.database().ref('/responses/'+surveyId);
-  	s.on('value', responsesSnapshot => {
-  	  if(responsesSnapshot.val()){
-  	    responses = responsesSnapshot.val();
-  	  }
-  	});
-  	return responses;
-  }
-
 }

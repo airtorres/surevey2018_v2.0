@@ -2,12 +2,14 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController, LoadingController } from 'ionic-angular';
 
 import * as firebase from 'firebase/app';
+import 'firebase/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { File } from '@ionic-native/file';
 import { FileChooser } from '@ionic-native/file-chooser';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
+import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the EditProfilePage page.
@@ -54,6 +56,7 @@ export class EditProfilePage {
 
   userCanLeave = false;
   exitFlag = false;
+  completeCountryStateCityData;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private alertCtrl: AlertController,
@@ -62,14 +65,17 @@ export class EditProfilePage {
   	private fire: AngularFireAuth,
   	public toastCtrl : ToastController,
     public loadingCtrl: LoadingController,
-    public configService: ConfigurationProvider) {
+    public configService: ConfigurationProvider,
+    private storage: Storage) {
 
   	this.userId = this.fire.auth.currentUser.uid;
-  	this.initializeProfileData();
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad EditProfilePage');   
+    console.log('ionViewDidLoad EditProfilePage');
+    this.loadCompleteCountryStateCityData();
+    this.getCountries();
+    this.initializeProfileData();
   }
 
   initializeProfileData(){
@@ -89,7 +95,6 @@ export class EditProfilePage {
       this.sex = this.userData['sex'];
       this.profession = this.userData['profession'];
       this.loadUserData();
-      this.getCountries();
     }
   }
 
@@ -102,15 +107,6 @@ export class EditProfilePage {
         this.bdate = this.userData['birthdate'];
       }
     } catch (error) { console.log(error); }
-    
-    
-    this.connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
-    if (this.connectedToFirebaseFlag) {
-      setTimeout(() => {
-        this.countries = this.configService.getAllCountryNames();
-      }, 1000);
-      console.log(this.countries);
-    }
 
     this.country = this.userData['country'];
 
@@ -120,8 +116,31 @@ export class EditProfilePage {
     this.city = this.userData['city'];
   }
 
+  loadCompleteCountryStateCityData(){
+    var completeCountriesData = [];
+    if(this.configService.isConnectedToFirebase()){
+      const surv:firebase.database.Reference = firebase.database().ref('/country_state_city/');
+      surv.on('value', countriesSnapshot => {
+        this.completeCountryStateCityData = countriesSnapshot.val();
+
+        // savetoLocalDB
+        this.storage.set('country_state_city', completeCountriesData);
+      });
+    }else{
+      this.storage.get('country_state_city').then(data =>{
+        if(data){
+          this.completeCountryStateCityData = data;
+        }
+      });
+    }
+  }
+
   getCountries(){
-    this.countries = this.configService.getAllCountryNames();
+    var countryNames = [];
+    for( var c in this.completeCountryStateCityData){
+      countryNames.push(c);
+    }
+    this.countries = countryNames;
   }
 
   getStates(countryId){

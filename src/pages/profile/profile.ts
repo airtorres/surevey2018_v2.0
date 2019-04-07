@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { EditProfilePage } from '../edit-profile/edit-profile';
@@ -6,13 +6,10 @@ import { EditProfilePage } from '../edit-profile/edit-profile';
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
 import { AngularFireAuth } from '@angular/fire/auth';
+import * as firebase from 'firebase/app';
+import 'firebase/database';
 
-/**
- * Generated class for the ProfilePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
@@ -20,29 +17,28 @@ import { AngularFireAuth } from '@angular/fire/auth';
   templateUrl: 'profile.html',
 })
 export class ProfilePage {
-
-  @ViewChild('firstname') firstname;
-  @ViewChild('lastname') lastname;
-  @ViewChild('username') username;
-
   userData = {};
   address = '';
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public configService: ConfigurationProvider,
-  	private fire: AngularFireAuth) {
-
-    if(this.configService.isConnectedToFirebase()){
-      this.userData = this.configService.getUserData(this.fire.auth.currentUser.uid);
-    }
-    else{
-      this.userData = this.configService.getUserDataFromLocalDB();
-    }
-    this.address = this.getAddress();
+  	private fire: AngularFireAuth,
+    private storage: Storage) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ProfilePage');
+
+    if(this.configService.isConnectedToFirebase()){
+      firebase.database().ref('/users/' + this.fire.auth.currentUser.uid)
+      .on('value', dataSnapshot => {
+        this.userData = dataSnapshot.val();
+      });
+    }else{
+      this.userData = this.configService.getUserDataFromLocalDB();
+    }
+
+    this.address = this.getAddress();
   }
 
   getAddress(){
@@ -69,12 +65,6 @@ export class ProfilePage {
   }
 
   public ionViewWillEnter(){
-    if(this.configService.isConnectedToFirebase()){
-      this.userData = this.configService.getUserData(this.fire.auth.currentUser.uid);
-    }
-    else{
-      this.userData = this.configService.getUserDataFromLocalDB();
-    }
     this.address = this.getAddress();
   }
 

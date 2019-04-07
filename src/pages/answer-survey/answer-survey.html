@@ -26,10 +26,6 @@
 		<p style="text-align: justify;">{{ description }}</p>
 	</div>
 
-	<!-- show this only if you know -->
-	<!-- <ion-input *ngIf="thisSurvey['author'] == currUser && viewOnly == false" placeholder="Name of Respondent/ Respondent Identifier" style="border-bottom: 1px solid gray;" #respondent_name></ion-input> -->
-	<!-- <ion-input placeholder="Enter text" style="border-bottom: 1px solid gray;"></ion-input> -->
-
 	<div *ngFor="let question of questions; let idx = index" class="question_items" id="qItem_{{idx}}">
 		<ion-label class="questions_labels" id="qMSg_{{idx}}" style="text-align: justify;" text-wrap>{{idx+1}}. {{ question['message'] }}
 			<span *ngIf="question['isRequired']" style="color: red">*</span>

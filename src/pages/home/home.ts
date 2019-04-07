@@ -52,7 +52,9 @@ export class HomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
-    this.configService.saveUsernameFromFirebaseToLocalDB();
+    this.loadSurveys();
+    this.configService.getBuiltInTemplates();
+    this.loadUserData();
   }
 
   saveLocalResponsesToFirebase(){
@@ -226,28 +228,29 @@ export class HomePage {
 
   loadUserData(){
      if(this.configService.isConnectedToFirebase()){
-      this.userData = this.configService.getUserData(this.fire.auth.currentUser.uid);
-      this.configService.saveUsernameFromFirebaseToLocalDB();
+      firebase.database().ref('/users/' + this.fire.auth.currentUser.uid)
+      .on('value', dataSnapshot => {
+        this.userData = dataSnapshot.val();
+
+        this.username = dataSnapshot.val()['username'];
+        this.storage.set('username', dataSnapshot.val()['username']);
+
+        // save to local storage
+        this.storage.set('thisUserData', this.userData);
+      });
     }
     else{
       this.userData = this.configService.getUserDataFromLocalDB();
+      this.storage.get('username').then(u =>{
+        this.username = u;
+      });
     }
-
-    this.storage.get('username').then(u =>{
-      this.username = u;
-    });
-  }
-
-  public ionViewDidEnter(){
-    console.log("entered home page ...");
-
-    this.loadSurveys();
-    this.loadUserData();
-    this.configService.getBuiltInTemplates();
   }
 
   public ionViewWillEnter(){
     console.log("entering home page ...");
+    this.loadSurveys();
+
     if(this.configService.isConnectedToFirebase()){
       this.saveLocalResponsesToFirebase();
     }
