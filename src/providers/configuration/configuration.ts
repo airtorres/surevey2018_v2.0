@@ -195,7 +195,7 @@ export class ConfigurationProvider {
   saveUsernameFromFirebaseToLocalDB(){
   	if(this.isConnectedToFirebase()){
   	  const uname:firebase.database.Reference = firebase.database().ref('/users/'+this.fire.auth.currentUser.uid);
-      uname.on('value', userSnapshot => {
+      uname.once('value', userSnapshot => {
       	this.username = userSnapshot.val()['username'];
         this.storage.set('username', userSnapshot.val()['username']);
       });

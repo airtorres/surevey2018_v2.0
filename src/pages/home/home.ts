@@ -48,9 +48,44 @@ export class HomePage {
     this.storage.get('currentUser').then(x =>{
       this.currentUser = x;
     });
+  }
 
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad HomePage');
+    this.configService.saveUsernameFromFirebaseToLocalDB();
+  }
+
+  saveLocalResponsesToFirebase(){
+    console.log("Saving Local Responses to Firebase ...");
     try{
-      this.configService.saveUsernameFromFirebaseToLocalDB();
+      this.storage.get('offline_responses').then(res =>{
+        if(res){
+          // for each surveyId
+          for( var survId in res){
+            console.log("SURVEY ID = "+survId);
+
+            // for each responses on this survey
+            for ( var responseIdx in res[survId]){
+              var newUserKey = firebase.database().ref().child('responses/'+survId).push().key;
+              try{
+                firebase.database().ref("/responses/"+survId+"/"+newUserKey).set(res[survId][responseIdx], function(error){
+                  if(error){
+                    console.log("Not successful pushing local response to list of responses.");
+                  }else{
+                    console.log("Local responses successfully added to responses!");
+                  }
+                });
+              }catch(e){
+                console.log(e);
+              }
+            }
+          }
+        }
+
+        setTimeout(() => {
+          this.storage.set('offline_responses', []);
+        }, 2000);
+      });
     }catch(e){
       console.log(e);
     }
@@ -213,6 +248,9 @@ export class HomePage {
 
   public ionViewWillEnter(){
     console.log("entering home page ...");
+    if(this.configService.isConnectedToFirebase()){
+      this.saveLocalResponsesToFirebase();
+    }
   }
 
   public ionViewWillLeave(){

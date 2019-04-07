@@ -191,6 +191,22 @@ export class AnswerSurveyPage {
       this.offline_responses[this.s_id].push(response);
     }
 
+    this.storage.get('mySurveys').then(mySurveys =>{
+      if(mySurveys){
+        for (var mySurv in mySurveys){
+          if(mySurveys[mySurv]['id'] == this.s_id){
+            var numresponses = mySurveys[mySurv]['num_responses'];
+
+            numresponses = numresponses + 1;
+            mySurveys[mySurv]['num_responses'] = numresponses;
+
+            this.storage.set('mySurveys', mySurveys);
+            break;
+          }
+        }
+      }
+    });
+
     this.storage.set('offline_responses', this.offline_responses);
     this.navCtrl.pop();
   }
@@ -269,7 +285,7 @@ export class AnswerSurveyPage {
       if (this.navParams.get('diff_respondent_flag')){
         // USE NEWLY GENERATED KEY for this unique user...
         var newUserKey = firebase.database().ref().child('responses/'+this.s_id).push().key;
-        this.response['respondent'] = this.respondent_name? this.respondent_name.value: newUserKey;
+        this.response['respondent'] = this.respondent_name? (this.respondent_name.value != ''? this.respondent_name.value : newUserKey): newUserKey;
 
         if(connectedToFirebaseFlag){
           try{
@@ -300,7 +316,8 @@ export class AnswerSurveyPage {
         // store response to firebase
         if(connectedToFirebaseFlag){
           try{
-            firebase.database().ref("/responses/"+this.s_id+"/"+this.fire.auth.currentUser.uid).set(this.response, function(error){
+            var myId = this.fire.auth.currentUser? this.fire.auth.currentUser.uid: this.currUser;
+            firebase.database().ref("/responses/"+this.s_id+"/"+myId).set(this.response, function(error){
               if(error){
                 console.log("Not successful pushing response to list of responses."+error);
                 this.showSubmitError();
@@ -316,15 +333,17 @@ export class AnswerSurveyPage {
                 // pop this page
                 this.navCtrl.pop();
               }
+              loadingSubmitting.dismiss();
             });
           }catch(e){
             console.log(e);
+            loadingSubmitting.dismiss();
           }
         }
         else{
           this.showNetworkError();
+          loadingSubmitting.dismiss();
         }
-        loadingSubmitting.dismiss();
       }
     });//endof loadingCtrl
   }

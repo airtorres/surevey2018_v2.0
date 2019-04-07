@@ -40,8 +40,7 @@ export class SurveyListPage {
   invite_status = {};
 
   drafts = [];
-  offline_responses = [];
-	
+  	
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public actionSheetController: ActionSheetController,
     private alertCtrl: AlertController,
@@ -59,16 +58,6 @@ export class SurveyListPage {
         this.drafts = d;
       }
     });
-
-    try{
-      this.storage.get('offline_responses').then(res =>{
-        if(res){
-          this.offline_responses = res;
-        }
-      });
-    }catch(e){
-      console.log(e);
-    }
 
     console.log(this.drafts);
   }
@@ -93,39 +82,6 @@ export class SurveyListPage {
       this.navCtrl.push(AnswerSurveyPage, {'item' : item, 'viewOnly': false});
     }else if(this.invite_status[item['id']] != 'completed'){
       this.configService.showSimpleConnectionError();
-    }
-  }
-
-  syncResponsesToFirebase(){
-    // check for Firebase connection
-   var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
-
-    if(connectedToFirebaseFlag){
-      for( var survId in this.offline_responses){
-        console.log(survId);
-        for( var resp in this.offline_responses[survId]){
-          var newUserKey = firebase.database().ref().child('responses/'+survId).push().key;
-          var thisResponse = this.offline_responses[survId][resp];
-          var successFlag = true;
-          console.log(thisResponse);
-          firebase.database().ref("/responses/"+survId+"/"+newUserKey).set(thisResponse, function(error){
-            if(error){
-              console.log("Not successful pushing response to list of responses."+error);
-              successFlag = false;
-            }else{
-              console.log("Successfully added to responses!");
-            }
-          });
-          if(successFlag){
-            // remove this response
-            this.offline_responses[survId].splice(resp,1);
-          }
-        }
-      }
-      console.log(this.offline_responses);
-      // TEMP ONLY
-      this.offline_responses = [];
-      this.storage.set('offline_responses', this.offline_responses);
     }
   }
 
@@ -303,9 +259,6 @@ export class SurveyListPage {
 
   public ionViewDidEnter(){
     console.log("yeah survey-list ...");
-
-    // save offline responses from localDB to Firebase
-    this.syncResponsesToFirebase();
   }
 
   public ionViewWillEnter() {
