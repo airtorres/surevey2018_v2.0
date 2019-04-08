@@ -199,7 +199,6 @@ export class NotificationPage {
 
 
     loading.present().then(() => {
-      var bindSelf = this;
       if (notif['type'] == 'invitation') {
         firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+notif['s_id']).remove(
         function(error) {

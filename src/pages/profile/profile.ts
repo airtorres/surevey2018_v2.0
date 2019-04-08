@@ -9,8 +9,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
 
-import { Storage } from '@ionic/storage';
-
 @IonicPage()
 @Component({
   selector: 'page-profile',
@@ -22,8 +20,7 @@ export class ProfilePage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public configService: ConfigurationProvider,
-  	private fire: AngularFireAuth,
-    private storage: Storage) {
+  	private fire: AngularFireAuth) {
   }
 
   ionViewDidLoad() {

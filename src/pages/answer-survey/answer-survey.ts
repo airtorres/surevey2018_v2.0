@@ -243,7 +243,7 @@ export class AnswerSurveyPage {
 
   submitResponse(){
     let loadingSubmitting = this.loadingCtrl.create({
-      content: 'Please wait...'
+      content: 'Submitting response'
     });
 
     loadingSubmitting.present().then(() => {
@@ -280,6 +280,8 @@ export class AnswerSurveyPage {
         }
       }
 
+      var that = this;
+
       // setting the respondents name through 'manual' input
       // STORE to localDB
       if (this.navParams.get('diff_respondent_flag')){
@@ -289,7 +291,6 @@ export class AnswerSurveyPage {
 
         if(connectedToFirebaseFlag){
           try{
-            var that = this;
             firebase.database().ref("/responses/"+this.s_id+"/"+newUserKey).set(this.response, function(error){
               if(error){
                 console.log("Not successful pushing response to list of responses."+error);
@@ -320,18 +321,18 @@ export class AnswerSurveyPage {
             firebase.database().ref("/responses/"+this.s_id+"/"+myId).set(this.response, function(error){
               if(error){
                 console.log("Not successful pushing response to list of responses."+error);
-                this.showSubmitError();
+                that.showSubmitError();
               }else{
                 bindSelf.notification['s_status'] = 'completed';
                 firebase.database().ref('/notifications/'+ bindSelf.thisSurvey['author_id'] + '/' + bindSelf.fire.auth.currentUser.uid).set(bindSelf.notification);
                 console.log("Successfully added to responses!");
 
                 // update survey status in notifications
-                this.UpdateNotifSurveyStatus();
+                that.UpdateNotifSurveyStatus();
                 // update USER_SURVEYS invitation to COMPLETED
-                this.UpdateInvitationStatus();
+                that.UpdateInvitationStatus();
                 // pop this page
-                this.navCtrl.pop();
+                that.navCtrl.pop();
               }
               loadingSubmitting.dismiss();
             });

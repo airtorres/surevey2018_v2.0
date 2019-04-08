@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SigninPage } from '../signin/signin';
@@ -12,13 +12,6 @@ import { ConfigurationProvider } from '../../providers/configuration/configurati
 import * as firebase from 'firebase/app';
 import 'firebase/database'
 import { Storage } from '@ionic/storage';
-
-/**
- * Generated class for the SignupPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -35,6 +28,7 @@ export class SignupPage {
     private formbuilder: FormBuilder,
     public loginService: LoginProvider,
     public loadingCtrl: LoadingController,
+    private alertCtrl: AlertController,
     public configService: ConfigurationProvider,
     private storage: Storage,
     private fire: AngularFireAuth) {
@@ -54,6 +48,23 @@ export class SignupPage {
 
   navigateToSignIn(){
   	this.navCtrl.setRoot(SigninPage);
+  }
+
+  showAgreementPage(){
+    let alertAgree = this.alertCtrl.create({
+      title: 'Terms and Conditions',
+      message: 'By signing up, you agree to share your basic info and the details and information that you used on this application to the administrators, the Surevey Team.',
+      buttons: [
+        {
+          text: "Yes, I agree",
+          cssClass: 'agreeBtn',
+          handler: () => {
+            this.signup();
+          }
+        }
+      ]
+    });
+    alertAgree.present();
   }
 
   signup(){
