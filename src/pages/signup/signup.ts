@@ -54,6 +54,7 @@ export class SignupPage {
     let alertAgree = this.alertCtrl.create({
       title: 'Terms and Conditions',
       message: 'By signing up, you agree to share your basic info and the details and information that you used on this application to the administrators, the Surevey Team.',
+      cssClass: 'agreeAlert',
       buttons: [
         {
           text: "Yes, I agree",
