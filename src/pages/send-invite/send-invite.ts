@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 
 import { FiltersPage } from '../filters/filters';
 
@@ -59,7 +59,8 @@ export class SendInvitePage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	private storage: Storage,
     private fire: AngularFireAuth,
-  	private alertCtrl: AlertController,
+  	private alertCtrl: AlertController, 
+    public toastCtrl: ToastController,
     public configService: ConfigurationProvider) {
 
     this.s_id = this.navParams.get('s_id');
@@ -96,8 +97,15 @@ export class SendInvitePage {
 
       this.numPersons = parseInt(this.numPersons['value']);
     }
-    console.log(this.generated_users_from_filter.length);
-    console.log(this.numPersons);
+    if (this.generated_users_from_filter.length < this.numPersons) {
+      let noteNotEnoughGeneratedUsersToast = this.toastCtrl.create({
+        message: "There weren't enough users that fit your filter options.",
+        duration: 4000,
+        showCloseButton: true,
+        closeButtonText: 'Close'
+      });
+      noteNotEnoughGeneratedUsersToast.present();
+    }
   }
 
   checkConnection(){
@@ -155,8 +163,6 @@ export class SendInvitePage {
       }
     }
 
-    console.log(this.selected_users);
-
     if ( (this.selected_users.length < this.numPersons && this.selAll == true) || (this.selected_users.length < this.all_users_email.length && this.selAll == true) ) {
       this.selAll = false;
     }
@@ -180,6 +186,17 @@ export class SendInvitePage {
         this.selected_users = [];
       }
     }
+  }
+
+  clearSelected(){
+    for (var user_email in this.all_users_email) {
+      this.selections[this.all_users_email[user_email]] = false;
+      this.selected_users = [];
+    }
+    if (this.selAll == true) {
+      this.selAll = false;
+    }
+    this.all_users_email = this.og_all_users_email;
   }
 
   sendInvitation(){
