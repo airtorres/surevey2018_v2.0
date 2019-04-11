@@ -29,7 +29,7 @@ export class NotificationPage {
   surveys = [];
   public user_survey_invites = [];
   public allSurveyInvi = [];
-  public user_notif = [];
+  public user_notifID = [];
   public allUserNotif = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
@@ -52,17 +52,22 @@ export class NotificationPage {
 
   ionViewDidEnter() {
     this.updateIsSeen();
+    console.log(this.allUserNotif);
+    console.log(this.user_notifID);
   }
 
   fetchNotifFromFirebase() {
-    firebase.database().ref('/notifications/'+this.userID+'/surveyNotifs').orderByChild('timestamp').on('value', allUserNotifRef => {
-      this.user_notif = allUserNotifRef.val();
+    firebase.database().ref('/notifications/'+this.userID+'/surveyNotifs').on('value', allUserNotifRef => {
+      var notification = allUserNotifRef.val();
 
       this.allUserNotif=[];
-      for (var i in this.user_notif) {
-        this.allUserNotif.push(this.user_notif[i]);
+      for (var i in notification) {
+        this.allUserNotif.push(notification[i]);
+        if (notification[i]['isSeen'] == false) {
+          this.user_notifID.push(i);
+        }
       }
-      this.allUserNotif.reverse();
+      // this.allUserNotif.reverse();
     });
   }
 
@@ -72,22 +77,16 @@ export class NotificationPage {
 
 
   updateIsSeen() {
-    var that = this;
-    const userNotifIsSeenRef:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID+'/surveyNotifs');
-    userNotifIsSeenRef.on('value', allUserNotifSnap => {
-      var notif = allUserNotifSnap.val();
-      for (var n in notif) {
-        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+n+"/isSeen").set("true", function(error){
-          if(error){
-            console.log("Not successful updating isSeen to True."+error);
-            that.showSubmitError();
-          }else{
-            console.log("Successfully updated: isSeen to True");
-          }
-        });
-      }
-
-    });
+    for (var notifIdx in this.user_notifID) {
+      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+this.user_notifID[notifIdx]+"/isSeen").set("true", function(error){
+        if(error){
+          console.log("Not successful updating isSeen to True."+error);
+          this.showSubmitError();
+        }else{
+          console.log("Successfully updated: isSeen to True");
+        }
+      });
+    }
   }
 
   showItemOption(notif){

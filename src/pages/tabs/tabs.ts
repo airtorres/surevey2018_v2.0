@@ -23,6 +23,7 @@ export class TabsPage {
 
   userID;
   public notifBadgeCount:number = 0;
+  public notifBadge;
   userNotifs = [];
 
   conversationIDs = [];
@@ -45,14 +46,10 @@ export class TabsPage {
       for (var i in notif) {
         this.userNotifs.push(notif[i]);
       }
-      console.log(notif);
-
+      console.log(this.userNotifs);
       for (var n in this.userNotifs) {
         if (this.userNotifs[n]['isSeen'] == false) {
           this.notifBadgeCount++;
-        }
-        else {
-          this.notifBadgeCount = 0;
         }
       }
     });
