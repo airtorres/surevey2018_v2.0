@@ -55,7 +55,7 @@ export class NotificationPage {
   }
 
   fetchNotifFromFirebase() {
-    firebase.database().ref('/notifications/'+this.userID).orderByChild('timestamp').on('value', allUserNotifRef => {
+    firebase.database().ref('/notifications/'+this.userID+'/surveyNotifs').orderByChild('timestamp').on('value', allUserNotifRef => {
       this.user_notif = allUserNotifRef.val();
 
       this.allUserNotif=[];
@@ -73,11 +73,11 @@ export class NotificationPage {
 
   updateIsSeen() {
     var that = this;
-    const userNotifIsSeenRef:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID);
+    const userNotifIsSeenRef:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID+'/surveyNotifs');
     userNotifIsSeenRef.on('value', allUserNotifSnap => {
       var notif = allUserNotifSnap.val();
       for (var n in notif) {
-        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+n+"/isSeen").set("true", function(error){
+        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+n+"/isSeen").set("true", function(error){
           if(error){
             console.log("Not successful updating isSeen to True."+error);
             that.showSubmitError();
@@ -200,7 +200,7 @@ export class NotificationPage {
 
     loading.present().then(() => {
       if (notif['type'] == 'invitation') {
-        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+notif['s_id']).remove(
+        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+notif['s_id']).remove(
         function(error) {
           if(error){
             console.log("Not able to delete notifications.");

@@ -22,8 +22,13 @@ export class TabsPage {
   tab4Root = ChatBoxPage;
 
   userID;
-  public badgeCount:number = 0;
+  public notifBadgeCount:number = 0;
   userNotifs = [];
+
+  conversationIDs = [];
+  chatmates = [];
+  userChats = [];
+  public chatBadgeCount:number = 0;
 
   constructor(private fire: AngularFireAuth, public configService: ConfigurationProvider) {
 
@@ -32,15 +37,11 @@ export class TabsPage {
   }
 
   checkChildAdded() {
-    const allUserNotifRef:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID);
+    const allUserNotifRef:firebase.database.Reference = firebase.database().ref('/notifications/'+this.userID+'/surveyNotifs');
     allUserNotifRef.on('value', allUserNotifSnapshot => {
       var notif = allUserNotifSnapshot.val();
-      // console.log(notif);
-      // if (notif['isSeen'] == false) {
-      //   this.badgeCount ++;
-      // }
       this.userNotifs = [];
-      this.badgeCount = 0;
+      this.notifBadgeCount = 0;
       for (var i in notif) {
         this.userNotifs.push(notif[i]);
       }
@@ -48,15 +49,52 @@ export class TabsPage {
 
       for (var n in this.userNotifs) {
         if (this.userNotifs[n]['isSeen'] == false) {
-          this.badgeCount++;
+          this.notifBadgeCount++;
         }
         else {
-          this.badgeCount = 0;
+          this.notifBadgeCount = 0;
         }
       }
     });
 
+    const chatmatesRef:firebase.database.Reference = firebase.database().ref('/chatmates/'+this.userID);
+    chatmatesRef.on('value', userChatmatesSnap => {
+      var mates = userChatmatesSnap.val();
 
+      this.chatmates = [];
+      for (var j in mates) {
+        this.chatmates.push(mates[j])
+      }
+      for (var chatmate in this.chatmates) {
+        if (this.chatmates[chatmate] < this.userID){
+          // this.conversationId = this.chatmates[chatmate]+this.userID;
+          this.conversationIDs.push(this.chatmates[chatmate]+this.userID);
+        }else{
+          // this.conversationId = this.userID+this.chatmates[chatmate];
+          this.conversationIDs.push(this.userID+this.chatmates[chatmate]);
+        }
+      }
+      // console.log(this.conversationIDs);
+      this.checkChats(this.conversationIDs);
+    });
+    
+  }
+
+  checkChats(convoID) {
+    console.log("convoID:",convoID);
+    for (var id in convoID) {
+      firebase.database().ref('/chat_messages/'+convoID[id]+'/isSeen/').on('value', chatMsgSnap => {
+        var isSeen = chatMsgSnap.val();
+
+        if (isSeen == false) {
+          this.chatBadgeCount++;
+        }
+        else {
+          this.chatBadgeCount = 0;
+        }
+      });
+    }
+    
   }
   
 }

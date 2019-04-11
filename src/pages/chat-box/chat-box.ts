@@ -87,6 +87,25 @@ export class ChatBoxPage {
     return last;
   }
 
+  showSubmitError(){
+    console.log("ERROR");
+  }
+
+  updateIsSeen() {
+    var that = this;
+    for (var c in this.chatmatelist) {
+      var conversationID = this.getConvoId(this.chatmatelist[c], this.userId);
+      firebase.database().ref("/chat_messages/"+conversationID+"/isSeen").set("true", function(error){
+        if(error){
+          console.log("Not successful updating isSeen to True."+error);
+          that.showSubmitError();
+        }else{
+          console.log("Successfully updated: isSeen to True");
+        }
+      });
+    }
+  }
+
   markAsRead(id){
     // use the chatmate id as the id on the html
   }
@@ -103,6 +122,7 @@ export class ChatBoxPage {
   ionViewDidEnter(){
     // check for Firebase connection
     this.connectedToFirebaseFlag = this.configService.connectedToFirebaseFlag;
+    this.updateIsSeen();
 
     if(!this.connectedToFirebaseFlag){
       this.configService.displayToast('Cannot load messages. No Internet Connection.');

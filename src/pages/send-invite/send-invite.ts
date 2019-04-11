@@ -248,7 +248,7 @@ export class SendInvitePage {
                 console.log("Not successful pushing to invitations (for some users ONLY)."+error);
                 successFlag = false;
               }else{
-                firebase.database().ref('/notifications/'+ u + '/' + survey_id).set(bindSelf.notification);
+                firebase.database().ref('/notifications/'+ u +'/surveyNotifs/' + survey_id).set(bindSelf.notification);
                 console.log("Successfully added the surveyID to invitations!");
                 successFlag = true && successFlag;
               }

@@ -166,7 +166,7 @@ export class AnswerSurveyPage {
   UpdateNotifSurveyStatus(){
     try{
       var that = this;
-      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+this.s_id+"/s_status").set("completed", function(error){
+      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+this.s_id+"/s_status").set("completed", function(error){
         if(error){
           console.log("Not successful updating invitation status in notifications."+error);
           that.showSubmitError();
@@ -324,7 +324,7 @@ export class AnswerSurveyPage {
                 that.showSubmitError();
               }else{
                 bindSelf.notification['s_status'] = 'completed';
-                firebase.database().ref('/notifications/'+ bindSelf.thisSurvey['author_id'] + '/' + bindSelf.fire.auth.currentUser.uid).set(bindSelf.notification);
+                firebase.database().ref('/notifications/'+ bindSelf.thisSurvey['author_id'] + '/surveyNotifs/' + bindSelf.fire.auth.currentUser.uid).set(bindSelf.notification);
                 console.log("Successfully added to responses!");
 
                 // update survey status in notifications
