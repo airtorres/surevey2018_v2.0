@@ -52,7 +52,7 @@
 		<div>
 		    <ion-item *ngFor="let user_email of all_users_email" no-lines>
 				<ion-avatar item-start>
-		       		<ion-img src="../assets/imgs/profile-avatar.png"></ion-img>
+		       		<ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
 		      	</ion-avatar>
 		      	<ion-checkbox mode="ios" color="secondary" [(ngModel)]="selections[user_email]" (ionChange)="refresh()" item-end></ion-checkbox>
 		      	<ion-label>{{ user_email }}</ion-label>
