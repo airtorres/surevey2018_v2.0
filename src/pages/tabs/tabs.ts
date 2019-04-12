@@ -65,45 +65,6 @@ export class TabsPage {
         }
       }
     });
-
-    // const chatmatesRef:firebase.database.Reference = firebase.database().ref('/chatmates/'+this.userID);
-    // chatmatesRef.on('value', userChatmatesSnap => {
-    //   var mates = userChatmatesSnap.val();
-
-    //   this.chatmates = [];
-    //   for (var j in mates) {
-    //     this.chatmates.push(mates[j])
-    //   }
-    //   for (var chatmate in this.chatmates) {
-    //     if (this.chatmates[chatmate] < this.userID){
-    //       // this.conversationId = this.chatmates[chatmate]+this.userID;
-    //       this.conversationIDs.push(this.chatmates[chatmate]+this.userID);
-    //     }else{
-    //       // this.conversationId = this.userID+this.chatmates[chatmate];
-    //       this.conversationIDs.push(this.userID+this.chatmates[chatmate]);
-    //     }
-    //   }
-    //   // console.log(this.conversationIDs);
-    //   this.checkChats(this.conversationIDs);
-    // });
-    
   }
-
-  // checkChats(convoID) {
-  //   console.log("convoID:",convoID);
-  //   for (var id in convoID) {
-  //     firebase.database().ref('/chat_messages/'+convoID[id]+'/isSeen/').on('value', chatMsgSnap => {
-  //       var isSeen = chatMsgSnap.val();
-
-  //       if (isSeen == false) {
-  //         this.chatBadgeCount++;
-  //       }
-  //       else {
-  //         this.chatBadgeCount = 0;
-  //       }
-  //     });
-  //   }
-    
-  // }
   
 }

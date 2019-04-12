@@ -30,6 +30,8 @@ export class ChatBoxPage {
   userId;
   connectedToFirebaseFlag = true;
 
+  isReadDict = {}
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public actionSheetController: ActionSheetController,
     private fire: AngularFireAuth,
@@ -41,9 +43,11 @@ export class ChatBoxPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatBoxPage');
     this.loadChatMessages();
+    this.loadReads();
   }
 
   loadChatMessages(){
+    var that = this;
     firebase.database().ref('/chatmates/'+this.userId)
     .on('value', chatmatesSnapshot => {
       var allChatmates = chatmatesSnapshot.val();
@@ -53,9 +57,29 @@ export class ChatBoxPage {
         for (var id in allChatmates){
           console.log(allChatmates[id]);
           this.chatmatelist.push(allChatmates[id]);
+
+          var convoId = this.getConvoId(this.userId, allChatmates[id]);
+
+          firebase.database().ref("/notifications/"+that.userId+"/chatNotifs/"+convoId+"/isSeen")
+          .on('value', readSnapshot => {
+            var isRead = readSnapshot.val();
+            that.isReadDict[allChatmates[id]] = isRead;
+          });
         }
       }
     });
+  }
+
+  loadReads(){
+    for (var i in this.chatmatelist){
+      var convoId = this.getConvoId(this.userId, this.chatmatelist[i]);
+
+      firebase.database().ref("/notifications/"+this.userId+"/chatNotifs/"+convoId+"/isSeen")
+      .on('value', readSnapshot => {
+        var isRead = readSnapshot.val();
+        this.isReadDict[this.chatmatelist[i]] = isRead;
+      });
+    }
   }
 
   getChatmateName(cid){
@@ -90,31 +114,15 @@ export class ChatBoxPage {
     return last;
   }
 
-  showSubmitError(){
-    console.log("ERROR");
-  }
+  markAsRead(chatmateId){
+    this.isReadDict[chatmateId] = true;
 
-  updateIsSeen() {
-    var that = this;
-    firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/chatNotifs/")
-    .once('value', chatNotifSnap => {
-      var chatNotif = chatNotifSnap.val();
-
-      for (var cn in chatNotif) {
-        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/chatNotifs/"+cn+"/isSeen").set("true", function(error){
-          if(error){
-            console.log("Not successful updating isSeen to True."+error);
-            that.showSubmitError();
-          }else{
-            console.log("Successfully updated: isSeen to True");
-          }
-        });
+    var convoId = this.getConvoId(this.userId, chatmateId);
+    firebase.database().ref("/notifications/"+this.userId+"/chatNotifs/"+convoId+"/isSeen").set(true, function(error){
+      if(error){
+        console.log(error);
       }
     });
-  }
-
-  markAsRead(id){
-    // use the chatmate id as the id on the html
   }
 
   gotoChat(chatmateId){
@@ -130,7 +138,6 @@ export class ChatBoxPage {
     // check for Firebase connection
     this.connectedToFirebaseFlag = this.configService.connectedToFirebaseFlag;
     console.log("ionviewdidenter chatbox");
-    this.updateIsSeen();
 
     if(!this.connectedToFirebaseFlag){
       this.configService.displayToast('Cannot load messages. No Internet Connection.');
