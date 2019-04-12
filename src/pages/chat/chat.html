@@ -8,6 +8,11 @@
 
   <ion-navbar color="primary">
     <ion-title>{{ chatmate }}</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="delChatCopy()" style="margin-right: 10px;">
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>

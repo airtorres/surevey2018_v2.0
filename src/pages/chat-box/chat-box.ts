@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ActionSheetController } from 'ionic-angular';
 
 import { ChatPage } from '../chat/chat';
 import { NewMsgPage } from '../new-msg/new-msg';
@@ -31,6 +31,7 @@ export class ChatBoxPage {
   connectedToFirebaseFlag = true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
+    public actionSheetController: ActionSheetController,
     private fire: AngularFireAuth,
     public configService: ConfigurationProvider) {
 
@@ -134,6 +135,40 @@ export class ChatBoxPage {
     if(!this.connectedToFirebaseFlag){
       this.configService.displayToast('Cannot load messages. No Internet Connection.');
     }
+  }
+
+  delChatCopy(chatmateId){
+    var that = this;
+    firebase.database().ref("/chatmates/"+this.fire.auth.currentUser.uid+"/"+chatmateId).remove(
+    function(error) {
+      if(error){
+        console.log(error);
+        that.configService.displayToast("Error occured. Try again.");
+      }else{
+        that.configService.displayToast("Conversation deleted!");
+      }
+    });
+  }
+
+  showItemOption(chatmateId){
+    const actionSheet = this.actionSheetController.create({
+      buttons: [{
+        text: 'Delete',
+        role: 'destructive',
+        icon: 'trash',
+        handler: () => {
+          this.delChatCopy(chatmateId);
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    actionSheet.present();
   }
 
 }

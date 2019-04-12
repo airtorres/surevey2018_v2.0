@@ -33,7 +33,7 @@
 	    </button> -->
 
 	    <!-- READ MESSAGES -->
-	    <button *ngFor="let chatmateId of chatmatelist" class="chat-messages" id="{{chatmateId}}" ion-item (click)="gotoChat(chatmateId)" no-lines style="border-bottom: 1px solid gainsboro;">
+	    <button *ngFor="let chatmateId of chatmatelist" class="chat-messages" id="{{chatmateId}}" ion-item (click)="gotoChat(chatmateId)" (press)="showItemOption(chatmateId)" no-lines style="border-bottom: 1px solid gainsboro;">
 	    	<div text-right> <ion-note color="blue">NEW</ion-note> </div>
 	    	<div text-right> <ion-note>Oct 19</ion-note> </div>
 			<ion-avatar item-start>

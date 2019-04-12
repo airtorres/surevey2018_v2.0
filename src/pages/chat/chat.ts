@@ -123,4 +123,18 @@ export class ChatPage {
       }
     });
   }
+
+  delChatCopy(){
+    var that = this;
+    firebase.database().ref("/chatmates/"+this.userId+"/"+this.authorId).remove(
+    function(error) {
+      if(error){
+        console.log(error);
+        that.configService.displayToast("Error occured. Try again.");
+      }else{
+        that.navCtrl.pop();
+        that.configService.displayToast("Conversation deleted!");
+      }
+    });
+  }
 }
