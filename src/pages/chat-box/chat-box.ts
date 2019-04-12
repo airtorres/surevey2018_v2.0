@@ -94,26 +94,22 @@ export class ChatBoxPage {
   }
 
   updateIsSeen() {
-    var conversationIDs = [];
-    firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/chatNotifs/").on('value', chatNotifSnap => {
+    var that = this;
+    firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/chatNotifs/")
+    .once('value', chatNotifSnap => {
       var chatNotif = chatNotifSnap.val();
-      this.conversationIDs = [];
+
       for (var cn in chatNotif) {
-        conversationIDs.push(cn);
+        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/chatNotifs/"+cn+"/isSeen").set("true", function(error){
+          if(error){
+            console.log("Not successful updating isSeen to True."+error);
+            that.showSubmitError();
+          }else{
+            console.log("Successfully updated: isSeen to True");
+          }
+        });
       }
     });
-    
-    var that = this;
-    for (var c in conversationIDs) {
-      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/chatNotifs/"+conversationIDs[c]+"/isSeen").set("true", function(error){
-        if(error){
-          console.log("Not successful updating isSeen to True."+error);
-          this.showSubmitError();
-        }else{
-          console.log("Successfully updated: isSeen to True");
-        }
-      });
-    }
   }
 
   markAsRead(id){
