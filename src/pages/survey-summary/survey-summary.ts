@@ -12,13 +12,6 @@ import * as firebase from 'firebase/app';
 import 'firebase/database';
 import { Storage } from '@ionic/storage';
 
-/**
- * Generated class for the SurveySummaryPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-survey-summary',

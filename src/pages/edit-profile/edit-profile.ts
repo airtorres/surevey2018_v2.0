@@ -11,13 +11,6 @@ import { FileChooser } from '@ionic-native/file-chooser';
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 import { Storage } from '@ionic/storage';
 
-/**
- * Generated class for the EditProfilePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-edit-profile',

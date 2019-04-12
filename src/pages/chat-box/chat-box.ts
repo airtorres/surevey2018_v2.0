@@ -11,13 +11,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
-/**
- * Generated class for the ChatBoxPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-chat-box',
@@ -43,7 +36,6 @@ export class ChatBoxPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatBoxPage');
     this.loadChatMessages();
-    this.loadReads();
   }
 
   loadChatMessages(){
@@ -68,18 +60,6 @@ export class ChatBoxPage {
         }
       }
     });
-  }
-
-  loadReads(){
-    for (var i in this.chatmatelist){
-      var convoId = this.getConvoId(this.userId, this.chatmatelist[i]);
-
-      firebase.database().ref("/notifications/"+this.userId+"/chatNotifs/"+convoId+"/isSeen")
-      .on('value', readSnapshot => {
-        var isRead = readSnapshot.val();
-        this.isReadDict[this.chatmatelist[i]] = isRead;
-      });
-    }
   }
 
   getChatmateName(cid){
