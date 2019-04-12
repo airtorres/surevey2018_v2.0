@@ -46,9 +46,11 @@ export class ChatBoxPage {
     firebase.database().ref('/chatmates/'+this.userId)
     .on('value', chatmatesSnapshot => {
       var allChatmates = chatmatesSnapshot.val();
+      console.log(allChatmates);
+      this.chatmatelist = [];
       if (allChatmates){
-        this.chatmatelist = [];
         for (var id in allChatmates){
+          console.log(allChatmates[id]);
           this.chatmatelist.push(allChatmates[id]);
         }
       }
@@ -92,13 +94,21 @@ export class ChatBoxPage {
   }
 
   updateIsSeen() {
+    var conversationIDs = [];
+    firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/chatNotifs/").on('value', chatNotifSnap => {
+      var chatNotif = chatNotifSnap.val();
+      this.conversationIDs = [];
+      for (var cn in chatNotif) {
+        conversationIDs.push(cn);
+      }
+    });
+    
     var that = this;
-    for (var c in this.chatmatelist) {
-      var conversationID = this.getConvoId(this.chatmatelist[c], this.userId);
-      firebase.database().ref("/chat_messages/"+conversationID+"/isSeen").set("true", function(error){
+    for (var c in conversationIDs) {
+      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/chatNotifs/"+conversationIDs[c]+"/isSeen").set("true", function(error){
         if(error){
           console.log("Not successful updating isSeen to True."+error);
-          that.showSubmitError();
+          this.showSubmitError();
         }else{
           console.log("Successfully updated: isSeen to True");
         }
@@ -122,6 +132,7 @@ export class ChatBoxPage {
   ionViewDidEnter(){
     // check for Firebase connection
     this.connectedToFirebaseFlag = this.configService.connectedToFirebaseFlag;
+    console.log("ionviewdidenter chatbox");
     this.updateIsSeen();
 
     if(!this.connectedToFirebaseFlag){

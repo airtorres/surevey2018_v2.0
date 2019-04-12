@@ -89,11 +89,17 @@ export class ChatPage {
     console.log("myEmail"+this.fire.auth.currentUser.email)
 
     var newPostKey = this.conversationId;
+    var bindSelf = this;
     var message = {
       'content' : this.chatMessage.value,
       'date_sent': new Date().toISOString(),
       'sender': this.userId,
       'receiver': this.authorId
+    }
+    var chatNotif = {
+      'isSeen':false,
+      'receiver':this.authorId,
+      'sender':this.userId,
     }
 
     firebase.database().ref('/chat_messages/')
@@ -106,6 +112,7 @@ export class ChatPage {
           console.log("Message not sent!"+error);
           this.configService.displayToast('Sending Failed! Try Again.');
         }else{
+          firebase.database().ref("notifications/"+bindSelf.authorId+"/chatNotifs/"+newPostKey).set(chatNotif);
           console.log("Message sent!!");
           that.chatMessage.value = "";
         }
