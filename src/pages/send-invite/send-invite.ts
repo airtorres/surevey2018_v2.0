@@ -202,7 +202,6 @@ export class SendInvitePage {
   sendInvitation(){
     console.log(this.selected_users);
     var bindSelf = this;
-    var date = new Date();
 
     this.thisSurvey['s_id'] = this.s_id;
 
@@ -210,7 +209,9 @@ export class SendInvitePage {
     this.notification['s_author'] = this.author;
     this.notification['s_author_id'] = this.userID;
     this.notification['s_title'] = this.title;
-    this.notification['timestamp'] = date.getTime();
+    this.notification['date'] = new Date().toISOString();
+    var newNotifKey = firebase.database().ref().child('/notifications/'+ u +'/surveyNotifs/').push().key;
+    this.notification['notifId'] = newNotifKey;
 
     var successFlag = true;
     var surveyInvites = [];
@@ -248,7 +249,7 @@ export class SendInvitePage {
                 console.log("Not successful pushing to invitations (for some users ONLY)."+error);
                 successFlag = false;
               }else{
-                firebase.database().ref('/notifications/'+ u +'/surveyNotifs/' + survey_id).set(bindSelf.notification);
+                firebase.database().ref('/notifications/'+ u +'/surveyNotifs/' + newNotifKey).set(bindSelf.notification);
                 console.log("Successfully added the surveyID to invitations!");
                 successFlag = true && successFlag;
               }

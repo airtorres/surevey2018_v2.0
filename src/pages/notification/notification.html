@@ -31,13 +31,14 @@
 
 				<!-- SURVEY INVITATION NOTIFICATION -->
 				<ion-item *ngIf="notif['type'] == 'invitation' && notif['s_status'] == 'pending'" id="invi" no-lines>
-						<ion-icon item-left name="mail-open" style="font-size:25px;" color="yellow"></ion-icon>
-						{{ notif['s_author'] }} invited you to respond to "{{ notif['s_title'] }}"
+					<div text-right> <ion-note>{{ transformDate(notif['date']) }}</ion-note> </div>
+					<ion-icon item-left name="mail-open" style="font-size:25px;" color="yellow"></ion-icon>
+					{{ notif['s_author'] }} invited you to respond to "{{ notif['s_title'] }}"
 
-						<ion-buttons end>
-							<button ion-button round small color="green" (click)="answerInvi(notif)">ANSWER</button>
-							<button ion-button round small color="red" (click)="deleteInvi(notif)">DELETE</button>
-						</ion-buttons>
+					<ion-buttons end>
+						<button ion-button round small color="green" (click)="answerInvi(notif)">ANSWER</button>
+						<button ion-button round small color="red" (click)="deleteInvi(notif)">DELETE</button>
+					</ion-buttons>
 				</ion-item>
 
 				<!-- RESPONDED TO SURVEY NOTIFICATION (@ RESPONDENT) -->
@@ -55,30 +56,5 @@
 				</ion-item>
 			</div>
 		</div>
-		<!-- USER DECLINED SURVEY INVITES -->
-		<!-- <ion-item>
-			<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
-			Aliah Pitts invited you to respond to "Social Media Pros and Cons"
-			<ion-note item-end color="red">Declined</ion-note>
-		</ion-item> -->
-
-		<!-- USER ACCEPTED SURVEY INVITES -->
-		<!-- <ion-item>
-			<ion-icon item-left name="mail-open" style="font-size: 25px;" color="yellow"></ion-icon>
-			Aayden Smith invited you to respond to "E-Learning for Students"
-			<ion-note item-end color="green">Accepted</ion-note>
-		</ion-item> -->
-
-		<!-- DECLINED INVITES OF USER SURVEY -->
-		<!-- <ion-item>
-			<ion-icon item-left name="close-circle" style="font-size: 25px;" color="red"></ion-icon>
-			Sophia Rose declined your survey invitation to "Music for the Brain"
-		</ion-item> -->
-
-		<!-- ACCEPTED INVITES OF USER SURVEY -->
-		<!-- <ion-item>
-			<ion-icon item-left name="checkmark-circle" style="font-size: 25px;" color="green"></ion-icon>
-			Alex Lee accepted your survey invitatiion to "Music for the Brain"
-		</ion-item> -->
 	</ion-list>
 </ion-content>

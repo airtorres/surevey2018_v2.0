@@ -58,6 +58,7 @@ export class AnswerSurveyPage {
     's_respondent_id':'',
     'isSeen': false
   }
+  notifID;
 
   public answers = [];
 
@@ -84,6 +85,8 @@ export class AnswerSurveyPage {
     }catch(e){
       console.log(e);
     }
+
+    this.notifID = navParams.get('notifID');
 
     // DB structure: survey_id -> user_id -> responses
 
@@ -166,7 +169,7 @@ export class AnswerSurveyPage {
   UpdateNotifSurveyStatus(){
     try{
       var that = this;
-      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+this.s_id+"/s_status").set("completed", function(error){
+      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+this.notifID+"/s_status").set("completed", function(error){
         if(error){
           console.log("Not successful updating invitation status in notifications."+error);
           that.showSubmitError();
@@ -250,7 +253,7 @@ export class AnswerSurveyPage {
 
       var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
       var bindSelf = this;
-      var date = new Date();
+
 
       console.log("submitting response ...")
 
@@ -265,7 +268,9 @@ export class AnswerSurveyPage {
       this.notification['s_title'] = this.thisSurvey['title'];
       this.notification['s_respondent'] = this.currUser;
       this.notification['s_respondent_id'] = this.fire.auth.currentUser.uid;
-      this.notification['timestamp'] = date.getTime();
+      this.notification['date'] = new Date().toISOString();
+      var newNotifKey = firebase.database().ref().child('/notifications/'+ this.thisSurvey['author_id'] +'/surveyNotifs/').push().key;
+      this.notification['notifId'] = newNotifKey;
 
 
       for( var q in this.questions){
@@ -324,7 +329,7 @@ export class AnswerSurveyPage {
                 that.showSubmitError();
               }else{
                 bindSelf.notification['s_status'] = 'completed';
-                firebase.database().ref('/notifications/'+ bindSelf.thisSurvey['author_id'] + '/surveyNotifs/' + bindSelf.fire.auth.currentUser.uid).set(bindSelf.notification);
+                firebase.database().ref('/notifications/'+ bindSelf.thisSurvey['author_id'] + '/surveyNotifs/' + newNotifKey).set(bindSelf.notification);
                 console.log("Successfully added to responses!");
 
                 // update survey status in notifications

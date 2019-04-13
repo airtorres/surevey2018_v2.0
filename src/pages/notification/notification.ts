@@ -61,13 +61,14 @@ export class NotificationPage {
       var notification = allUserNotifRef.val();
 
       this.allUserNotif=[];
+      this.user_notifID=[];
       for (var i in notification) {
         this.allUserNotif.push(notification[i]);
         if (notification[i]['isSeen'] == false) {
           this.user_notifID.push(i);
         }
       }
-      // this.allUserNotif.reverse();
+      this.allUserNotif.reverse();
     });
   }
 
@@ -77,6 +78,7 @@ export class NotificationPage {
 
 
   updateIsSeen() {
+    console.log(this.user_notifID);
     for (var notifIdx in this.user_notifID) {
       firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+this.user_notifID[notifIdx]+"/isSeen").set("true", function(error){
         if(error){
@@ -111,10 +113,10 @@ export class NotificationPage {
     actionSheet.present();
   }
 
-  updateIsSeenStatusToTrue(surveyID){
+  updateIsSeenStatusToTrue(notif){
     try{
       var that = this;
-      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+surveyID+"/isSeen").set("true", function(error){
+      firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+notif+"/isSeen").set("true", function(error){
         if(error){
           console.log("Not successful updating isSeen to True."+error);
           that.showSubmitError();
@@ -127,15 +129,19 @@ export class NotificationPage {
     }
   }
 
+  transformDate(ISOString){
+    return this.configService.transformDate(ISOString) + " " + this.configService.transformTime(ISOString);
+  }
+
   answerInvi(survey) {
     // check for Firebase connection
-    var surveyID = survey['s_id'];
-    var item = this.configService.getSurveyData(surveyID);
+    var notif = survey['notifId'];
+    var item = this.configService.getSurveyData(survey['s_id']);
 
     var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
     if(connectedToFirebaseFlag && survey['s_status'] != 'completed'){
-      this.updateIsSeenStatusToTrue(surveyID);
-      this.navCtrl.push(AnswerSurveyPage, {'item' : item, 'viewOnly': false});
+      this.updateIsSeenStatusToTrue(notif);
+      this.navCtrl.push(AnswerSurveyPage, {'item' : item, 'viewOnly': false, 'notifID': notif});
     }else if(survey['s_status'] != 'completed'){
       this.configService.showSimpleConnectionError();
     }
@@ -199,7 +205,7 @@ export class NotificationPage {
 
     loading.present().then(() => {
       if (notif['type'] == 'invitation') {
-        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+notif['s_id']).remove(
+        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+notif['notifId']).remove(
         function(error) {
           if(error){
             console.log("Not able to delete notifications.");
@@ -212,7 +218,7 @@ export class NotificationPage {
       }
 
       else if (notif['type'] == 'respond') {
-        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+notif['s_respondent_id']).remove(
+        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+notif['notifId']).remove(
         function(error) {
           if(error){
             console.log("Not able to delete notifications.");

@@ -44,10 +44,10 @@
 
 	<!-- DISPLAY CONTACTS -->
 	<ion-list text-wrap>
-		<p *ngIf="all_users_email.length == 0">
-			No users to show.<br/>
-			You must be connected to the internet.
-		</p>
+
+		<ion-item text-center *ngIf="all_users_email.length == 0" no-lines>
+			No users to show
+		</ion-item>
 
 		<div>
 		    <ion-item *ngFor="let user_email of all_users_email" no-lines>
