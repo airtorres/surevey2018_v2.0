@@ -22,9 +22,9 @@
 			Jesiah Neely responded to "Music for the Brain"
 		</ion-item> -->
 
-		<ion-item text-center *ngIf="allUserNotif.length==0">
-			You have no notifications
-		</ion-item>
+		<div *ngIf="allUserNotif.length==0">
+			<img src="../assets/imgs/noNotifications.png" style="background: transparent !important; vertical-align: middle; margin-top: 130px;">
+		</div>
 
 		<div *ngIf="allUserNotif.length!=0">
 			<div *ngFor="let notif of allUserNotif">

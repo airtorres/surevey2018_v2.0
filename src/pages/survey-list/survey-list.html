@@ -25,9 +25,9 @@
 
   		<!-- ALL -->
   		<ion-list *ngSwitchCase="'all'" text-wrap>
-  			<ion-item *ngIf="mySurveys.length + survey_invites.length == 0 && drafts.length == 0" text-center>
-      			<img width="350" height="350" src="../assets/imgs/noSurveyIllustration.png" style="background: transparent !important; vertical-align: middle;">
-			</ion-item>
+  			<div *ngIf="mySurveys.length + survey_invites.length == 0 && drafts.length == 0">
+      			<img src="../assets/imgs/noSurveyAndInvites.png" style="background: transparent !important; vertical-align: middle; margin-top: 85px;">
+			</div>
 
 			<ion-item *ngFor="let item of mySurveys" value="item" (click)="gotoSummary(item)" (press)="showItemOption(item)">
 			  	{{ item['title'] }}
@@ -59,10 +59,10 @@
 
 		<!-- USER OWN CREATED SURVEYS -->
 		<ion-list *ngSwitchCase="'surveys'" text-wrap>
-			<ion-item *ngIf="mySurveys.length == 0 && drafts.length == 0" text-center>
+			<div *ngIf="mySurveys.length == 0 && drafts.length == 0">
 				<!-- You haven't created any surveys yet. -->
-				<img width="350" height="350" src="../assets/imgs/noSurveyIllustration.png" style="background: transparent !important; vertical-align: middle;">
-			</ion-item>
+				<img src="../assets/imgs/noSurvey.png" style="background: transparent !important; vertical-align: middle; margin-top: 85px;">
+			</div>
 
 			<ion-item *ngFor="let item of mySurveys" value="item" (click)="gotoSummary(item)" (press)="showItemOption(item)">
 			  	{{ item['title'] }}
@@ -83,10 +83,10 @@
 
 		<!-- SURVEY INVITES -->
 		<ion-list *ngSwitchCase="'invites'" text-wrap>
-			<ion-item *ngIf="survey_invites.length == 0" text-center>
+			<div *ngIf="survey_invites.length == 0">
 				<!-- No survey invitations. -->
-				<img width="350" height="350" src="../assets/imgs/noSurveyIllustration.png" style="background: transparent !important; vertical-align: middle;">
-			</ion-item>
+				<img src="../assets/imgs/noSurveyInvite.png" style="background: transparent !important; vertical-align: middle; margin-top: 85px;">
+			</div>
 
 			<ion-item *ngFor="let item of survey_invites" value="item" (press)="showItemOption(item)">
 			  	{{ item['title'] }}
