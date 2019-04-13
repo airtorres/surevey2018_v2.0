@@ -18,7 +18,7 @@
 		<div *ngFor="let chatmateId of chatmatelist">
 			<!-- UNREAD MESSAGES WILL HAVE A BACKGROUND COLOR : LIGHT BLUE -->
 			<button *ngIf="!isReadDict[chatmateId]" ion-item style="background-color: #E6EEF2;" id="{{chatmateId}}" (click)="gotoChat(chatmateId)" (press)="showItemOption(chatmateId)">
-				<div text-right> <ion-note color="blue">NEW</ion-note> </div>
+				<ion-note item-end> <strong style="color: #1EA0E5;">NEW</strong></ion-note>
 				<ion-avatar item-start>
 		       		<ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
 		      	</ion-avatar>
@@ -28,7 +28,7 @@
 
 		    <!-- READ MESSAGES -->
 		    <button *ngIf="isReadDict[chatmateId]" class="chat-messages" id="{{chatmateId}}" ion-item (click)="gotoChat(chatmateId)" (press)="showItemOption(chatmateId)" no-lines style="border-bottom: 1px solid gainsboro;">
-		    	<div text-right> <ion-note>Oct 19</ion-note> </div>
+		    	<ion-note item-end>Oct 19</ion-note>
 				<ion-avatar item-start>
 		       		<ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
 		      	</ion-avatar>
