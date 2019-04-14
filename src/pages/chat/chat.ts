@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import * as firebase from 'firebase/app';
 import 'firebase/database';
-import { AngularFireAuth } from '@angular/fire/auth';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
@@ -21,7 +20,6 @@ export class ChatPage {
   allmessages = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private fire: AngularFireAuth,
     public configService: ConfigurationProvider) {
   	this.chatmate = this.navParams.get('chatmate')? this.navParams.get('chatmate'):"(Missing Receiver Info)";
     this.authorId = this.navParams.get('author_id');
@@ -35,15 +33,8 @@ export class ChatPage {
   }
 
   ionViewDidLoad() {
-    this.loadMessages();
     console.log('ionViewDidLoad ChatPage');
-  }
 
-  transformDate(ISOString){
-    return this.configService.transformDate(ISOString) + " " + this.configService.transformTime(ISOString);
-  }
-
-  loadMessages(){
     firebase.database().ref('/chat_messages/'+this.conversationId)
     .on('value', chatSnapshot => {
       var allMsg = chatSnapshot.val();
@@ -55,6 +46,10 @@ export class ChatPage {
         }
       }
     });
+  }
+
+  transformDate(ISOString){
+    return this.configService.transformDate(ISOString) + " " + this.configService.transformTime(ISOString);
   }
 
   addToChatmates(authorId){
@@ -76,11 +71,6 @@ export class ChatPage {
   }
 
   sendMessage(){
-    console.log("Sending to "+this.chatmate);
-    console.log(this.authorId);
-    console.log("From: "+this.userId)
-    console.log("myEmail"+this.fire.auth.currentUser.email)
-
     var newPostKey = this.conversationId;
     var bindSelf = this;
     var message = {

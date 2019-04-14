@@ -52,7 +52,6 @@ export class HomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
-    // this.loadSurveys();
   }
 
   saveLocalResponsesToFirebase(){
@@ -248,17 +247,16 @@ export class HomePage {
 
   public ionViewDidEnter(){
     this.loadSurveys();
-  }
-
-  public ionViewWillEnter(){
-    console.log("entering home page ...");
-    
     this.configService.getBuiltInTemplates();
     this.loadUserData();
 
     if(this.configService.isConnectedToFirebase()){
       this.saveLocalResponsesToFirebase();
     }
+  }
+
+  public ionViewWillEnter(){
+    console.log("entering home page ...");
   }
 
   public ionViewWillLeave(){

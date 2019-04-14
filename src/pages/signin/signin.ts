@@ -6,17 +6,11 @@ import { SignupPage } from '../signup/signup';
 import { MyAppPage } from '../my-app/my-app';
 
 import { LoginProvider } from '../../providers/login/login';
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { Storage } from '@ionic/storage';
-
-/**
- * Generated class for the SigninPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -34,9 +28,12 @@ export class SigninPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl : ToastController,
     private formbuilder: FormBuilder,
     public loginService: LoginProvider,
+    public configService: ConfigurationProvider,
     public loadingCtrl: LoadingController,
     private fire: AngularFireAuth,
     private storage: Storage) {
+
+    this.configService.isConnectedToFirebase();
 
     // used for offline login
     try{

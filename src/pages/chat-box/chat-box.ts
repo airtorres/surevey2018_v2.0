@@ -35,10 +35,7 @@ export class ChatBoxPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatBoxPage');
-    this.loadChatMessages();
-  }
 
-  loadChatMessages(){
     var that = this;
     firebase.database().ref('/chatmates/'+this.userId)
     .on('value', chatmatesSnapshot => {
