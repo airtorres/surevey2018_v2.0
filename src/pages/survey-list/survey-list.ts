@@ -258,12 +258,12 @@ export class SurveyListPage {
   }
 
   public ionViewDidEnter(){
-    console.log("yeah survey-list ...");
+    console.log("Did Enter survey-list ...");
+    this.fetchSurveys();
   }
 
   public ionViewWillEnter() {
     console.log("entering survey-list ...");
-    this.fetchSurveys();
   }
 
 }
