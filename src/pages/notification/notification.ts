@@ -218,7 +218,7 @@ export class NotificationPage {
       }
 
       else if (notif['type'] == 'respond') {
-        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/"+notif['notifId']).remove(
+        firebase.database().ref("/notifications/"+this.fire.auth.currentUser.uid+"/surveyNotifs/"+notif['notifId']).remove(
         function(error) {
           if(error){
             console.log("Not able to delete notifications.");
