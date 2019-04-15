@@ -289,9 +289,29 @@ export class CreateSurveyPage {
     }
   }
 
-  deleteQuestion(q_id){
+  confirmedDelete(q_id){
     this.survey['questions'].splice(q_id,1);
     this.reloadQuestionIDs();
+  }
+
+  deleteQuestion(q_id, q_msg){
+    let alert = this.alertCtrl.create({
+      title: 'Are you sure to delete this question?',
+      message: q_msg,
+      buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel'
+      },
+      {
+        text: 'Delete',
+        handler: () => {
+          this.confirmedDelete(q_id);
+        }
+      }
+    ]
+    });
+    alert.present();
   }
 
   editQuestion(q_id){

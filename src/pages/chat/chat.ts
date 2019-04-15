@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import * as firebase from 'firebase/app';
 import 'firebase/database';
@@ -20,6 +20,7 @@ export class ChatPage {
   allmessages = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
+    private alertCtrl: AlertController,
     public configService: ConfigurationProvider) {
   	this.chatmate = this.navParams.get('chatmate')? this.navParams.get('chatmate'):"(Missing Receiver Info)";
     this.authorId = this.navParams.get('author_id');
@@ -107,7 +108,7 @@ export class ChatPage {
     });
   }
 
-  delChatCopy(){
+  confirmDeleteChat(){
     var that = this;
     firebase.database().ref("/chatmates/"+this.userId+"/"+this.authorId).remove(
     function(error) {
@@ -119,5 +120,26 @@ export class ChatPage {
         that.configService.displayToast("Conversation deleted!");
       }
     });
+  }
+
+  delChatCopy(){
+    var mate = this.chatmate? this.chatmate: '(Missing Receiver Info)';
+    let alert = this.alertCtrl.create({
+      title: 'Are you sure to delete this conversation?',
+      message: 'Convo with: '+mate,
+      buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+      },
+      {
+        text: 'Delete',
+        handler: () => {
+          this.confirmDeleteChat();
+        }
+      }
+    ]
+    });
+    alert.present();
   }
 }

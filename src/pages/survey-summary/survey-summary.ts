@@ -138,8 +138,8 @@ export class SurveySummaryPage {
 
   deleteSurvey(){
     let alert = this.alertCtrl.create({
-      title: 'Warning',
-      message: 'Are you sure to delete this survey?',
+      title: 'Are you sure to delete this survey?',
+      message: this.title,
       buttons: [
       {
         text: 'Cancel',

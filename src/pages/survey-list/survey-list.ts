@@ -181,9 +181,11 @@ export class SurveyListPage {
       msg = 'Are you sure to delete this Draft?';
     }
 
+    var s_title = item['title']? item['title'] : 'Unkown Survey';
+
     let alert = this.alertCtrl.create({
-      title: 'Warning',
-      message: msg,
+      title: msg,
+      message: s_title,
       buttons: [
       {
         text: 'Cancel',
