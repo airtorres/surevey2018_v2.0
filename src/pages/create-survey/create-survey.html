@@ -71,8 +71,8 @@
  		<!-- DROPDOWN -->
 	  	<ion-item *ngIf="question['type'] == 'dropdown'">
 			<ion-label>Select</ion-label>
-		  	<ion-select>
-			    <ion-option *ngFor="let opt of question['options']" disabled>{{ opt }}</ion-option>
+		  	<ion-select disabled>
+			    <ion-option *ngFor="let opt of question['options']">{{ opt }}</ion-option>
 		  	</ion-select>
 		</ion-item>
 

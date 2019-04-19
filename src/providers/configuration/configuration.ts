@@ -292,6 +292,39 @@ export class ConfigurationProvider {
   	// OR, handle lang ang null valued survey sa receipient.
   }
 
+  deleteSentInvitationNotifFromSurveyList(surveyId) {
+    var notifInvites = this.getNotifSurveyInvites();
+    for (var n in notifInvites) {
+      if (notifInvites[n]['s_id'] == surveyId) {
+        firebase.database().ref('/notifications/'+this.fire.auth.currentUser.uid+'/surveyNotifs/'+notifInvites[n]['notifId']).remove(
+          function(error) {
+          if(error){
+            console.log("Not able to delete invitation from notif.");
+          }else{
+            console.log("Survey ID from notif removed!");
+          }
+        });
+      }
+    }
+
+  }
+
+  getNotifSurveyInvites(){
+    var invites = [];
+    const notifinviteRef:firebase.database.Reference = firebase.database().ref('/notifications/'+this.fire.auth.currentUser.uid+'/surveyNotifs/');
+    notifinviteRef.on('value', notifInviteSnap => {
+      var notifInvite = notifInviteSnap.val();
+      if (notifInvite) {
+        for (var ni in notifInvite) {
+          if (notifInvite[ni]['type'] == 'invitation' && notifInvite[ni]['s_status'] == 'pending'){
+            invites.push(notifInvite[ni]);
+          }
+        }
+      }
+    });
+    return invites;
+  }
+
   getSurveyData(surveyId){
   	var thisSurvey = [];
     const survey:firebase.database.Reference = firebase.database().ref('/surveys/'+surveyId);

@@ -225,6 +225,8 @@ export class SurveyListPage {
     loading.present().then(() => {
       if(this.configService.isConnectedToFirebase()){
         this.configService.deleteSurveyInvitation(item['id']);
+        this.configService.deleteSentInvitationNotifFromSurveyList(item['id']);
+
       }else{
         this.configService.showSimpleConnectionError();
       }
