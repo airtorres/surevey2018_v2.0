@@ -1,4 +1,4 @@
-<!--
++<!--
   Generated template for the CreateSurveyPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
@@ -38,75 +38,81 @@
 
  	<!-- CARDS -->
 
- 	<ion-card padding style="border-radius: 12px;" *ngFor="let question of questions_with_IDs">
- 		<div text-right>
- 			<ion-note *ngIf="question['type'] == 'multipleChoice'">Multiple Choice</ion-note>
- 			<ion-note *ngIf="question['type'] == 'shortAnswer'">Short Answer</ion-note>
- 			<ion-note *ngIf="question['type'] == 'longAnswer'">Long Answer</ion-note>
- 			<ion-note *ngIf="question['type'] == 'checkbox'">Check Box</ion-note>
- 			<ion-note *ngIf="question['type'] == 'dropdown'">Dropdown</ion-note>
- 			<ion-note *ngIf="question['type'] == 'date'">Date</ion-note>
- 			<ion-note *ngIf="question['type'] == 'time'">Time</ion-note>
- 		</div>
- 		<ion-card-title id="question-title" text-wrap style="text-align: justify;">{{ question['message'] }}
- 			<span *ngIf="question['isRequired']" style="color: red">*</span>
- 		</ion-card-title>
+ 	<ion-list reorder="true">
+ 		<!-- <ion-item-group reorder="true"> -->
+ 			<!-- <ion-item> -->
+		 	<ion-card padding style="border-radius: 12px;" *ngFor="let question of questions_with_IDs">
+		 		<div text-right>
+		 			<ion-note *ngIf="question['type'] == 'multipleChoice'">Multiple Choice</ion-note>
+		 			<ion-note *ngIf="question['type'] == 'shortAnswer'">Short Answer</ion-note>
+		 			<ion-note *ngIf="question['type'] == 'longAnswer'">Long Answer</ion-note>
+		 			<ion-note *ngIf="question['type'] == 'checkbox'">Check Box</ion-note>
+		 			<ion-note *ngIf="question['type'] == 'dropdown'">Dropdown</ion-note>
+		 			<ion-note *ngIf="question['type'] == 'date'">Date</ion-note>
+		 			<ion-note *ngIf="question['type'] == 'time'">Time</ion-note>
+		 		</div>
+		 		<ion-card-title id="question-title" text-wrap style="text-align: justify;">{{ question['message'] }}
+		 			<span *ngIf="question['isRequired']" style="color: red">*</span>
+		 		</ion-card-title>
 
- 		<!-- MULTIPLE CHOICE -->
- 		<ion-list radio-group [(ngModel)]="relationship" *ngIf="question['type'] == 'multipleChoice'">
-  			<ion-item *ngFor="let opt of question['options']">
-			    <ion-label>{{ opt }}</ion-label>
-			    <ion-radio disabled></ion-radio>
-	  		</ion-item>
-		</ion-list>
+		 		<!-- MULTIPLE CHOICE -->
+		 		<ion-list radio-group [(ngModel)]="relationship" *ngIf="question['type'] == 'multipleChoice'">
+		  			<ion-item *ngFor="let opt of question['options']">
+					    <ion-label>{{ opt }}</ion-label>
+					    <ion-radio disabled></ion-radio>
+			  		</ion-item>
+				</ion-list>
 
-		<!-- CHECKBOX -->
-		<ion-list *ngIf="question['type'] == 'checkbox'">
-  			<ion-item *ngFor="let opt of question['options']">
-			    <ion-label>{{ opt }}</ion-label>
-			    <ion-checkbox disabled></ion-checkbox>
-	  		</ion-item>
-	  	</ion-list>
+				<!-- CHECKBOX -->
+				<ion-list *ngIf="question['type'] == 'checkbox'">
+		  			<ion-item *ngFor="let opt of question['options']">
+					    <ion-label>{{ opt }}</ion-label>
+					    <ion-checkbox disabled></ion-checkbox>
+			  		</ion-item>
+			  	</ion-list>
 
- 		<!-- DROPDOWN -->
-	  	<ion-item *ngIf="question['type'] == 'dropdown'">
-			<ion-label>Select</ion-label>
-		  	<ion-select disabled>
-			    <ion-option *ngFor="let opt of question['options']">{{ opt }}</ion-option>
-		  	</ion-select>
-		</ion-item>
+		 		<!-- DROPDOWN -->
+			  	<ion-item *ngIf="question['type'] == 'dropdown'">
+					<ion-label>Select</ion-label>
+				  	<ion-select disabled>
+					    <ion-option *ngFor="let opt of question['options']">{{ opt }}</ion-option>
+				  	</ion-select>
+				</ion-item>
 
-		<!-- SHORT ANSWER -->
-		<ion-item *ngIf="question['type'] == 'shortAnswer'">
- 			<ion-input type="text" placeholder="Short answer text" disabled></ion-input>
- 		</ion-item>
+				<!-- SHORT ANSWER -->
+				<ion-item *ngIf="question['type'] == 'shortAnswer'">
+		 			<ion-input type="text" placeholder="Short answer text" disabled></ion-input>
+		 		</ion-item>
 
- 		<!-- LONG ANSWER -->
- 		<ion-item *ngIf="question['type'] == 'longAnswer'">
- 			<ion-input type="text" placeholder="Long answer text" disabled></ion-input>
- 		</ion-item>
+		 		<!-- LONG ANSWER -->
+		 		<ion-item *ngIf="question['type'] == 'longAnswer'">
+		 			<ion-input type="text" placeholder="Long answer text" disabled></ion-input>
+		 		</ion-item>
 
- 		<!-- DATE -->
- 		<ion-item *ngIf="question['type'] == 'date'">
- 			<ion-label>Select Date</ion-label>
-			<ion-datetime displayFormat="MMM DD, YYYY" disabled></ion-datetime>
- 		</ion-item>
+		 		<!-- DATE -->
+		 		<ion-item *ngIf="question['type'] == 'date'">
+		 			<ion-label>Select Date</ion-label>
+					<ion-datetime displayFormat="MMM DD, YYYY" disabled></ion-datetime>
+		 		</ion-item>
 
- 		<!-- TIME -->
- 		<ion-item *ngIf="question['type'] == 'time'">
- 			<ion-label>Select Time</ion-label>
-			<ion-datetime displayFormat= "HH:mm" disabled></ion-datetime>
- 		</ion-item>
+		 		<!-- TIME -->
+		 		<ion-item *ngIf="question['type'] == 'time'">
+		 			<ion-label>Select Time</ion-label>
+					<ion-datetime displayFormat= "HH:mm" disabled></ion-datetime>
+		 		</ion-item>
 
-		<ion-buttons end>
-			<button ion-button clear (click)="deleteQuestion(question['q_id'], question['message'])">
-				<ion-icon name="trash"></ion-icon>
-			</button>
-			<button ion-button clear>
-				<ion-icon name="create" (click)="editQuestion(question['q_id'])"></ion-icon>
-			</button>
-		</ion-buttons>
- 	</ion-card>
+				<ion-buttons end>
+					<button ion-button clear (click)="deleteQuestion(question['q_id'], question['message'])">
+						<ion-icon name="trash"></ion-icon>
+					</button>
+					<button ion-button clear>
+						<ion-icon name="create" (click)="editQuestion(question['q_id'])"></ion-icon>
+					</button>
+				</ion-buttons>
+		 	</ion-card>
+			<!-- </ion-item> -->
+		<!-- </ion-item-group> -->
+	</ion-list>
 
  	<!-- giving a space to click edit-button for the last card -->
  	<div style="margin-bottom: 80px"></div>
