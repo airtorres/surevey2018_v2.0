@@ -8,10 +8,10 @@
 </ion-header>
 
 <ion-menu [content]="content">
-	<ion-header text-center>
+	<ion-header text-center no-border>
 		<ion-toolbar padding>
 			<ion-avatar>
-				<img class="avatar" src="../assets/imgs/user_icon_mini.png">
+				<img class="avatar" src="../assets/imgs/user.png">
 			</ion-avatar>
 			<ion-label text-center id="usernameTitle">
 				{{ username }}
@@ -22,15 +22,15 @@
 
 	<ion-content class="menu_items">
 		<ion-list>
-			<ion-item (click)="gotoProfile()" menuClose>
+			<ion-item (click)="gotoProfile()" menuClose no-lines>
 				<ion-icon item-left name="person"></ion-icon>
 				Profile
 			</ion-item>
-			<ion-item (click)="gotoSettings()" menuClose>
+			<ion-item (click)="gotoSettings()" menuClose no-lines>
 				<ion-icon item-left name="settings"></ion-icon>
 				Settings
 			</ion-item>
-			<ion-item (click)="logout()" menuClose>
+			<ion-item (click)="logout()" menuClose no-lines>
 				<ion-icon  item-left name="log-out"></ion-icon>
 				Sign out
 			</ion-item>

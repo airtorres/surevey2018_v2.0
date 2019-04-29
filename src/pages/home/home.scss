@@ -29,7 +29,8 @@ page-home {
 	}
 
 	.menu_items{
-		margin-top: 15px;
+		margin-top: 30px;
+		margin-left: 18px;
 	}
 	.ongoing-card-header{
 		background-color:  map-get($colors, primary);
@@ -59,11 +60,14 @@ page-home {
 		margin: 13px 8px 3px 0;
 		font-size: 21px;
 		font-weight: bold;
-		letter-spacing: 1px;
+		letter-spacing: 2px;
 	}
 	#emailTitle {
 		margin: 0px 8px 0px 0;
 		font-size: 14px;
 	}
 
+	ion-toolbar {
+		margin-top: 20px;
+	}
 }
