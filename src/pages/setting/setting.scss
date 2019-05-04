@@ -1,6 +1,11 @@
 page-setting {
-	ion-label {
+	#divider {
 		text-transform: uppercase;
-		font-size: 12px;
+		font-size: 15px;
+		letter-spacing: 2px;
+	}
+
+	#save_btn {
+		margin-top: 25px;
 	}
 }

@@ -8,7 +8,7 @@
 
 
 <ion-content padding>
-	<ion-item-divider no-lines style="text-transform: uppercase;">
+	<ion-item-divider no-lines id="divider">
 		Change Password
 	</ion-item-divider>
 
@@ -28,6 +28,6 @@
 	</ion-item>
 
 	<ion-buttons end>
-		<button ion-button (click)="updatePassword()">Save Changes</button>
+		<button ion-button (click)="updatePassword()" id="save_btn">Save Changes</button>
 	</ion-buttons>
 </ion-content>
