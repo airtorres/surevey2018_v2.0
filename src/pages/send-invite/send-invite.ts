@@ -244,16 +244,19 @@ export class SendInvitePage {
             // console.log("unsent: ", unsent);
           }
           else {
-            firebase.database().ref("/user_surveys/"+u+"/invitations/"+survey_id).set(this.thisSurvey, function(error){
+            firebase.database().ref("/user_surveys/"+u+"/invitations/"+survey_id).set(this.thisSurvey, function(error){              
               if(error){
                 console.log("Not successful pushing to invitations (for some users ONLY)."+error);
                 successFlag = false;
               }else{
-                firebase.database().ref('/notifications/'+ u +'/surveyNotifs/' + newNotifKey).set(bindSelf.notification);
                 console.log("Successfully added the surveyID to invitations!");
                 successFlag = true && successFlag;
               }
             });
+
+            if (successFlag) {
+              firebase.database().ref('/notifications/'+ u +'/surveyNotifs/' + newNotifKey).set(bindSelf.notification);
+            }
           }
           break;
         }
