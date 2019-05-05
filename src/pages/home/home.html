@@ -65,7 +65,9 @@
 			    </ion-col>
 
 			    <ion-col>
-			     	<button ion-button id="view-ongoing-btn" (click)="gotoSummary(item)">VIEW DETAILS</button>
+			    	<ion-buttons end>
+			     		<button ion-button id="view-ongoing-btn" (click)="gotoSummary(item)">VIEW DETAILS</button>
+			     	</ion-buttons>
 			    </ion-col>
 		  	</ion-row>
 		</div>
@@ -98,7 +100,9 @@
 				    </ion-col>
 
 				    <ion-col>
-				     	<button ion-button small id="invite-respond-btn" (click)="gotoAnswer(item)">RESPOND NOW</button>
+				    	<ion-buttons end>
+					     	<button ion-button small id="invite-respond-btn" (click)="gotoAnswer(item)">RESPOND NOW</button>
+					    </ion-buttons>
 				    </ion-col>
 			  	</ion-row>
 
