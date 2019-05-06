@@ -22,18 +22,18 @@
 				<ion-avatar item-start>
 		       		<ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
 		      	</ion-avatar>
-		      	<h3 #name>{{ getChatmateName(chatmateId) }}</h3>
-		      	<p>{{ getLatestMessageForDisplay(chatmateId) }}</p>
+		      	<h3 #name>{{ chatmateNames[chatmateId] }}</h3>
+		      	<p>{{ getLatestMessageForDisplay(chatmateId)['last_msg'] }}</p>
 		    </button>
 
 		    <!-- READ MESSAGES -->
 		    <button *ngIf="isReadDict[chatmateId]" class="chat-messages" id="{{chatmateId}}" ion-item (click)="gotoChat(chatmateId)" (press)="showItemOption(chatmateId)" no-lines style="border-bottom: 1px solid gainsboro;">
-		    	<ion-note item-end>Oct 19</ion-note>
+		    	<ion-note item-end>{{ getLatestMessageForDisplay(chatmateId)['date'] }}</ion-note>
 				<ion-avatar item-start>
 		       		<ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
 		      	</ion-avatar>
-		      	<h3 #name>{{ getChatmateName(chatmateId) }}</h3>
-		      	<p>{{ getLatestMessageForDisplay(chatmateId) }}</p>
+		      	<h3 #name>{{ chatmateNames[chatmateId] }}</h3>
+		      	<p>{{ getLatestMessageForDisplay(chatmateId)['last_msg'] }}</p>
 		    </button>
 		</div>
 	</ion-list>

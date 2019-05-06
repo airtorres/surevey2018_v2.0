@@ -24,6 +24,7 @@ export class ChatBoxPage {
   connectedToFirebaseFlag = true;
 
   isReadDict = {}
+  messageDisplays = {};
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public actionSheetController: ActionSheetController,
@@ -36,7 +37,6 @@ export class ChatBoxPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatBoxPage');
 
-    var that = this;
     firebase.database().ref('/chatmates/'+this.userId)
     .on('value', chatmatesSnapshot => {
       var allChatmates = chatmatesSnapshot.val();
@@ -44,25 +44,51 @@ export class ChatBoxPage {
       this.chatmatelist = [];
       if (allChatmates){
         for (var id in allChatmates){
-          console.log(allChatmates[id]);
+
           this.chatmatelist.push(allChatmates[id]);
 
-          var convoId = this.getConvoId(this.userId, allChatmates[id]);
-
-          firebase.database().ref("/notifications/"+that.userId+"/chatNotifs/"+convoId+"/isSeen")
-          .on('value', readSnapshot => {
-            var isRead = readSnapshot.val();
-            that.isReadDict[allChatmates[id]] = isRead;
-          });
+          this.loadMsgDisplays(allChatmates[id]);
+          this.getChatmateName(allChatmates[id]);
+          this.loadisReadNotifs(allChatmates[id]);
         }
       }
     });
   }
 
+  loadisReadNotifs(chatmateId){
+    var convoId = this.getConvoId(this.userId, chatmateId);
+    firebase.database().ref("/notifications/"+this.userId+"/chatNotifs/"+convoId+"/isSeen")
+    .on('value', readSnapshot => {
+      var isRead = readSnapshot.val();
+      this.isReadDict[chatmateId] = isRead;
+    });
+  }
+
   getChatmateName(cid){
-    var name = this.configService.transformAuthorNameNoEmail(cid);
-    this.chatmateNames[cid] = '';
-    this.chatmateNames[cid] = name;
+    // var name = this.configService.transformAuthorNameNoEmail(cid);
+    var name = '';
+    var email = '';
+    const user:firebase.database.Reference = firebase.database().ref('/users/'+cid);
+    user.on('value', userSnapshot => {
+      var u = userSnapshot.val();
+
+      if(u){
+        email = u['email'];
+        var firstname = u['first_name'];
+        var lastname = u['last_name'];
+
+        if(u['first_name'] != null && u['last_name'] != null){
+          name = firstname + ' ' + lastname;
+        }
+      }
+
+      if(name == ' '){
+        name = email;
+      }
+
+      this.chatmateNames[cid] = '';
+      this.chatmateNames[cid] = name;
+    });
     return name;
   }
 
@@ -74,21 +100,12 @@ export class ChatBoxPage {
     }
   }
 
+  transformDate(ISOString){
+    return this.configService.transformDate(ISOString) + " " + this.configService.transformTime(ISOString);
+  }
+
   getLatestMessageForDisplay(chatmateId){
-    var convoId = this.getConvoId(chatmateId, this.userId);
-    var last = '';
-    firebase.database().ref('/chat_messages/'+ convoId).orderByChild('date_sent')
-    .on('value', chatSnapshot => {
-      var allMsg = chatSnapshot.val();
-      if (allMsg){
-        var msg = [];
-        for (var m in allMsg){
-          msg.push(allMsg[m]['content']);
-        }
-          last = msg[msg.length-1];
-        }
-    });
-    return last;
+    return this.messageDisplays[chatmateId];
   }
 
   markAsRead(chatmateId){
@@ -109,6 +126,33 @@ export class ChatBoxPage {
 
   gotoNewMsg(){
     this.navCtrl.push(NewMsgPage, {});
+  }
+
+  loadMsgDisplays(chatmateId){
+    var convoId = this.getConvoId(chatmateId, this.userId);
+    var last = '';
+    firebase.database().ref('/chat_messages/'+ convoId).orderByChild('date_sent')
+    .on('value', chatSnapshot => {
+      var allMsg = chatSnapshot.val();
+      if (allMsg){
+        var msg = [];
+        for (var m in allMsg){
+          msg.push(allMsg[m]);
+        }
+        last = msg[msg.length-1];
+        this.messageDisplays[chatmateId] = {};
+        this.messageDisplays[chatmateId]['last_msg'] = '';
+        this.messageDisplays[chatmateId]['last_msg'] = last['content'];
+        this.messageDisplays[chatmateId]['date'] = '';
+        var date = this.transformDate(last['date_sent']).split(' ');
+        var fdate = '';
+        if(date){
+          var formated = (date[0] + ' ' + date[1]).split(',');
+          fdate = formated[0];
+        }
+        this.messageDisplays[chatmateId]['date'] = fdate;
+      }
+    });
   }
 
   ionViewDidEnter(){
