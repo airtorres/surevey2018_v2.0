@@ -12,6 +12,7 @@ import { ConfigurationProvider } from '../../providers/configuration/configurati
   templateUrl: 'chat.html',
 })
 export class ChatPage {
+  @ViewChild('content') content;
   @ViewChild('chatMessage') chatMessage;
 	chatmate = "(Missing Receiver Info)";
   conversationId;
@@ -99,6 +100,7 @@ export class ChatPage {
           firebase.database().ref("notifications/"+bindSelf.authorId+"/chatNotifs/"+newPostKey).set(chatNotif);
           console.log("Message sent!!");
           that.chatMessage.value = "";
+          that.content.scrollToBottom(500);
         }
       });
 
@@ -141,5 +143,10 @@ export class ChatPage {
     ]
     });
     alert.present();
+  }
+
+  ionViewDidEnter(){
+    console.log("chat page entered.");
+    this.content.scrollToBottom(500);
   }
 }
