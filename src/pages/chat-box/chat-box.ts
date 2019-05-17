@@ -105,7 +105,7 @@ export class ChatBoxPage {
   }
 
   getLatestMessageForDisplay(chatmateId){
-    return this.messageDisplays[chatmateId];
+    return this.messageDisplays[chatmateId] ? this.messageDisplays[chatmateId]:'';
   }
 
   markAsRead(chatmateId){
