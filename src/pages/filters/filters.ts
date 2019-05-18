@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-// import { AgeValidator } from  '../validators/age';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
@@ -23,7 +21,6 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'filters.html',
 })
 export class FiltersPage {
-  validateInputs : FormGroup;
   @ViewChild('min') min;
   @ViewChild('max') max;
   @ViewChild('numPersons') numPersons;
@@ -48,7 +45,6 @@ export class FiltersPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	public toastCtrl: ToastController, private storage: Storage,
-    private formbuilder: FormBuilder,
     private fire: AngularFireAuth,
     public configService: ConfigurationProvider,
     public loadingCtrl: LoadingController) {
@@ -352,6 +348,7 @@ export class FiltersPage {
     });
 
     minAgeRangeError.present();
+    document.getElementById('ageRange').classList.add("warning");
   }
   validateInputAgeRange() {
     let ageRangeError = this.toastCtrl.create({
@@ -361,6 +358,7 @@ export class FiltersPage {
     });
 
     ageRangeError.present();
+    document.getElementById('ageRange').classList.add("warning");
   }
 
 	applyFilter() {
