@@ -39,10 +39,13 @@
 			<ion-input value="{{userData['username']}}" #username></ion-input>
 		</ion-item>
 
-		<ion-item>
-			<ion-label color="primary">Birth Date</ion-label>
-			<ion-datetime displayFormat="MMM DD, YYYY" placeholder="Select Date" [(ngModel)]="bdate"></ion-datetime>
-		</ion-item>
+		<div>
+			<ion-item>
+				<ion-label color="primary">Birth Date</ion-label>
+				<ion-datetime displayFormat="MMM DD, YYYY" placeholder="Select Date" [(ngModel)]="bdate" min="1928" (ionChange)="getBdate()"></ion-datetime>
+			</ion-item>
+			<ion-note style="margin-left: 16px; color:#FF675C; text-transform: none;">{{bDateValidationNote}}</ion-note> 
+		</div>
 
 		<ion-item>
 		  	<ion-label color="primary">Sex</ion-label>

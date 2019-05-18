@@ -50,6 +50,7 @@ export class EditProfilePage {
   userCanLeave = false;
   exitFlag = false;
   completeCountryStateCityData;
+  bDateValidationNote : string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private alertCtrl: AlertController,
@@ -128,6 +129,18 @@ export class EditProfilePage {
     }
   }
 
+  getBdate() {
+    console.log(this.bdate);
+    var age = this.calculateAge(this.bdate);
+    if (age < 15) {
+      this.bDateValidationNote = "You must 15 years old and above."
+    }
+    else {
+      this.bDateValidationNote = "";
+    }
+
+  }
+
   getCountries(){
     var countryNames = [];
     for( var c in this.completeCountryStateCityData){
@@ -192,31 +205,42 @@ export class EditProfilePage {
 
 	saveProfile(popFlag) {
     this.exitFlag = true;
-
+    var ageValFlag = true;
     if(this.configService.isConnectedToFirebase()){
-		  		
-  	  firebase.database().ref('/users/'+ this.userId + '/first_name/').set(this.firstname.value);
-   		firebase.database().ref('/users/'+ this.userId + '/last_name/').set(this.lastname.value);
-   		firebase.database().ref('/users/'+ this.userId + '/username/').set(this.username.value);
 
-   		if (this.profession != undefined) {
-   			firebase.database().ref('/users/'+ this.userId + '/profession/').set(this.profession);
-   		}
+      if (this.bdate != null) {
+        if (this.calculateAge(this.bdate) < 15) {
+          ageValFlag = false;
+          popFlag = false;
+          this.configService.displayToast('You must be 15 years old and above.');
+          this.bDateValidationNote = "";
+        }
+      }
+		  
+      if (ageValFlag) {		
+    	  firebase.database().ref('/users/'+ this.userId + '/first_name/').set(this.firstname.value);
+     		firebase.database().ref('/users/'+ this.userId + '/last_name/').set(this.lastname.value);
+     		firebase.database().ref('/users/'+ this.userId + '/username/').set(this.username.value);
 
-   		if (this.sex != undefined) {
-   			firebase.database().ref('/users/'+ this.userId + '/sex/').set(this.sex);
-   		}
+     		if (this.profession != undefined) {
+     			firebase.database().ref('/users/'+ this.userId + '/profession/').set(this.profession);
+     		}
 
-   		if (this.bdate != null) {
-   			firebase.database().ref('/users/'+ this.userId + '/birthdate/').set(this.bdate);
-   			firebase.database().ref('/users/' + this.userId + '/age/').set(this.calculateAge(this.bdate));
-   		}
+     		if (this.sex != undefined) {
+     			firebase.database().ref('/users/'+ this.userId + '/sex/').set(this.sex);
+     		}
 
-      firebase.database().ref('/users/' + this.userId + '/country/').set(this.country);
-      firebase.database().ref('/users/' + this.userId + '/state/').set(this.state);
-      firebase.database().ref('/users/' + this.userId + '/city/').set(this.city);
+     		if (this.bdate != null) {
+     			firebase.database().ref('/users/'+ this.userId + '/birthdate/').set(this.bdate);
+     			firebase.database().ref('/users/' + this.userId + '/age/').set(this.calculateAge(this.bdate));
+     		}
 
-      this.configService.displayToast('Success! Profile Updated!');
+        firebase.database().ref('/users/' + this.userId + '/country/').set(this.country);
+        firebase.database().ref('/users/' + this.userId + '/state/').set(this.state);
+        firebase.database().ref('/users/' + this.userId + '/city/').set(this.city);
+
+        this.configService.displayToast('Success! Profile Updated!');
+      }
     }
     else{
       this.configService.showSimpleConnectionError();
