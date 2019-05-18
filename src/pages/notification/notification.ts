@@ -32,6 +32,8 @@ export class NotificationPage {
   public user_notifID = [];
   public allUserNotif = [];
 
+  connectedToFirebaseFlag = true;
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public actionSheetController: ActionSheetController,
     public alertCtrl: AlertController, public loadingCtrl: LoadingController,
@@ -51,9 +53,17 @@ export class NotificationPage {
   }
 
   ionViewDidEnter() {
-    this.updateIsSeen();
-    console.log(this.allUserNotif);
-    console.log(this.user_notifID);
+    this.connectedToFirebaseFlag = this.configService.connectedToFirebaseFlag;
+    console.log("ionviewdidenter chatbox");
+
+    if(!this.connectedToFirebaseFlag){
+      this.configService.displayToast('Cannot load messages. No Internet Connection.');
+    }
+    else {
+      this.updateIsSeen();
+      console.log(this.allUserNotif);
+      console.log(this.user_notifID);
+    }
   }
 
   fetchNotifFromFirebase() {

@@ -163,7 +163,7 @@ export class SendInvitePage {
       }
     }
 
-    if ( (this.selected_users.length < this.numPersons && this.selAll == true) || (this.selected_users.length < this.all_users_email.length && this.selAll == true) ) {
+    if ( (this.selected_users.length < this.numPersons && this.selAll == true) || (this.selected_users.length < this.all_users_email.length && this.selAll == true) || (this.selected_users.length == 0) ) {
       this.selAll = false;
     }
     else if ( (this.selected_users.length == this.numPersons) || (this.selected_users.length == this.all_users_email.length) ) {
@@ -188,7 +188,7 @@ export class SendInvitePage {
     }
   }
 
-  clearSelected(){
+  clearSelected() {
     for (var user_email in this.all_users_email) {
       this.selections[this.all_users_email[user_email]] = false;
       this.selected_users = [];

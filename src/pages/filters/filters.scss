@@ -10,7 +10,7 @@ page-filters {
 	}
 
 	.card {
-		border-radius: 10px;	
+		border-radius: 10px;
 
 		.card-title {
 			font-size: 16px;
@@ -20,6 +20,17 @@ page-filters {
 		.stacked {
 			margin: 0px 0px 0px 0px;
 		}
+	}
+
+	.warning{
+		border: 3px #FFC0CB solid;
+	}
+
+	.errorMessage {
+		color: red;
+		font-size: 11px;
+		font-style: italic;
+		text-align: center;
 	}
 
 	#applybtn {
@@ -37,7 +48,7 @@ page-filters {
 		padding: 8px;
 
 		ion-note {
-			color: black;
+			color: #FF675C;
 		}
 	}
 }

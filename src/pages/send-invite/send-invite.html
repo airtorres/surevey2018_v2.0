@@ -28,19 +28,10 @@
 		</button>
 	</ion-buttons>
 
-	<ion-item no-lines>
+	<ion-item no-lines *ngIf="all_users_email.length != 0">
 		<ion-checkbox [(ngModel)]="selAll" (click)="selectAllUsers()"></ion-checkbox>
 		<ion-label>Select All</ion-label>
 	</ion-item>
-
-	<!-- <div style="padding-left: 16px; padding-right: 16px;" id="noteDiv">
-		<ion-item text-wrap no-lines id="notEnoughUserGenerated" *ngIf="generated_users_from_filter.length < numPersons">
-			<ion-label>There weren't enough users that fit your filter options.</ion-label> -->
-			<!-- <button item-end clear ion-button (click)="removeNote()">
-				<ion-icon name="close"></ion-icon>
-			</button>
-		</ion-item>
-	</div> -->
 
 	<!-- DISPLAY CONTACTS -->
 	<ion-list text-wrap>
@@ -64,7 +55,7 @@
 </ion-content>
 
 <ion-footer>
-	<ion-toolbar *ngIf="selected_users.length > 0" id="toolbar" style="display: block;">
+	<ion-toolbar *ngIf="selected_users.length > 0">
 		<ion-item no-lines>
 			<button item-start clear ion-button (click)="clearSelected()">
 				<ion-icon name="close"></ion-icon>

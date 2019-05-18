@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+// import { AgeValidator } from  '../validators/age';
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
@@ -21,7 +23,7 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'filters.html',
 })
 export class FiltersPage {
-  
+  validateInputs : FormGroup;
   @ViewChild('min') min;
   @ViewChild('max') max;
   @ViewChild('numPersons') numPersons;
@@ -46,6 +48,7 @@ export class FiltersPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   	public toastCtrl: ToastController, private storage: Storage,
+    private formbuilder: FormBuilder,
     private fire: AngularFireAuth,
     public configService: ConfigurationProvider,
     public loadingCtrl: LoadingController) {
@@ -55,7 +58,6 @@ export class FiltersPage {
       this.countries = this.configService.getAllCountryNames();
       console.log(this.countries);
     }
-
   	this.sex = "Male & Female";
   	this.profession = "Any";
   	this.country = "Anywhere";
@@ -224,10 +226,20 @@ export class FiltersPage {
     if (ageMin != '' && ageMax != '') {
       console.log("ageMin and ageMax");
       arrayofUsers = [];
-      for ( var mn in filteredUsers){
-        if(filteredUsers[mn]['age'] >= ageMin && filteredUsers[mn]['age'] <= ageMax){
-          console.log(filteredUsers[mn]['age'], filteredUsers[mn]['email']);
-          arrayofUsers.push(filteredUsers[mn]);
+      if (ageMin == ageMax) {
+        for ( var mn1 in filteredUsers){
+          if(filteredUsers[mn1]['age'] == ageMin){
+            console.log(filteredUsers[mn1]['age'], filteredUsers[mn1]['email']);
+            arrayofUsers.push(filteredUsers[mn1]);
+          }
+        }
+      }
+      else {
+        for ( var mn in filteredUsers){
+          if(filteredUsers[mn]['age'] >= ageMin && filteredUsers[mn]['age'] <= ageMax){
+            console.log(filteredUsers[mn]['age'], filteredUsers[mn]['email']);
+            arrayofUsers.push(filteredUsers[mn]);
+          }
         }
       }
       filteredUsers = [];
@@ -311,14 +323,44 @@ export class FiltersPage {
   }
 
   requiredField() {
-    let incompleteFieldsToast = this.toastCtrl.create({
-      message: 'Please input the number of respondents to be generated.',
+    if (this.numPersons.value == '') {
+      let incompleteFieldsToast = this.toastCtrl.create({
+        message: 'Please input the number of respondents to be generated.',
+        duration: 2000,
+        position: 'bottom'
+      });
+
+      incompleteFieldsToast.present();
+    }
+    else if (this.numPersons.value < 1) {
+      let invalidToast = this.toastCtrl.create({
+        message: 'Please input numbers greater than 1.',
+        duration: 2000,
+        position: 'bottom'
+      });
+
+      invalidToast.present();
+    }
+    document.getElementById('numOfRespondents').classList.add("warning");
+  }
+
+  validateAgeRange() {
+    let minAgeRangeError = this.toastCtrl.create({
+      message: 'Please input positive numbers for age between 15-90.',
       duration: 2000,
       position: 'bottom'
     });
 
-    incompleteFieldsToast.present();
-    this.numPersons.setFocus();
+    minAgeRangeError.present();
+  }
+  validateInputAgeRange() {
+    let ageRangeError = this.toastCtrl.create({
+      message: 'Invalid range.',
+      duration: 2000,
+      position: 'bottom'
+    });
+
+    ageRangeError.present();
   }
 
 	applyFilter() {
@@ -334,9 +376,10 @@ export class FiltersPage {
 
 
     // if empty ang number of respondents
-    if (this.numPersons.value == '') { 
+    if (this.numPersons.value == '' || this.numPersons.value < 1) { 
       this.requiredField();
     }
+  
     else {
        // for random sampling
       if (this.min.value == '' && this.max.value == '' && this.sex == 'Male & Female' && this.profession == 'Any' && this.country == 'Anywhere' && this.state == 'Anywhere' && this.city == 'Anywhere') {
@@ -348,17 +391,43 @@ export class FiltersPage {
           this.randomSample();
           generateUsersByRandom.dismiss();
         });
-      }   
+      }
       else {
+        var validAge = true;
         // cluster or stratified sampling
-        let generateUsersByClusterStratified = this.loadingCtrl.create({
-          content: '\nApplying filters... Generating users... Please wait'
-        });
+        if (this.min.value != '' && this.max.value == '') {
+          if (this.min.value < 15 || this.min.value > 90) {
+            validAge = false;
+            this.validateAgeRange();
+          }
+        }
+        else if (this.min.value == '' && this.max.value != '') {
+           if (this.max.value < 15 || this.max.value > 90) {
+            validAge = false;
+            this.validateAgeRange();
+          }
+        }
+        else if (this.min.value != '' && this.max.value != '') {
+          if (this.max.value < this.min.value) {
+            validAge = false;
+            this.validateInputAgeRange();
+          }
+          else if (this.min.value < 15 || this.min.value > 90 || this.max.value < 15 || this.max.value > 90){
+            validAge = false;
+            this.validateAgeRange();
+          }
+        }
 
-        generateUsersByClusterStratified.present().then(() => {
-          this.cluster_stratifiedSample();
-          generateUsersByClusterStratified.dismiss();
-        });
+        if (validAge) {
+          let generateUsersByClusterStratified = this.loadingCtrl.create({
+            content: '\nApplying filters... Generating users... Please wait'
+          });
+
+          generateUsersByClusterStratified.present().then(() => {
+            this.cluster_stratifiedSample();
+            generateUsersByClusterStratified.dismiss();
+          });
+        }
       }
     }
   }

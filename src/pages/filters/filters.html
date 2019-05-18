@@ -21,14 +21,15 @@
 
 <ion-content>
 
-	<ion-card id="filterNote" justify>
-		<ion-note> <strong>Note:</strong> Enter the necessesary filters you need, to generate a list of users for you to send survey invitations. If you wish to generate users randomly using the default values of the filter inputs, fill in the number of users you want to generate.  </ion-note>
+	<ion-card id="filterNote" text-justify>
+		<ion-note> <strong>Note:</strong> Enter the necessesary filters you need, to generate a list of users for you to send survey invitations. If you wish to generate users randomly using the default values of the filter inputs, fill in <strong>ONLY</strong> the number of users you want to generate. <br>  
+		In <strong>AGE RANGE</strong>, you are allowed to input the minimum age only or the maximum age only or both. If you wish to send invites to a specific age. For example, 19 years old, enter 19 to both min and max input field. The default min is 15 and default max is 90. You don't need to input the default value. 
+		</ion-note>
 	</ion-card>
 
-	<ion-card class="card" style="margin-top: 16px;">
+	<ion-card class="card" style="margin-top: 16px;" id="ageRange">
 		<ion-card-content>
 			<ion-card-title color="primary" class="card-title">AGE RANGE</ion-card-title>
-
 			<ion-list id="age">
 				<ion-grid>
 					<ion-row>
@@ -39,7 +40,7 @@
 
 						<ion-col>
 							<ion-label stacked class="stacked">MAX</ion-label>
-							<ion-input type="number" #max [(ngModel)]="maximum" min="{{minimum}}" max="100"></ion-input>
+							<ion-input type="number" #max [(ngModel)]="maximum" min="{{minimum}}" max="90"></ion-input>
 						</ion-col>
 					</ion-row>
 				</ion-grid>
@@ -123,11 +124,11 @@
 		</ion-card-content>
 	</ion-card>
 
-	<ion-card class="card">
+	<ion-card class="card" id="numOfRespondents">
 		<ion-card-content>
 			<ion-card-title color="primary" class="card-title">NUMBER OF RESPONDENTS</ion-card-title>
-			<ion-note style="color:gray;">* This field is required.</ion-note>
-			<ion-input required type="number" [(ngModel)]="numberOfPersons" style="width: 40%;" #numPersons></ion-input>
+			<ion-note style="color:#FF675C;">* This field is required.</ion-note>
+			<ion-input id="numPersons" required type="number" min="1" [(ngModel)]="numberOfPersons" style="width: 40%;" #numPersons></ion-input>
 		</ion-card-content>
 	</ion-card>
 
