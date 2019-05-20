@@ -3,13 +3,6 @@ import { IonicPage, NavController, NavParams, ViewController, AlertController } 
 
 import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
-/**
- * Generated class for the QuestionPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-question',
@@ -33,7 +26,6 @@ export class QuestionPage {
   addingFlag = false;
   leaveNowFlag = true;
 
-  prev_array = [];
   prev_first_opt;
   prev_qMsg;
   prev_anArray = [];
@@ -67,10 +59,13 @@ export class QuestionPage {
     }
 
     // storing the previous values to check the changes
-    this.prev_array = this.anArray;
+    this.prev_anArray = [];
+    for (var i in this.anArray){
+      this.prev_anArray.push(this.anArray[i]);
+    }
+    this.prev_anArray = JSON.stringify(this.prev_anArray);
     this.prev_isRequired = this.thisQuestion['isRequired'];
     this.prev_qMsg = this.thisQuestion? this.thisQuestion['message']: '';
-    this.prev_anArray = this.anArray;
     if(this.type == "multipleChoice" || this.type == "checkbox" || this.type == "dropdown"){
       this.prev_first_opt = this.thisQuestion['options'].length == 0? '':this.thisQuestion['options'][0];
     }
@@ -190,15 +185,15 @@ export class QuestionPage {
     var exitFlag = false;
 
     if(this.type == "multipleChoice" && this.prev_first_opt == this.firstOpt_multipleChoice.value
-      && this.prev_anArray == this.anArray){
+      && this.prev_anArray == JSON.stringify(this.anArray)){
       exitFlag = true;
     }
     else if( this.type == "checkbox" && this.prev_first_opt == this.firstOpt_checkbox.value
-      && this.prev_anArray == this.anArray){
+      && this.prev_anArray == JSON.stringify(this.anArray)){
       exitFlag = true;
     }
     else if(this.type == "dropdown" && this.prev_first_opt == this.firstOpt_dropdown.value
-      && this.prev_anArray == this.anArray){
+      && this.prev_anArray == JSON.stringify(this.anArray)){
       exitFlag = true;
     }
     else if(this.type == "shortAnswer" || this.type == "longAnswer" || this.type == "date" || this.type == "time"){
