@@ -137,6 +137,9 @@ export class FiltersPage {
   	this.country = "Anywhere";
   	this.state = "Anywhere";
   	this.city = "Anywhere";
+    this.numberOfPersons = "";
+    document.getElementById('ageRange').classList.remove("warning");
+    document.getElementById('numOfRespondents').classList.remove("warning");
 	}
 
   applyFilterToast() {
