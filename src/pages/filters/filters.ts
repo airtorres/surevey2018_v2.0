@@ -31,9 +31,15 @@ export class FiltersPage {
   city: any;
   minimum: string;
   maximum: string;
+  numberOfPersons: string;
   countries = [];
   states = [];
   cities = [];
+  professions = ['Student', 'Teacher', 'Engineer', 'Lawyer', 'Technician', 'Architect', 'Musician', 'Athlete',
+  'Accoutant', 'Agriculturist', 'Animator', 'Carpenter', 'Cashier', 'Computer Programmer', 'Florist', 'Food Technologist',
+  'Forester', 'Graphic Artist', ' Heavy Equipment Operator', 'Driver', 'Dentist', 'Nurse', 'Doctor', 'Hospital Staff', 'Accounting Staff',
+  'Human Resource Manager', 'Landscape artists', 'Librarian', 'Mason', 'Medical Technologist', 'Nutritionist', 'Painter',
+  'Pharmacist', 'Physician', 'Plumber', 'Software Developer', 'System Analyst', 'Veterinarian', 'Web Developer' ,'Web Designer', 'Welder'];
 
   users = [];
   all_users = [];

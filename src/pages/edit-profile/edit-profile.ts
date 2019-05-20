@@ -40,7 +40,7 @@ export class EditProfilePage {
   'Accoutant', 'Agriculturist', 'Animator', 'Carpenter', 'Cashier', 'Computer Programmer', 'Florist', 'Food Technologist',
   'Forester', 'Graphic Artist', ' Heavy Equipment Operator', 'Driver', 'Dentist', 'Nurse', 'Doctor', 'Hospital Staff', 'Accounting Staff',
   'Human Resource Manager', 'Landscape artists', 'Librarian', 'Mason', 'Medical Technologist', 'Nutritionist', 'Painter',
-  'Pharmacist', 'Physician', 'Plumber', 'Software Developer', 'System Analyst', 'Veterinarian', 'Web Developer' ,'Web Designer', 'Welder']
+  'Pharmacist', 'Physician', 'Plumber', 'Software Developer', 'System Analyst', 'Veterinarian', 'Web Developer' ,'Web Designer', 'Welder'];
 
   prev_birthdate = '';
   prev_city = '';

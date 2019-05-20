@@ -74,15 +74,7 @@
 					<ion-label>Profession</ion-label>
 					<ion-select [(ngModel)]="profession">
 						<ion-option value="Any">Any</ion-option>
-						<ion-option value="Student">Student</ion-option>
-						<ion-option value="Teacher">Teacher</ion-option>
-						<ion-option value="Engineer">Engineer</ion-option>
-						<ion-option value="Programmer">Programmer</ion-option>
-						<ion-option value="Lawyer">Lawyer</ion-option>
-						<ion-option value="Technician">Technician</ion-option>
-						<ion-option value="Architect">Architect</ion-option>
-						<ion-option value="Musician">Musician</ion-option>
-						<ion-option value="Athlete">Athlete</ion-option>
+						<ion-option *ngFor="let prof of professions" value={{prof}}>{{prof}}</ion-option>
 					</ion-select>
 				</ion-item>
 			</ion-list>
