@@ -28,7 +28,7 @@ export class QuestionPage {
 
   prev_first_opt;
   prev_qMsg;
-  prev_anArray = [];
+  prev_anArray: any;
   prev_isRequired = true;
 
 	public type;
