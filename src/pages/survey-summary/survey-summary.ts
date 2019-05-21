@@ -54,6 +54,15 @@ export class SurveySummaryPage {
     this.title = this.thisSurvey['title'];
     this.isActive = this.thisSurvey['isActive'];
     this.s_id = this.thisSurvey['id'];
+
+    firebase.database().ref('/surveys/'+this.s_id)
+    .on('value', sSnapshot => {
+      var s = sSnapshot.val();
+      if(s){
+        this.title = s['title'];
+      }
+    });
+
     this.num_responses = this.thisSurvey['num_responses'];
     this.author = this.thisSurvey['author'];
 
@@ -172,6 +181,16 @@ export class SurveySummaryPage {
 
   public ionViewWillEnter(){
     console.log("entering survey-summary page ...");
+
+    if(!this.configService.isConnectedToFirebase()){
+      this.storage.get('mySurveys').then(s =>{
+        for ( var i in s){
+          if( s[i]['id'] == this.s_id){
+            this.num_responses = s[i]['num_responses'];
+          }
+        }
+      });
+    }
   }
 
 }
