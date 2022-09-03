@@ -1,49 +1,62 @@
 <ion-header>
-
   <ion-navbar color="primary">
     <ion-title>{{ chatmate }}</ion-title>
     <ion-buttons end>
-      <button ion-button (click)="delChatCopy()" style="margin-right: 10px;">
+      <button ion-button (click)="delChatCopy()" style="margin-right: 10px">
         <ion-icon name="trash"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 <!-- CHAT -->
 <ion-content #content padding id="chatPage">
-	<ion-list text-wrap>
-		<div *ngFor="let msg of allmessages" class="allmessages">
-			<!-- sent messages -->
-			<ion-item *ngIf="msg['sender'] == userId" class="sent-msg" text-wrap no-lines>
-					{{ msg['content'] }}
-					<p class="dateTimeLabels" style="color:white;">{{ transformDate(msg['date_sent']) }}</p>
-			</ion-item>
+  <ion-list text-wrap>
+    <div *ngFor="let msg of allmessages" class="allmessages">
+      <!-- sent messages -->
+      <ion-item
+        *ngIf="msg['sender'] == userId"
+        class="sent-msg"
+        text-wrap
+        no-lines
+      >
+        {{ msg['content'] }}
+        <p class="dateTimeLabels" style="color: white">
+          {{ transformDate(msg['date_sent']) }}
+        </p>
+      </ion-item>
 
-
-			<!-- received messages -->
-			<ion-item *ngIf="msg['sender'] == authorId" class="received-msg" text-wrap no-lines>
-					{{ msg['content'] }}
-					<p class="dateTimeLabels">{{ transformDate(msg['date_sent']) }}</p>
-			</ion-item>
-		</div>
-	</ion-list>
+      <!-- received messages -->
+      <ion-item
+        *ngIf="msg['sender'] == authorId"
+        class="received-msg"
+        text-wrap
+        no-lines
+      >
+        {{ msg['content'] }}
+        <p class="dateTimeLabels">{{ transformDate(msg['date_sent']) }}</p>
+      </ion-item>
+    </div>
+  </ion-list>
 </ion-content>
 
 <!-- SEND MESSAGE INPUT -->
 <ion-footer>
-	<ion-toolbar>
-		<ion-row>
-			<ion-col col-10>
-				<ion-input type="text" placeholder="Type your message..." #chatMessage></ion-input>
-			</ion-col>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col col-10>
+        <ion-input
+          type="text"
+          placeholder="Type your message..."
+          #chatMessage
+        ></ion-input>
+      </ion-col>
 
-			<ion-col col-2>
-				<button ion-button block clear (click)="sendMessage()">
-					<ion-icon name="send" style="font-size: 35px;"></ion-icon>
-				</button>
-			</ion-col>
-		</ion-row>
-	</ion-toolbar>
+      <ion-col col-2>
+        <button ion-button block clear (click)="sendMessage()">
+          <ion-icon name="send" style="font-size: 35px"></ion-icon>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
 </ion-footer>

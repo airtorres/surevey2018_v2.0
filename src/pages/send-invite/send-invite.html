@@ -5,65 +5,69 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar color="primary">
     <ion-title>Send Invites</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content>
-	<ion-searchbar
-	  [(ngModel)]="searchInput"
-	  [showCancelButton]="shouldShowCancel"
-	  (ionInput)="onInput($event)"
-	  (ionCancel)="onCancel($event)">
-	</ion-searchbar>
+  <ion-searchbar
+    [(ngModel)]="searchInput"
+    [showCancelButton]="shouldShowCancel"
+    (ionInput)="onInput($event)"
+    (ionCancel)="onCancel($event)"
+  >
+  </ion-searchbar>
 
-	<ion-buttons end>
-		<button ion-button icon-end clear (click)="gotoFiltersPage()">
-			Filter
-			<ion-icon name="options"></ion-icon>
-		</button>
-	</ion-buttons>
+  <ion-buttons end>
+    <button ion-button icon-end clear (click)="gotoFiltersPage()">
+      Filter
+      <ion-icon name="options"></ion-icon>
+    </button>
+  </ion-buttons>
 
-	<ion-item no-lines *ngIf="all_users_email.length != 0">
-		<ion-checkbox [(ngModel)]="selAll" (click)="selectAllUsers()"></ion-checkbox>
-		<ion-label>Select All</ion-label>
-	</ion-item>
+  <ion-item no-lines *ngIf="all_users_email.length != 0">
+    <ion-checkbox
+      [(ngModel)]="selAll"
+      (click)="selectAllUsers()"
+    ></ion-checkbox>
+    <ion-label>Select All</ion-label>
+  </ion-item>
 
-	<!-- DISPLAY CONTACTS -->
-	<ion-list text-wrap>
+  <!-- DISPLAY CONTACTS -->
+  <ion-list text-wrap>
+    <ion-item text-center *ngIf="all_users_email.length == 0" no-lines>
+      No users to show
+    </ion-item>
 
-		<ion-item text-center *ngIf="all_users_email.length == 0" no-lines>
-			No users to show
-		</ion-item>
-
-		<div>
-		    <ion-item *ngFor="let user_email of all_users_email" no-lines>
-				<ion-avatar item-start>
-		       		<ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
-		      	</ion-avatar>
-		      	<ion-checkbox mode="ios" color="secondary" [(ngModel)]="selections[user_email]" (ionChange)="refresh()" item-end></ion-checkbox>
-		      	<ion-label>{{ user_email }}</ion-label>
-		    </ion-item>	
-		</div>
-
-	</ion-list>
-
+    <div>
+      <ion-item *ngFor="let user_email of all_users_email" no-lines>
+        <ion-avatar item-start>
+          <ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
+        </ion-avatar>
+        <ion-checkbox
+          mode="ios"
+          color="secondary"
+          [(ngModel)]="selections[user_email]"
+          (ionChange)="refresh()"
+          item-end
+        ></ion-checkbox>
+        <ion-label>{{ user_email }}</ion-label>
+      </ion-item>
+    </div>
+  </ion-list>
 </ion-content>
 
 <ion-footer>
-	<ion-toolbar *ngIf="selected_users.length > 0">
-		<ion-item no-lines>
-			<button item-start clear ion-button (click)="clearSelected()">
-				<ion-icon name="close"></ion-icon>
-			</button>
-			{{ selected_users.length }} selected
-			<button clear ion-button (click)="sendInvitation()" item-end>
-				<ion-icon name="send"></ion-icon>
-			</button>
-		</ion-item>
-	</ion-toolbar>
+  <ion-toolbar *ngIf="selected_users.length > 0">
+    <ion-item no-lines>
+      <button item-start clear ion-button (click)="clearSelected()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+      {{ selected_users.length }} selected
+      <button clear ion-button (click)="sendInvitation()" item-end>
+        <ion-icon name="send"></ion-icon>
+      </button>
+    </ion-item>
+  </ion-toolbar>
 </ion-footer>

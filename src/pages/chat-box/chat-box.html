@@ -1,45 +1,68 @@
 <ion-header>
-
   <ion-navbar color="primary">
     <ion-title>Chat</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content>
-	<!-- CHAT MESSAGES HERE -->
+  <!-- CHAT MESSAGES HERE -->
 
-	<div *ngIf="chatmatelist.length == 0">
-		<img src="../assets/imgs/noMessages.png" style="background: transparent !important; vertical-align: middle; margin-top: 130px;">
-	</div>
+  <div *ngIf="chatmatelist.length == 0">
+    <img
+      src="../assets/imgs/noMessages.png"
+      style="
+        background: transparent !important;
+        vertical-align: middle;
+        margin-top: 130px;
+      "
+    />
+  </div>
 
-	<ion-list>
-		<div *ngFor="let chatmateId of chatmatelist">
-			<!-- UNREAD MESSAGES WILL HAVE A BACKGROUND COLOR : LIGHT BLUE -->
-			<button *ngIf="!isReadDict[chatmateId]" ion-item style="background-color: #E6EEF2;" id="{{chatmateId}}" (click)="gotoChat(chatmateId)" (press)="showItemOption(chatmateId)">
-				<ion-note item-end> <strong style="color: #1EA0E5;">NEW</strong></ion-note>
-				<ion-avatar item-start>
-		       		<ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
-		      	</ion-avatar>
-		      	<h3 #name>{{ chatmateNames[chatmateId] }}</h3>
-		      	<p>{{ getLatestMessageForDisplay(chatmateId)['last_msg'] }}</p>
-		    </button>
+  <ion-list>
+    <div *ngFor="let chatmateId of chatmatelist">
+      <!-- UNREAD MESSAGES WILL HAVE A BACKGROUND COLOR : LIGHT BLUE -->
+      <button
+        *ngIf="!isReadDict[chatmateId]"
+        ion-item
+        style="background-color: #e6eef2"
+        id="{{chatmateId}}"
+        (click)="gotoChat(chatmateId)"
+        (press)="showItemOption(chatmateId)"
+      >
+        <ion-note item-end>
+          <strong style="color: #1ea0e5">NEW</strong></ion-note
+        >
+        <ion-avatar item-start>
+          <ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
+        </ion-avatar>
+        <h3 #name>{{ chatmateNames[chatmateId] }}</h3>
+        <p>{{ getLatestMessageForDisplay(chatmateId)['last_msg'] }}</p>
+      </button>
 
-		    <!-- READ MESSAGES -->
-		    <button *ngIf="isReadDict[chatmateId]" class="chat-messages" id="{{chatmateId}}" ion-item (click)="gotoChat(chatmateId)" (press)="showItemOption(chatmateId)" no-lines style="border-bottom: 1px solid gainsboro;">
-		    	<ion-note item-end>{{ getLatestMessageForDisplay(chatmateId)['date'] }}</ion-note>
-				<ion-avatar item-start>
-		       		<ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
-		      	</ion-avatar>
-		      	<h3 #name>{{ chatmateNames[chatmateId] }}</h3>
-		      	<p>{{ getLatestMessageForDisplay(chatmateId)['last_msg'] }}</p>
-		    </button>
-		</div>
-	</ion-list>
+      <!-- READ MESSAGES -->
+      <button
+        *ngIf="isReadDict[chatmateId]"
+        class="chat-messages"
+        id="{{chatmateId}}"
+        ion-item
+        (click)="gotoChat(chatmateId)"
+        (press)="showItemOption(chatmateId)"
+        no-lines
+        style="border-bottom: 1px solid gainsboro"
+      >
+        <ion-note item-end
+          >{{ getLatestMessageForDisplay(chatmateId)['date'] }}</ion-note
+        >
+        <ion-avatar item-start>
+          <ion-img src="../assets/imgs/user_icon_mini.png"></ion-img>
+        </ion-avatar>
+        <h3 #name>{{ chatmateNames[chatmateId] }}</h3>
+        <p>{{ getLatestMessageForDisplay(chatmateId)['last_msg'] }}</p>
+      </button>
+    </div>
+  </ion-list>
 
-	<!-- <ion-fab bottom right #fab (click)="gotoNewMsg()">
+  <!-- <ion-fab bottom right #fab (click)="gotoNewMsg()">
 		<button ion-fab style="margin-bottom: 10px;"><ion-icon name="add"></ion-icon></button>
  	</ion-fab> -->
-
 </ion-content>

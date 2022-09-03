@@ -5,58 +5,92 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar color="primary">
     <ion-title>Analyze</ion-title>
     <ion-buttons end>
-      <button ion-button style="margin-right: 10px;" (click)="downloadCSV()">
+      <button ion-button style="margin-right: 10px" (click)="downloadCSV()">
         <ion-icon name="download"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
-	<div id="title-desc">
-		<h4 text-wrap>{{ survey_title }} Results</h4>
-		<p style="text-align: justify;">{{ description }}</p>
-	</div>
+  <div id="title-desc">
+    <h4 text-wrap>{{ survey_title }} Results</h4>
+    <p style="text-align: justify">{{ description }}</p>
+  </div>
 
-	<div class="qandResDiv" id="questionAndResultDiv_{{idx}}" *ngFor="let question of questions; let idx = index">
-		<ion-item text-wrap style="padding-right: 0; padding-left: 0; border-bottom:none;" id="item_{{idx}}">
-			<ion-label>{{idx+1}}. {{ question['message'] }}</ion-label>
-			<button icon-end item-end clear ion-button (click)="showResult(idx)" id="view_btn_{{idx}}" class="viewBtnClass">
-				View 
-				<ion-icon icon-end name="ios-arrow-down"></ion-icon>
-			</button>
-			<button icon-end item-end clear ion-button (click)="closeResult(idx)" style="display: none; margin-right: 5px;" id="closeIcon_{{idx}}">
-				<ion-icon name="close"></ion-icon>
-			</button>
-		</ion-item>
+  <div
+    class="qandResDiv"
+    id="questionAndResultDiv_{{idx}}"
+    *ngFor="let question of questions; let idx = index"
+  >
+    <ion-item
+      text-wrap
+      style="padding-right: 0; padding-left: 0; border-bottom: none"
+      id="item_{{idx}}"
+    >
+      <ion-label>{{idx+1}}. {{ question['message'] }}</ion-label>
+      <button
+        icon-end
+        item-end
+        clear
+        ion-button
+        (click)="showResult(idx)"
+        id="view_btn_{{idx}}"
+        class="viewBtnClass"
+      >
+        View
+        <ion-icon icon-end name="ios-arrow-down"></ion-icon>
+      </button>
+      <button
+        icon-end
+        item-end
+        clear
+        ion-button
+        (click)="closeResult(idx)"
+        style="display: none; margin-right: 5px"
+        id="closeIcon_{{idx}}"
+      >
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-item>
 
-		<div id="resDiv_{{idx}}" style="display: none;">
-			<div *ngIf="question['type'] == 'multipleChoice' || question['type'] == 'checkbox' || question['type'] == 'dropdown' " id="graphResult_{{idx}}" class="graphDivs">
-			
-				<ion-toolbar id="opt_{{idx}}">
-					<ion-segment mode="ios" [(ngModel)]="chartOptions[idx]">
-					    <ion-segment-button value="pie" (click)="showPieChart(idx)">Pie</ion-segment-button>
-					    <ion-segment-button value="donut" (click)="showDonutChart(idx)">Donut</ion-segment-button>
-					    <ion-segment-button value="bar" (click)="showBarChart(idx)">Bar</ion-segment-button>
-					</ion-segment>
-				</ion-toolbar>
+    <div id="resDiv_{{idx}}" style="display: none">
+      <div
+        *ngIf="question['type'] == 'multipleChoice' || question['type'] == 'checkbox' || question['type'] == 'dropdown' "
+        id="graphResult_{{idx}}"
+        class="graphDivs"
+      >
+        <ion-toolbar id="opt_{{idx}}">
+          <ion-segment mode="ios" [(ngModel)]="chartOptions[idx]">
+            <ion-segment-button value="pie" (click)="showPieChart(idx)"
+              >Pie</ion-segment-button
+            >
+            <ion-segment-button value="donut" (click)="showDonutChart(idx)"
+              >Donut</ion-segment-button
+            >
+            <ion-segment-button value="bar" (click)="showBarChart(idx)"
+              >Bar</ion-segment-button
+            >
+          </ion-segment>
+        </ion-toolbar>
 
-				<div id="results_div_{{idx}}" class="thisGraphDivs">
-				</div>
-			</div>
+        <div id="results_div_{{idx}}" class="thisGraphDivs"></div>
+      </div>
 
-			<div *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' " id="openAnsDiv_{{idx}}" style=" padding-left: 16px;" class="listOfAnswers">
-				<p id="listTitle">LIST OF ANSWERS</p>
-				<ul>
-					<li *ngFor="let ans of openAnswers[idx]" text-wrap>{{ ans }}</li>
-				</ul>
-			</div>
-		</div>
-	</div>
+      <div
+        *ngIf="question['type'] == 'longAnswer' || question['type'] == 'shortAnswer' || question['type'] == 'date' || question['type'] == 'time' "
+        id="openAnsDiv_{{idx}}"
+        style="padding-left: 16px"
+        class="listOfAnswers"
+      >
+        <p id="listTitle">LIST OF ANSWERS</p>
+        <ul>
+          <li *ngFor="let ans of openAnswers[idx]" text-wrap>{{ ans }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </ion-content>

@@ -5,100 +5,189 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar color="primary">
     <ion-title>Surveys</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content>
-	<ion-toolbar>
-	    <ion-segment [(ngModel)]="surveyList" color="primary">
-	      	<ion-segment-button value="all">All</ion-segment-button>
-	      	<ion-segment-button value="surveys">Surveys</ion-segment-button>
-	      	<ion-segment-button value="invites">Invites</ion-segment-button>
-	    </ion-segment>
-  	</ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="surveyList" color="primary">
+      <ion-segment-button value="all">All</ion-segment-button>
+      <ion-segment-button value="surveys">Surveys</ion-segment-button>
+      <ion-segment-button value="invites">Invites</ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 
-  	<div [ngSwitch] = "surveyList">
+  <div [ngSwitch]="surveyList">
+    <!-- ALL -->
+    <ion-list *ngSwitchCase="'all'" text-wrap>
+      <div
+        *ngIf="mySurveys.length + survey_invites.length == 0 && drafts.length == 0"
+      >
+        <img
+          src="../assets/imgs/noSurveyAndInvites.png"
+          style="
+            background: transparent !important;
+            vertical-align: middle;
+            margin-top: 85px;
+          "
+        />
+      </div>
 
-  		<!-- ALL -->
-  		<ion-list *ngSwitchCase="'all'" text-wrap>
-  			<div *ngIf="mySurveys.length + survey_invites.length == 0 && drafts.length == 0">
-      			<img src="../assets/imgs/noSurveyAndInvites.png" style="background: transparent !important; vertical-align: middle; margin-top: 85px;">
-			</div>
+      <ion-item
+        *ngFor="let item of mySurveys"
+        value="item"
+        (click)="gotoSummary(item)"
+        (press)="showItemOption(item)"
+      >
+        {{ item['title'] }}
+        <button item-end clear ion-button>
+          View
+          <ion-icon name="ios-arrow-forward"></ion-icon>
+        </button>
+      </ion-item>
 
-			<ion-item *ngFor="let item of mySurveys" value="item" (click)="gotoSummary(item)" (press)="showItemOption(item)">
-			  	{{ item['title'] }}
-				<button item-end clear ion-button>
-					View 
-					<ion-icon name="ios-arrow-forward"></ion-icon>
-				</button>
-			</ion-item>
+      <ion-item
+        *ngFor="let item of drafts"
+        value="item"
+        (click)="gotoDraftPage(item)"
+        (press)="showItemOption(item)"
+      >
+        {{ item['title'] }}
+        <button item-end clear ion-button id="draftbtn">
+          Draft
+          <ion-icon name="ios-arrow-forward"></ion-icon>
+        </button>
+      </ion-item>
 
-			<ion-item *ngFor="let item of drafts" value="item" (click)="gotoDraftPage(item)" (press)="showItemOption(item)">
-			  	{{ item['title'] }}
-				<button item-end clear ion-button id="draftbtn">
-					Draft 
-					<ion-icon name="ios-arrow-forward"></ion-icon>
-				</button>
-			</ion-item>
+      <ion-item
+        *ngFor="let item of survey_invites"
+        value="item"
+        (press)="showItemOption(item)"
+      >
+        {{ item['title'] }}
+        <button
+          item-end
+          round
+          ion-button
+          *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == true"
+          (click)="gotoRespondentView(item)"
+        >
+          Respond Now
+        </button>
+        <button
+          item-end
+          clear
+          style="color: red"
+          ion-button
+          *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == false"
+          disabled
+        >
+          CLOSED
+        </button>
+        <button
+          ion-button
+          clear
+          *ngIf="invite_status[item['id']] == 'completed'"
+          item-end
+          disabled
+        >
+          Responded
+        </button>
+      </ion-item>
+    </ion-list>
 
-			<ion-item *ngFor="let item of survey_invites" value="item" (press)="showItemOption(item)">
-			  	{{ item['title'] }}
-				<button item-end round ion-button *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == true" (click)="gotoRespondentView(item)">
-					Respond Now
-				</button>
-				<button item-end clear style="color: red;" ion-button *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == false" disabled>
-					CLOSED
-				</button>
-				<button ion-button clear *ngIf="invite_status[item['id']] == 'completed'" item-end disabled>Responded</button>
-			</ion-item>
-		</ion-list>
+    <!-- USER OWN CREATED SURVEYS -->
+    <ion-list *ngSwitchCase="'surveys'" text-wrap>
+      <div *ngIf="mySurveys.length == 0 && drafts.length == 0">
+        <!-- You haven't created any surveys yet. -->
+        <img
+          src="../assets/imgs/noSurvey.png"
+          style="
+            background: transparent !important;
+            vertical-align: middle;
+            margin-top: 85px;
+          "
+        />
+      </div>
 
-		<!-- USER OWN CREATED SURVEYS -->
-		<ion-list *ngSwitchCase="'surveys'" text-wrap>
-			<div *ngIf="mySurveys.length == 0 && drafts.length == 0">
-				<!-- You haven't created any surveys yet. -->
-				<img src="../assets/imgs/noSurvey.png" style="background: transparent !important; vertical-align: middle; margin-top: 85px;">
-			</div>
+      <ion-item
+        *ngFor="let item of mySurveys"
+        value="item"
+        (click)="gotoSummary(item)"
+        (press)="showItemOption(item)"
+      >
+        {{ item['title'] }}
+        <button item-end clear ion-button>
+          View
+          <ion-icon name="ios-arrow-forward"></ion-icon>
+        </button>
+      </ion-item>
 
-			<ion-item *ngFor="let item of mySurveys" value="item" (click)="gotoSummary(item)" (press)="showItemOption(item)">
-			  	{{ item['title'] }}
-				<button item-end clear ion-button>
-					View 
-					<ion-icon name="ios-arrow-forward"></ion-icon>
-				</button>
-			</ion-item>
+      <ion-item
+        *ngFor="let item of drafts"
+        value="item"
+        (click)="gotoDraftPage(item)"
+        (press)="showItemOption(item)"
+      >
+        {{ item['title'] }}
+        <button item-end clear ion-button id="draftbtn">
+          Draft
+          <ion-icon name="ios-arrow-forward"></ion-icon>
+        </button>
+      </ion-item>
+    </ion-list>
 
-			<ion-item *ngFor="let item of drafts" value="item" (click)="gotoDraftPage(item)" (press)="showItemOption(item)">
-			  	{{ item['title'] }}
-				<button item-end clear ion-button id="draftbtn">
-					Draft 
-					<ion-icon name="ios-arrow-forward"></ion-icon>
-				</button>
-			</ion-item>
-		</ion-list>
+    <!-- SURVEY INVITES -->
+    <ion-list *ngSwitchCase="'invites'" text-wrap>
+      <div *ngIf="survey_invites.length == 0">
+        <!-- No survey invitations. -->
+        <img
+          src="../assets/imgs/noSurveyInvite.png"
+          style="
+            background: transparent !important;
+            vertical-align: middle;
+            margin-top: 85px;
+          "
+        />
+      </div>
 
-		<!-- SURVEY INVITES -->
-		<ion-list *ngSwitchCase="'invites'" text-wrap>
-			<div *ngIf="survey_invites.length == 0">
-				<!-- No survey invitations. -->
-				<img src="../assets/imgs/noSurveyInvite.png" style="background: transparent !important; vertical-align: middle; margin-top: 85px;">
-			</div>
-
-			<ion-item *ngFor="let item of survey_invites" value="item" (press)="showItemOption(item)">
-			  	{{ item['title'] }}
-				<button item-end round ion-button *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == true" (click)="gotoRespondentView(item)">
-					Respond Now
-				</button>
-				<button item-end clear style="color: red;" ion-button *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == false" disabled>
-					CLOSED
-				</button>
-				<button ion-button clear *ngIf="invite_status[item['id']] == 'completed'" item-end disabled>Responded</button>
-			</ion-item>
-		</ion-list>
-  	</div>
-
+      <ion-item
+        *ngFor="let item of survey_invites"
+        value="item"
+        (press)="showItemOption(item)"
+      >
+        {{ item['title'] }}
+        <button
+          item-end
+          round
+          ion-button
+          *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == true"
+          (click)="gotoRespondentView(item)"
+        >
+          Respond Now
+        </button>
+        <button
+          item-end
+          clear
+          style="color: red"
+          ion-button
+          *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == false"
+          disabled
+        >
+          CLOSED
+        </button>
+        <button
+          ion-button
+          clear
+          *ngIf="invite_status[item['id']] == 'completed'"
+          item-end
+          disabled
+        >
+          Responded
+        </button>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>
