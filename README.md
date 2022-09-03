@@ -17,7 +17,7 @@ In installing using the source code, you need to use a desktop computer with the
 1. Copy the surevey folder to your computer.
 2. Open CMD and navigate to the path where you have copied the surevey folder.
 3. Make sure that your current directory or path is in surevey.
-4. Run following command: ionic cordova build android
+4. Run following command: `ionic cordova build android`
 5. Go to this path: **<path_from_home>\surevey\platforms\android\app\build\outputs\apk\debug**
 6. Copy the APK file to your Android device.
 7. Click the APK file on your Android device and click Install.
