@@ -5,107 +5,78 @@
   Ionic pages and navigation.
 -->
 <ion-header>
+
   <ion-navbar color="primary">
     <ion-title>Profile</ion-title>
 
     <ion-buttons end>
-      <button ion-button clear (click)="gotoEditProfile()">Edit</button>
-    </ion-buttons>
+		<button ion-button clear (click)="gotoEditProfile()"> Edit </button>
+	</ion-buttons>
   </ion-navbar>
+
 </ion-header>
 
+
 <ion-content>
-  <div id="profileContent">
-    <ion-avatar>
-      <img class="avatar" src="../assets/imgs/user.png" />
-    </ion-avatar>
 
-    <ion-item text-center no-lines>
-      <ion-label id="nameTitle">{{userData['username']}}</ion-label>
-    </ion-item>
+	<div id="profileContent">
+		<ion-avatar>
+			<img class="avatar" src="../assets/imgs/user.png">
+		</ion-avatar>
 
-    <ion-list style="padding-left: 16px">
-      <ion-item no-lines>
-        <ion-icon name="contact" item-start></ion-icon>
-        <ion-label id="stackedLabel" stacked color="primary">NAME</ion-label>
-        <ion-label
-          *ngIf="userData['first_name'] == '' && userData['last_name'] == '' "
-          id="noData"
-          >Name</ion-label
-        >
-        <ion-label
-          *ngIf="userData['first_name'] != '' || userData['last_name'] != '' "
-          id="userData"
-          text-wrap
-          >{{userData['first_name']}} {{userData['last_name']}}</ion-label
-        >
-      </ion-item>
+		<ion-item text-center no-lines>
+			<ion-label id="nameTitle">{{userData['username']}}</ion-label>
+		</ion-item>
 
-      <ion-item no-lines>
-        <ion-icon name="mail" item-start></ion-icon>
-        <ion-label id="stackedLabel" stacked color="primary">EMAIL</ion-label>
-        <ion-label id="userData" text-wrap>{{userData['email']}}</ion-label>
-      </ion-item>
+		<ion-list style="padding-left: 16px;">
 
-      <ion-item no-lines>
-        <ion-icon name="pin" item-start></ion-icon>
-        <ion-label id="stackedLabel" stacked color="primary">ADDRESS</ion-label>
+			<ion-item no-lines>
+				<ion-icon name="contact" item-start></ion-icon>
+				<ion-label id="stackedLabel" stacked color="primary">NAME</ion-label>
+				<ion-label *ngIf="userData['first_name'] == '' && userData['last_name'] == '' " id="noData">Name</ion-label>
+				<ion-label *ngIf="userData['first_name'] != '' || userData['last_name'] != '' " id="userData" text-wrap>{{userData['first_name']}} {{userData['last_name']}}</ion-label>
+			</ion-item>
 
-        <ion-label *ngIf="address == ''" id="noData">Address</ion-label>
+			<ion-item no-lines>
+				<ion-icon name="mail" item-start></ion-icon>
+				<ion-label id="stackedLabel" stacked color="primary">EMAIL</ion-label>
+				<ion-label id="userData" text-wrap>{{userData['email']}}</ion-label>
+			</ion-item>
 
-        <ion-label *ngIf="address != ''" id="userData" text-wrap
-          >{{ address }}
-        </ion-label>
-      </ion-item>
+			<ion-item no-lines>
+				<ion-icon name="pin" item-start></ion-icon>
+				<ion-label id="stackedLabel" stacked color="primary">ADDRESS</ion-label>
 
-      <ion-item no-lines>
-        <ion-icon name="briefcase" item-start></ion-icon>
-        <ion-label id="stackedLabel" stacked color="primary"
-          >PROFESSION</ion-label
-        >
-        <ion-label *ngIf="userData['profession'] == '' " id="noData"
-          >Profession</ion-label
-        >
-        <ion-label *ngIf="userData['profession'] != '' " id="userData"
-          >{{userData['profession']}}</ion-label
-        >
-      </ion-item>
+				<ion-label *ngIf="address == ''" id="noData">Address</ion-label>
 
-      <ion-item no-lines>
-        <ion-icon name="heart" item-start></ion-icon>
-        <ion-label id="stackedLabel" stacked color="primary"
-          >BIRTHDAY</ion-label
-        >
-        <ion-label *ngIf="userData['birthdate'] == '' " id="noData"
-          >Birthday</ion-label
-        >
-        <ion-label *ngIf="userData['birthdate'] != '' " id="userData"
-          >{{userData['birthdate']}}</ion-label
-        >
-      </ion-item>
+				<ion-label *ngIf="address != ''" id="userData" text-wrap>{{ address }} </ion-label>				
+			</ion-item>
 
-      <ion-item no-lines>
-        <ion-icon
-          *ngIf="userData['sex'] == 'Female' "
-          name="female"
-          item-start
-        ></ion-icon>
-        <ion-icon
-          *ngIf="userData['sex'] == 'Male' "
-          name="male"
-          item-start
-        ></ion-icon>
-        <ion-icon
-          *ngIf="userData['sex'] == '' "
-          name="body"
-          item-start
-        ></ion-icon>
-        <ion-label id="stackedLabel" stacked color="primary">SEX</ion-label>
-        <ion-label *ngIf="userData['sex'] == '' " id="noData">Sex</ion-label>
-        <ion-label *ngIf="userData['sex'] != '' " id="userData"
-          >{{ userData['sex'] }}</ion-label
-        >
-      </ion-item>
-    </ion-list>
-  </div>
+			<ion-item no-lines>
+				<ion-icon name="briefcase" item-start></ion-icon>
+				<ion-label id="stackedLabel" stacked color="primary">PROFESSION</ion-label>
+				<ion-label *ngIf="userData['profession'] == '' " id="noData">Profession</ion-label>
+				<ion-label *ngIf="userData['profession'] != '' " id="userData">{{userData['profession']}}</ion-label>
+			</ion-item>
+
+			<ion-item no-lines>
+				<ion-icon name="heart" item-start></ion-icon>
+				<ion-label id="stackedLabel" stacked color="primary">BIRTHDAY</ion-label>
+				<ion-label *ngIf="userData['birthdate'] == '' " id="noData">Birthday</ion-label>
+				<ion-label *ngIf="userData['birthdate'] != '' " id="userData">{{userData['birthdate']}}</ion-label>
+			</ion-item>
+
+			<ion-item no-lines>
+				<ion-icon *ngIf="userData['sex'] == 'Female' " name="female" item-start></ion-icon>
+				<ion-icon *ngIf="userData['sex'] == 'Male' " name="male" item-start></ion-icon>
+				<ion-icon *ngIf="userData['sex'] == '' " name="body" item-start></ion-icon>
+				<ion-label id="stackedLabel" stacked color="primary">SEX</ion-label>
+				<ion-label *ngIf="userData['sex'] == '' " id="noData">Sex</ion-label>
+				<ion-label *ngIf="userData['sex'] != '' " id="userData">{{ userData['sex'] }}</ion-label>
+			</ion-item>
+
+		</ion-list>
+
+	</div>	
+	
 </ion-content>

@@ -1,35 +1,37 @@
 page-chat {
-  #chatPage {
-    display: flex;
-    flex-direction: row;
+	#chatPage {
+		display: flex;
+		flex-direction: row;
 
-    .sent-msg {
-      // background-color: #5FAED9;
-      background-color: #12608a;
-      color: white;
-      border: none;
-      border-top-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-      border-bottom-left-radius: 20px;
-      margin-bottom: 10px;
-      width: 65%;
-      float: right;
-      text-align: right;
-      // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    }
+		.sent-msg {
+			// background-color: #5FAED9;
+			background-color: #12608a;
+			color: white;
+			border: none;
+			border-top-left-radius: 20px;
+			border-bottom-right-radius: 20px;
+			border-bottom-left-radius: 20px;
+			margin-bottom: 10px;
+			width: 65%;
+			float: right;
+			text-align: right;
+			// box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		}
 
-    .received-msg {
-      background-color: #f0f0f0;
-      width: 75%;
-      border-top-right-radius: 20px;
-      border-bottom-right-radius: 20px;
-      border-bottom-left-radius: 20px;
-      margin-bottom: 10px;
-      // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    }
+		.received-msg {
+			background-color: #F0F0F0;
+			width: 75%;
+			border-top-right-radius: 20px;
+			border-bottom-right-radius: 20px;
+			border-bottom-left-radius: 20px;
+			margin-bottom: 10px;
+			// box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+		}
 
-    .dateTimeLabels {
-      font-size: 11px;
-    }
-  }
+		.dateTimeLabels{
+			font-size: 11px;
+		}
+	}
 }
+
+

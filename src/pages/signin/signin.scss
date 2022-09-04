@@ -1,42 +1,42 @@
 page-signin {
-  p {
-    text-align: center;
-  }
+	p{
+		text-align: center;
+	}
 
-  ion-input {
-    border: 1px solid #707070;
-    border-radius: 64px;
-    /*margin: 5px 0;*/
-    padding: 0 15px;
-  }
+	ion-input{
+		border: 1px solid #707070;
+		border-radius: 64px;
+		/*margin: 5px 0;*/
+		padding: 0 15px;
+	}
 
-  ::placeholder {
-    text-transform: uppercase;
-    letter-spacing: 3px;
-  }
+	::placeholder{
+		text-transform: uppercase;
+		letter-spacing: 3px;
+	}
 
-  .errorMessage {
-    color: red;
-    font-size: 11px;
-    font-style: italic;
-    text-align: center;
-  }
+	.errorMessage {
+		color: red;
+		font-size: 11px;
+		font-style: italic;
+		text-align: center;
+	}
 
-  #signInBtn {
-    button {
-      line-height: normal;
-    }
-  }
+	#signInBtn {
+		button {
+			line-height: normal;
+		}
+	}
 
-  #signUpBtn {
-    margin-top: 70px;
+	#signUpBtn {
+		margin-top: 70px;
 
-    ion-label {
-      margin: 13px 8px 0px 0;
-    }
+		ion-label {
+			margin: 13px 8px 0px 0;
+		}
 
-    button {
-      margin: 0px 0px;
-    }
-  }
+		button {
+			margin: 0px 0px;
+		}
+	}
 }

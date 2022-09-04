@@ -1,20 +1,20 @@
 <ion-header>
+
   <ion-navbar color="primary">
     <ion-title>Templates</ion-title>
   </ion-navbar>
+
 </ion-header>
 
-<ion-content>
-  <p *ngIf="built_in_templates.length == 0">No Templates Available</p>
 
-  <ion-list text-wrap>
-    <button
-      *ngFor="let item of built_in_templates"
-      ion-item
-      (click)="edit_templates(item['title'])"
-    >
-      {{ item['title'] }}
-      <ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
-    </button>
-  </ion-list>
+<ion-content>
+	<p *ngIf="built_in_templates.length == 0">No Templates Available</p>
+
+	<ion-list text-wrap>
+		<button *ngFor="let item of built_in_templates" ion-item (click)="edit_templates(item['title'])">
+			{{ item['title'] }}
+			<ion-icon item-end color="primary" name="ios-arrow-forward"></ion-icon>
+		</button >
+	</ion-list>
+
 </ion-content>

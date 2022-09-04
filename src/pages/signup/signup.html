@@ -7,48 +7,25 @@
 
 <ion-content padding>
   <div class="fixed-content" padding>
-    <div text-center style="margin-top: 7%">
-      <ion-img
-        width="150"
-        height="150"
-        src="../assets/imgs/logo-05.png"
-        style="background: transparent !important"
-      ></ion-img>
+  	<div text-center style="margin-top: 7%;">
+      <ion-img width="150" height="150" src="../assets/imgs/logo-05.png" style="background: transparent !important;"></ion-img>
     </div>
 
     <form [formGroup]="authSignup">
       <ion-grid>
-        <ion-row style="margin: 3% 0">
-          <ion-input
-            type="text"
-            placeholder="Username"
-            #username
-            formControlName="username"
-          ></ion-input>
+        <ion-row style="margin: 3% 0;">
+          <ion-input type="text" placeholder="Username" #username formControlName="username"></ion-input>
         </ion-row>
 
-        <ion-row style="margin: 5px 0">
-          <ion-input
-            type="text"
-            #email
-            placeholder="Email"
-            formControlName="email"
-          ></ion-input>
+        <ion-row style="margin: 5px 0;">
+          <ion-input type="text" #email placeholder="Email" formControlName="email"></ion-input>
         </ion-row>
 
-        <ion-row style="margin: 5px 0">
-          <ion-input
-            type="password"
-            #password
-            placeholder="Password"
-            formControlName="password"
-          ></ion-input>
+        <ion-row style="margin: 5px 0;">
+          <ion-input type="password" #password placeholder="Password" formControlName="password"></ion-input>
         </ion-row>
 
-        <ion-note
-          class="errorMessage"
-          *ngIf="!authSignup.controls.username.hasError('required') && authSignup.controls.username.hasError('pattern') && authSignup.controls.username.dirty"
-        >
+        <ion-note class="errorMessage" *ngIf="!authSignup.controls.username.hasError('required') && authSignup.controls.username.hasError('pattern') && authSignup.controls.username.dirty">
           Please enter valid username
         </ion-note>
 
@@ -56,10 +33,7 @@
           Please enter username
         </p> -->
 
-        <ion-note
-          class="errorMessage"
-          *ngIf="!authSignup.controls.email.hasError('required') && authSignup.controls.email.hasError('pattern') && authSignup.controls.email.dirty"
-        >
+        <ion-note class="errorMessage" *ngIf="!authSignup.controls.email.hasError('required') && authSignup.controls.email.hasError('pattern') && authSignup.controls.email.dirty">
           Please enter valid email
         </ion-note>
 
@@ -71,29 +45,22 @@
           Please enter password
         </p> -->
 
-        <ion-note
-          class="errorMessage"
-          *ngIf="!authSignup.controls.password.hasError('required') && authSignup.controls.password.hasError('minlength') && authSignup.controls.password.dirty "
-        >
+        <ion-note class="errorMessage" *ngIf="!authSignup.controls.password.hasError('required') && authSignup.controls.password.hasError('minlength') && authSignup.controls.password.dirty ">
           Password should be at least 6 characters
         </ion-note>
+
       </ion-grid>
 
       <div text-center>
-        <button
-          ion-button
-          round
-          (click)="showAgreementPage()"
-          [disabled]="!authSignup.valid"
-        >
-          Sign up
-        </button>
+        <button ion-button round (click)="showAgreementPage()" [disabled]="!authSignup.valid">Sign up</button>
       </div>
     </form>
 
-    <div text-center id="signInBtn">
-      <ion-label>Already have an account?</ion-label>
-      <button ion-button clear (click)="navigateToSignIn()">Sign in</button>
-    </div>
+  	<div text-center id="signInBtn">
+  		<ion-label>Already have an account?</ion-label>
+  		<button ion-button clear (click)="navigateToSignIn()">Sign in</button>
+  	</div>
+
   </div>
+
 </ion-content>

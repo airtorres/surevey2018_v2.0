@@ -1,40 +1,41 @@
 page-create-survey {
+
 }
 
-.questionChoice button {
-  margin-right: 140%;
-  width: 145px;
+.questionChoice button{
+	margin-right: 140%;
+	width: 145px;
 }
 
 #question-title {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .fabOpt {
-  -moz-appearance: none;
-  -ms-appearance: none;
-  -webkit-appearance: none;
-  appearance: none;
-  position: relative;
-  z-index: 0;
-  display: block;
-  overflow: hidden;
-  width: 115px;
-  border-radius: 2px;
-  font-size: 14px;
-  line-height: 56px;
-  text-align: center;
-  text-overflow: ellipsis;
-  text-transform: none;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background-color, opacity 100ms linear;
-  background-clip: padding-box;
-  -webkit-font-kerning: none;
-  font-kerning: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  contain: layout;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    z-index: 0;
+    display: block;
+    overflow: hidden;
+    width: 115px;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 56px;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-transform: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color, opacity 100ms linear;
+    background-clip: padding-box;
+    -webkit-font-kerning: none;
+    font-kerning: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    contain: layout;
 }

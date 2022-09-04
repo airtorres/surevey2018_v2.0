@@ -1,73 +1,73 @@
 page-home {
-  .avatar {
-    margin: auto;
-    border: 2px solid white;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border-radius: 50%;
-    width: 110px;
-    height: 110px;
-  }
-  .main-card {
-    margin-top: 25px;
-  }
+	.avatar {
+		margin: auto;
+		border: 2px solid white;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		border-radius: 50%;
+		width: 110px;
+		height: 110px;
+	}
+	.main-card{
+		margin-top: 25px;
+	}
 
-  .card-radius {
-    border-radius: 12px;
-  }
+	.card-radius{
+		border-radius: 12px;
+	}
 
-  .page-header {
-    background: #fffefe;
-  }
 
-  ion-icon {
-    font-size: 20px;
-  }
+	.page-header{
+		background: #FFFEFE;
+	}
 
-  ion-card-header {
-    letter-spacing: 2px;
-  }
+	ion-icon{
+		font-size: 20px;
+	}
 
-  .menu_items {
-    margin-top: 30px;
-    margin-left: 18px;
-  }
-  .ongoing-card-header {
-    background-color: map-get($colors, primary);
-  }
+	ion-card-header{
+		letter-spacing: 2px;
+	}
 
-  #ongoing-card-title,
-  .ongoing-card-header p {
-    color: white;
-  }
+	.menu_items{
+		margin-top: 30px;
+		margin-left: 18px;
+	}
+	.ongoing-card-header{
+		background-color:  map-get($colors, primary);
+	}
 
-  #view-ongoing-btn {
-    border: 2px solid white;
-    border-radius: 54px;
-  }
+	#ongoing-card-title, .ongoing-card-header p{
+		color: white;
+	}
 
-  .invite-card {
-    background-color: #e6eef2;
-  }
-  #invite-card-title {
-    font-size: 16px;
-    font-weight: 500;
-  }
-  #invite-respond-btn {
-    border-radius: 54px;
-  }
+	#view-ongoing-btn{
+		border: 2px solid white;
+		border-radius: 54px;
+	}
 
-  #usernameTitle {
-    margin: 13px 8px 3px 0;
-    font-size: 21px;
-    font-weight: bold;
-    letter-spacing: 2px;
-  }
-  #emailTitle {
-    margin: 0px 8px 0px 0;
-    font-size: 14px;
-  }
+	.invite-card{
+		background-color:  #E6EEF2
+	}
+	#invite-card-title{
+		font-size: 16px;
+		font-weight: 500;
+	}
+	#invite-respond-btn{
+		border-radius: 54px;
+	}
 
-  ion-toolbar {
-    margin-top: 20px;
-  }
+	#usernameTitle {
+		margin: 13px 8px 3px 0;
+		font-size: 21px;
+		font-weight: bold;
+		letter-spacing: 2px;
+	}
+	#emailTitle {
+		margin: 0px 8px 0px 0;
+		font-size: 14px;
+	}
+
+	ion-toolbar {
+		margin-top: 20px;
+	}
 }

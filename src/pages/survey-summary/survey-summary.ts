@@ -1,27 +1,21 @@
-import { Component } from "@angular/core";
-import {
-  IonicPage,
-  NavController,
-  NavParams,
-  AlertController,
-  LoadingController,
-} from "ionic-angular";
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 
-import { SendInvitePage } from "../send-invite/send-invite";
-import { CreateSurveyPage } from "../create-survey/create-survey";
-import { ResultsPage } from "../results/results";
-import { AnswerSurveyPage } from "../answer-survey/answer-survey";
+import { SendInvitePage } from '../send-invite/send-invite';
+import { CreateSurveyPage } from '../create-survey/create-survey';
+import { ResultsPage } from '../results/results';
+import { AnswerSurveyPage } from '../answer-survey/answer-survey';
 
-import { ConfigurationProvider } from "../../providers/configuration/configuration";
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
-import * as firebase from "firebase/app";
-import "firebase/database";
-import { Storage } from "@ionic/storage";
+import * as firebase from 'firebase/app';
+import 'firebase/database';
+import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
-  selector: "page-survey-summary",
-  templateUrl: "survey-summary.html",
+  selector: 'page-survey-summary',
+  templateUrl: 'survey-summary.html',
 })
 export class SurveySummaryPage {
   isActive = true;
@@ -36,145 +30,113 @@ export class SurveySummaryPage {
   currUser;
   thisResponses = [];
 
-  constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
+  constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage,
     public configService: ConfigurationProvider,
     private alertCtrl: AlertController,
-    public loadingForResultsCtrl: LoadingController
-  ) {
-    this.thisSurvey = this.navParams.get("item");
+    public loadingForResultsCtrl: LoadingController) {
 
-    this.storage.get("currentUser").then((x) => {
+    this.thisSurvey = this.navParams.get('item');
+    
+    this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
 
-    try {
-      firebase
-        .database()
-        .ref("/users/")
-        .on("value", (val) => {});
-    } catch (e) {
+    try{
+      firebase.database().ref('/users/').on('value', val => {});
+    }catch(e){
       console.log(e);
     }
   }
 
   ionViewDidLoad() {
-    console.log("ionViewDidLoad SurveySummaryPage");
-    this.title = this.thisSurvey["title"];
-    this.isActive = this.thisSurvey["isActive"];
-    this.s_id = this.thisSurvey["id"];
+    console.log('ionViewDidLoad SurveySummaryPage');
+    this.title = this.thisSurvey['title'];
+    this.isActive = this.thisSurvey['isActive'];
+    this.s_id = this.thisSurvey['id'];
 
-    firebase
-      .database()
-      .ref("/surveys/" + this.s_id)
-      .on("value", (sSnapshot) => {
-        var s = sSnapshot.val();
-        if (s) {
-          this.title = s["title"];
-        }
-      });
+    firebase.database().ref('/surveys/'+this.s_id)
+    .on('value', sSnapshot => {
+      var s = sSnapshot.val();
+      if(s){
+        this.title = s['title'];
+      }
+    });
 
-    this.num_responses = this.thisSurvey["num_responses"];
-    this.author = this.thisSurvey["author"];
+    this.num_responses = this.thisSurvey['num_responses'];
+    this.author = this.thisSurvey['author'];
 
-    const resp: firebase.database.Reference = firebase
-      .database()
-      .ref("/responses/" + this.s_id);
-    resp.on("value", (respSnapshot) => {
-      if (respSnapshot.val()) {
+    const resp:firebase.database.Reference = firebase.database().ref('/responses/'+this.s_id);
+    resp.on('value', respSnapshot => {
+      if(respSnapshot.val()){
         this.num_responses = respSnapshot.numChildren();
       }
     });
 
-    this.created_date = this.configService.transformDateNumFormat(
-      this.thisSurvey["created_at"]
-    );
-    this.updated_date = this.configService.transformDateNumFormat(
-      this.thisSurvey["updated_at"]
-    );
+    this.created_date =  this.configService.transformDateNumFormat(this.thisSurvey['created_at']);
+    this.updated_date =  this.configService.transformDateNumFormat(this.thisSurvey['updated_at']);
   }
 
-  gotoSendInvitePage() {
+  gotoSendInvitePage(){
     let loadingUsers = this.loadingForResultsCtrl.create({
-      content: "Please wait...",
+      content: 'Please wait...'
     });
 
-    if (this.configService.isConnectedToFirebase()) {
+    if(this.configService.isConnectedToFirebase()){
       loadingUsers.present().then(() => {
         loadingUsers.dismiss();
-        this.navCtrl.push(SendInvitePage, {
-          s_id: this.s_id,
-          title: this.title,
-          author: this.author,
-        });
+        this.navCtrl.push(SendInvitePage, {s_id: this.s_id, title: this.title, author: this.author});
       });
-    } else {
+    }
+    else{
       loadingUsers.dismiss();
       this.configService.showSimpleConnectionError();
     }
   }
 
-  gotoEdit() {
-    this.navCtrl.push(CreateSurveyPage, {
-      thisSurvey: this.thisSurvey,
-      s_id: this.s_id,
-    });
+  gotoEdit(){
+    this.navCtrl.push(CreateSurveyPage, {thisSurvey: this.thisSurvey, s_id: this.s_id});
   }
 
-  gotoRespondentView() {
-    this.navCtrl.push(AnswerSurveyPage, {
-      item: this.thisSurvey,
-      diff_respondent_flag: true,
-      viewOnly: false,
-    });
+  gotoRespondentView(){
+    this.navCtrl.push(AnswerSurveyPage, {'item' : this.thisSurvey, 'diff_respondent_flag': true, 'viewOnly': false});
   }
 
-  gotoRespondentViewReadOnly() {
-    this.navCtrl.push(AnswerSurveyPage, {
-      item: this.thisSurvey,
-      viewOnly: true,
-    });
+  gotoRespondentViewReadOnly(){
+    this.navCtrl.push(AnswerSurveyPage, {'item' : this.thisSurvey, 'viewOnly': true});
   }
 
-  gotoResultsPage() {
-    if (this.configService.isConnectedToFirebase()) {
+  gotoResultsPage(){
+    if(this.configService.isConnectedToFirebase()){
       let loadingForResults = this.loadingForResultsCtrl.create({
-        content: "Please wait...",
+        content: 'Please wait...'
       });
 
       loadingForResults.present().then(() => {
-        const s: firebase.database.Reference = firebase
-          .database()
-          .ref("/responses/" + this.s_id);
-        s.once("value", (responsesSnapshot) => {
-          if (responsesSnapshot.val()) {
+        const s:firebase.database.Reference = firebase.database().ref('/responses/'+this.s_id);
+        s.once('value', responsesSnapshot => {
+          if(responsesSnapshot.val()){
             this.thisResponses = responsesSnapshot.val();
             loadingForResults.dismiss();
-            this.navCtrl.push(ResultsPage, {
-              s_id: this.s_id,
-              responses: this.thisResponses,
-            });
-          } else {
+            this.navCtrl.push(ResultsPage, {s_id: this.s_id, responses: this.thisResponses});
+          }
+          else{
             loadingForResults.dismiss();
-            this.configService.showSimpleAlert(
-              "Opsss!",
-              "There are no responses recorded yet."
-            );
+            this.configService.showSimpleAlert('Opsss!','There are no responses recorded yet.');
           }
         });
       });
-    } else {
+    }
+    else{
       this.configService.showSimpleConnectionError();
     }
   }
 
-  confirmDeleteSurvey() {
+  confirmDeleteSurvey(){
     var surveyId = this.s_id;
-    if (this.configService.isConnectedToFirebase()) {
+    if(this.configService.isConnectedToFirebase()){
       this.configService.deleteSurvey(surveyId);
-    } else {
+    }else{
       this.configService.showSimpleConnectionError();
     }
 
@@ -183,51 +145,52 @@ export class SurveySummaryPage {
     }, 1000);
   }
 
-  deleteSurvey() {
+  deleteSurvey(){
     let alert = this.alertCtrl.create({
-      title: "Are you sure to delete this survey?",
+      title: 'Are you sure to delete this survey?',
       message: this.title,
       buttons: [
-        {
-          text: "Cancel",
-          role: "cancel",
-          handler: () => {
-            console.log("Cancel clicked. Do not delete survey.");
-          },
-        },
-        {
-          text: "Delete",
-          handler: () => {
-            console.log("deleting survey ...");
-            this.confirmDeleteSurvey();
-          },
-        },
-      ],
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked. Do not delete survey.');
+        }
+      },
+      {
+        text: 'Delete',
+        handler: () => {
+          console.log('deleting survey ...');
+          this.confirmDeleteSurvey();
+        }
+      }
+    ]
     });
     alert.present();
   }
 
-  updateSurveyStatus() {
-    console.log("updating isActive status of survey " + this.s_id);
+  updateSurveyStatus(){
+    console.log("updating isActive status of survey "+this.s_id);
     this.configService.updateSurveyStatus(this.s_id, this.isActive);
   }
 
-  public ionViewWillLeave() {
+  public ionViewWillLeave(){
     console.log("leaving survey-summary page ...");
     // this.navCtrl.pop();
   }
 
-  public ionViewWillEnter() {
+  public ionViewWillEnter(){
     console.log("entering survey-summary page ...");
 
-    if (!this.configService.isConnectedToFirebase()) {
-      this.storage.get("mySurveys").then((s) => {
-        for (var i in s) {
-          if (s[i]["id"] == this.s_id) {
-            this.num_responses = s[i]["num_responses"];
+    if(!this.configService.isConnectedToFirebase()){
+      this.storage.get('mySurveys').then(s =>{
+        for ( var i in s){
+          if( s[i]['id'] == this.s_id){
+            this.num_responses = s[i]['num_responses'];
           }
         }
       });
     }
   }
+
 }

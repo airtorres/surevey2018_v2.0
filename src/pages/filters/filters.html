@@ -5,168 +5,128 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar color="primary">
-    <ion-title>Filters</ion-title>
 
-    <ion-buttons end>
-      <button ion-button (click)="reset()" style="margin-right: 10px">
-        Reset
-      </button>
-    </ion-buttons>
-  </ion-navbar>
+  <ion-navbar color="primary">
+    	<ion-title>Filters</ion-title>
+
+    	<ion-buttons end>
+	      	<button ion-button (click)="reset()" style="margin-right: 10px;">
+	        	Reset
+	      	</button>
+	    </ion-buttons>
+  	</ion-navbar>
+
 </ion-header>
 
+
 <ion-content>
-  <ion-card id="filterNote" text-justify>
-    <ion-note>
-      <strong>Note:</strong> Enter the necessesary filters you need, to generate
-      a list of users for you to send survey invitations. If you wish to
-      generate users randomly using the default values of the filter inputs,
-      fill in <strong>ONLY</strong> the number of users you want to generate.
-      <br />
-      In <strong>AGE RANGE</strong>, you are allowed to input the minimum age
-      only or the maximum age only or both. If you wish to send invites to a
-      specific age. For example, 19 years old, enter 19 to both min and max
-      input field. The default min is 15 and default max is 90. You don't need
-      to input the default values.
-    </ion-note>
-  </ion-card>
 
-  <ion-card class="card" style="margin-top: 16px" id="ageRange">
-    <ion-card-content>
-      <ion-card-title color="primary" class="card-title"
-        >AGE RANGE</ion-card-title
-      >
-      <ion-list id="age">
-        <ion-grid>
-          <ion-row>
-            <ion-col>
-              <ion-label stacked class="stacked">MIN</ion-label>
-              <ion-input
-                type="number"
-                min="15"
-                #min
-                [(ngModel)]="minimum"
-              ></ion-input>
-            </ion-col>
+	<ion-card id="filterNote" text-justify>
+		<ion-note> <strong>Note:</strong> Enter the necessesary filters you need, to generate a list of users for you to send survey invitations. If you wish to generate users randomly using the default values of the filter inputs, fill in <strong>ONLY</strong> the number of users you want to generate. <br>  
+		In <strong>AGE RANGE</strong>, you are allowed to input the minimum age only or the maximum age only or both. If you wish to send invites to a specific age. For example, 19 years old, enter 19 to both min and max input field. The default min is 15 and default max is 90. You don't need to input the default values. 
+		</ion-note>
+	</ion-card>
 
-            <ion-col>
-              <ion-label stacked class="stacked">MAX</ion-label>
-              <ion-input
-                type="number"
-                #max
-                [(ngModel)]="maximum"
-                min="{{minimum}}"
-                max="90"
-              ></ion-input>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
+	<ion-card class="card" style="margin-top: 16px;" id="ageRange">
+		<ion-card-content>
+			<ion-card-title color="primary" class="card-title">AGE RANGE</ion-card-title>
+			<ion-list id="age">
+				<ion-grid>
+					<ion-row>
+						<ion-col>
+							<ion-label stacked class="stacked">MIN</ion-label>
+							<ion-input type="number" min="15" #min [(ngModel)]="minimum"></ion-input>
+						</ion-col>
 
-  <ion-card class="card">
-    <ion-card-content>
-      <ion-card-title color="primary" class="card-title">SEX</ion-card-title>
+						<ion-col>
+							<ion-label stacked class="stacked">MAX</ion-label>
+							<ion-input type="number" #max [(ngModel)]="maximum" min="{{minimum}}" max="90"></ion-input>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-list>
+		</ion-card-content>
+	</ion-card>
+	
+	<ion-card class="card">
+		<ion-card-content>
+			<ion-card-title color="primary" class="card-title">SEX</ion-card-title>
 
-      <ion-list id="sex">
-        <ion-item>
-          <ion-label>Sex</ion-label>
-          <ion-select [(ngModel)]="sex">
-            <ion-option value="Male">Male</ion-option>
-            <ion-option value="Female">Female</ion-option>
-            <ion-option value="Male & Female">Male & Female</ion-option>
-          </ion-select>
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
+			<ion-list id="sex">
+				<ion-item>
+					<ion-label>Sex</ion-label>
+					<ion-select [(ngModel)]="sex">
+						<ion-option value="Male">Male</ion-option>
+						<ion-option value="Female">Female</ion-option>
+						<ion-option value="Male & Female">Male & Female</ion-option>
+					</ion-select>
+				</ion-item>
+			</ion-list>
+		</ion-card-content>
+	</ion-card>
 
-  <ion-card class="card">
-    <ion-card-content>
-      <ion-card-title color="primary" class="card-title"
-        >PROFESSION</ion-card-title
-      >
+	<ion-card class="card">
+		<ion-card-content>
+			<ion-card-title color="primary" class="card-title">PROFESSION</ion-card-title>
 
-      <ion-list id="profession">
-        <ion-item>
-          <ion-label>Profession</ion-label>
-          <ion-select [(ngModel)]="profession">
-            <ion-option value="Any">Any</ion-option>
-            <ion-option *ngFor="let prof of professions" value="{{prof}}"
-              >{{prof}}</ion-option
-            >
-          </ion-select>
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
+			<ion-list id="profession">
+				<ion-item>
+					<ion-label>Profession</ion-label>
+					<ion-select [(ngModel)]="profession">
+						<ion-option value="Any">Any</ion-option>
+						<ion-option *ngFor="let prof of professions" value={{prof}}>{{prof}}</ion-option>
+					</ion-select>
+				</ion-item>
+			</ion-list>
+		</ion-card-content>
+	</ion-card>
 
-  <ion-card class="card">
-    <ion-card-content>
-      <ion-card-title color="primary" class="card-title"
-        >LOCATION</ion-card-title
-      >
+	<ion-card class="card">
+		<ion-card-content>
+			<ion-card-title color="primary" class="card-title">LOCATION</ion-card-title>
 
-      <ion-list id="address">
-        <ion-item>
-          <ion-label>Country</ion-label>
-          <ion-select [(ngModel)]="country" (ionChange)="getCountry()">
-            <ion-option value="Anywhere">Anywhere</ion-option>
-            <ion-option *ngFor="let country of countries" value="{{country}}"
-              >{{country}}</ion-option
-            >
-          </ion-select>
-        </ion-item>
+			<ion-list id="address">
+			
+				<ion-item>
+					<ion-label>Country</ion-label>
+					<ion-select [(ngModel)]="country" (ionChange)="getCountry()">
+						<ion-option value="Anywhere">Anywhere</ion-option>
+						<ion-option *ngFor="let country of countries" value="{{country}}">{{country}}</ion-option>
+					</ion-select>
+				</ion-item>
 
-        <ion-item>
-          <ion-label>Province/State</ion-label>
-          <ion-select [(ngModel)]="state" (ionChange)="getState()">
-            <ion-option value="Anywhere">Anywhere</ion-option>
-            <ion-option *ngFor="let state of states" value="{{state}}"
-              >{{state}}</ion-option
-            >
-          </ion-select>
-        </ion-item>
+				<ion-item>
+					<ion-label>Province/State</ion-label>
+					<ion-select [(ngModel)]="state" (ionChange)="getState()">
+						<ion-option value="Anywhere">Anywhere</ion-option>
+						<ion-option *ngFor="let state of states" value="{{state}}">{{state}}</ion-option>
+					</ion-select>
+				</ion-item>
 
-        <ion-item>
-          <ion-label>Municipality/City</ion-label>
-          <ion-select [(ngModel)]="city" (ionChange)="getCity()">
-            <ion-option value="Anywhere">Anywhere</ion-option>
-            <ion-option *ngFor="let city of cities" value="{{city}}"
-              >{{city}}</ion-option
-            >
-          </ion-select>
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
+				<ion-item>
+					<ion-label>Municipality/City</ion-label>
+					<ion-select [(ngModel)]="city" (ionChange)="getCity()">
+						<ion-option value="Anywhere">Anywhere</ion-option>
+						<ion-option *ngFor="let city of cities" value="{{city}}">{{city}}</ion-option>
+					</ion-select>
+				</ion-item>
 
-  <ion-card class="card" id="numOfRespondents">
-    <ion-card-content>
-      <ion-card-title color="primary" class="card-title"
-        >NUMBER OF RESPONDENTS</ion-card-title
-      >
-      <ion-note style="color: #ff675c">* This field is required.</ion-note>
-      <ion-input
-        id="numPersons"
-        required
-        type="number"
-        min="1"
-        [(ngModel)]="numberOfPersons"
-        style="width: 40%"
-        #numPersons
-      ></ion-input>
-    </ion-card-content>
-  </ion-card>
+			</ion-list>
 
-  <ion-buttons end style="margin-right: 10px; margin-bottom: 10px">
-    <button ion-button clear id="cancelbtn" (click)="cancelBtn()">
-      Cancel
-    </button>
-    <button ion-button id="applybtn" (click)="applyFilter()">
-      Apply Filters
-    </button>
-  </ion-buttons>
+		</ion-card-content>
+	</ion-card>
+
+	<ion-card class="card" id="numOfRespondents">
+		<ion-card-content>
+			<ion-card-title color="primary" class="card-title">NUMBER OF RESPONDENTS</ion-card-title>
+			<ion-note style="color:#FF675C;">* This field is required.</ion-note>
+			<ion-input id="numPersons" required type="number" min="1" [(ngModel)]="numberOfPersons" style="width: 40%;" #numPersons></ion-input>
+		</ion-card-content>
+	</ion-card>
+
+	<ion-buttons end style="margin-right: 10px; margin-bottom: 10px;">
+		<button ion-button clear id="cancelbtn" (click)="cancelBtn()">Cancel</button>
+		<button ion-button id="applybtn" (click)="applyFilter()">Apply Filters</button>
+	</ion-buttons>
+
 </ion-content>

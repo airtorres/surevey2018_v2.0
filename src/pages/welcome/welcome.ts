@@ -1,7 +1,7 @@
-import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams } from "ionic-angular";
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { MyAppPage } from "../my-app/my-app";
+import { MyAppPage } from '../my-app/my-app';
 
 /**
  * Generated class for the WelcomePage page.
@@ -12,18 +12,21 @@ import { MyAppPage } from "../my-app/my-app";
 
 @IonicPage()
 @Component({
-  selector: "page-welcome",
-  templateUrl: "welcome.html",
+  selector: 'page-welcome',
+  templateUrl: 'welcome.html',
 })
 export class WelcomePage {
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  }
 
   ionViewDidLoad() {
-    console.log("ionViewDidLoad WelcomePage");
+    console.log('ionViewDidLoad WelcomePage');
   }
 
-  navigateToHome() {
-    this.navCtrl.setRoot(MyAppPage);
-    // use this.navCtrl.push(PageName, {}); // para may "back" button
+  navigateToHome(){
+  	this.navCtrl.setRoot(MyAppPage);
+  	// use this.navCtrl.push(PageName, {}); // para may "back" button
   }
+
 }

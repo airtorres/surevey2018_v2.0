@@ -1,54 +1,54 @@
 page-filters {
-  .divider {
-    background-color: #f2efef;
-    font-size: 17px;
-  }
+	.divider {
+		background-color: #F2EFEF;
+		font-size: 17px;
+	}
 
-  ion-input {
-    border: 1px solid gray;
-    border-radius: 8px;
-  }
+	ion-input {
+		border: 1px solid gray;
+		border-radius: 8px;
+	}
 
-  .card {
-    border-radius: 10px;
+	.card {
+		border-radius: 10px;
 
-    .card-title {
-      font-size: 16px;
-      letter-spacing: 2px;
-    }
+		.card-title {
+			font-size: 16px;
+			letter-spacing: 2px;
+		}
 
-    .stacked {
-      margin: 0px 0px 0px 0px;
-    }
-  }
+		.stacked {
+			margin: 0px 0px 0px 0px;
+		}
+	}
 
-  .warning {
-    border: 3px #ffc0cb solid;
-  }
+	.warning{
+		border: 3px #FFC0CB solid;
+	}
 
-  .errorMessage {
-    color: red;
-    font-size: 11px;
-    font-style: italic;
-    text-align: center;
-  }
+	.errorMessage {
+		color: red;
+		font-size: 11px;
+		font-style: italic;
+		text-align: center;
+	}
 
-  #applybtn {
-    border-radius: 15px;
-  }
+	#applybtn {
+		border-radius: 15px;
+	}
 
-  #cancelbtn {
-    color: gray;
-  }
+	#cancelbtn {
+		color: gray;
+	}
 
-  #filterNote {
-    box-shadow: none !important;
-    border-radius: 0px !important;
-    background-color: #f7f7f7;
-    padding: 8px;
+	#filterNote {
+		box-shadow: none !important;
+		border-radius: 0px !important;
+		background-color: #F7F7F7;
+		padding: 8px;
 
-    ion-note {
-      color: #ff675c;
-    }
-  }
+		ion-note {
+			color: #FF675C;
+		}
+	}
 }

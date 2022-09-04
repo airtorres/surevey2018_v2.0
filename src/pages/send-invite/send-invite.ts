@@ -1,20 +1,14 @@
-import { Component } from "@angular/core";
-import {
-  IonicPage,
-  NavController,
-  NavParams,
-  AlertController,
-  ToastController,
-} from "ionic-angular";
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 
-import { FiltersPage } from "../filters/filters";
+import { FiltersPage } from '../filters/filters';
 
-import { ConfigurationProvider } from "../../providers/configuration/configuration";
+import { ConfigurationProvider } from '../../providers/configuration/configuration';
 
-import { AngularFireAuth } from "@angular/fire/auth";
-import * as firebase from "firebase/app";
-import "firebase/database";
-import { Storage } from "@ionic/storage";
+import { AngularFireAuth } from '@angular/fire/auth';
+import * as firebase from 'firebase/app';
+import 'firebase/database';
+import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the SendInvitePage page.
@@ -25,8 +19,8 @@ import { Storage } from "@ionic/storage";
 
 @IonicPage()
 @Component({
-  selector: "page-send-invite",
-  templateUrl: "send-invite.html",
+  selector: 'page-send-invite',
+  templateUrl: 'send-invite.html',
 })
 export class SendInvitePage {
   currUser;
@@ -41,40 +35,38 @@ export class SendInvitePage {
   public generated_users_from_filter = [];
   public numPersons;
 
-  selAll: boolean = false;
+  selAll : boolean = false;
   public length;
 
   public s_id;
   public author;
   public title;
   thisSurvey = {
-    s_id: "",
-    status: "pending", //status: cancelled/deleted/pending/incomplete/completed
-  };
+  	's_id':'',
+    'status':'pending', //status: cancelled/deleted/pending/incomplete/completed
+  }
   notification = {
-    type: "invitation",
-    s_id: "",
-    s_status: "pending",
-    s_author: "",
-    s_author_id: "",
-    s_title: "",
-    s_respondent: "",
-    isSeen: false,
-  };
+    'type':'invitation',
+    's_id':'',
+    's_status':'pending',
+    's_author':'',
+    's_author_id': '',
+    's_title':'',
+    's_respondent':'',
+    'isSeen': false
+  }
 
-  constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    private storage: Storage,
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+  	private storage: Storage,
     private fire: AngularFireAuth,
-    private alertCtrl: AlertController,
+  	private alertCtrl: AlertController, 
     public toastCtrl: ToastController,
-    public configService: ConfigurationProvider
-  ) {
-    this.s_id = this.navParams.get("s_id");
-    this.author = this.navParams.get("author");
-    this.title = this.navParams.get("title");
-    this.storage.get("currentUser").then((x) => {
+    public configService: ConfigurationProvider) {
+
+    this.s_id = this.navParams.get('s_id');
+    this.author = this.navParams.get('author');
+    this.title = this.navParams.get('title');
+    this.storage.get('currentUser').then(x =>{
       this.currUser = x;
     });
 
@@ -84,18 +76,15 @@ export class SendInvitePage {
     this.checkConnection();
   }
 
-  ionViewWillEnter() {
-    this.generated_users_from_filter =
-      this.navParams.get("generated_users") || null;
-    this.numPersons = this.navParams.get("numPersons") || null;
+  ionViewWillEnter(){
+    this.generated_users_from_filter = this.navParams.get('generated_users') || null;
+    this.numPersons = this.navParams.get('numPersons') || null;
 
     if (this.generated_users_from_filter == null && this.numPersons == null) {
       this.generated_users_from_filter = [];
       this.numPersons = 0;
-    } else if (
-      this.generated_users_from_filter != null &&
-      this.numPersons != null
-    ) {
+    }
+    else if (this.generated_users_from_filter != null && this.numPersons != null) {
       this.selected_users = [];
       this.selections = {};
       this.all_users_email = this.generated_users_from_filter;
@@ -106,43 +95,42 @@ export class SendInvitePage {
         this.selected_users.push(this.all_users_email[email]);
       }
 
-      this.numPersons = parseInt(this.numPersons["value"]);
+      this.numPersons = parseInt(this.numPersons['value']);
     }
     if (this.generated_users_from_filter.length < this.numPersons) {
       let noteNotEnoughGeneratedUsersToast = this.toastCtrl.create({
         message: "There weren't enough users that fit your filter options.",
         duration: 4000,
         showCloseButton: true,
-        closeButtonText: "Close",
+        closeButtonText: 'Close'
       });
       noteNotEnoughGeneratedUsersToast.present();
     }
   }
 
-  checkConnection() {
+  checkConnection(){
     // check for Firebase connection
     var connectFlag = this.configService.isConnectedToFirebase();
 
-    if (connectFlag) {
+    if(connectFlag){
       this.loadUsersFromFirebase();
-    } else {
+    }
+    else{
       this.configService.showSimpleConnectionError();
     }
   }
 
-  loadUsersFromFirebase() {
+  loadUsersFromFirebase(){
     // getting all users from firebase
-    const allUsersRef: firebase.database.Reference = firebase
-      .database()
-      .ref("/users/");
-    allUsersRef.on("value", (allUsersSnapshot) => {
+    const allUsersRef:firebase.database.Reference = firebase.database().ref('/users/');
+    allUsersRef.on('value', allUsersSnapshot => {
       this.all_users = allUsersSnapshot.val();
     });
 
     // getting the emails of all_users
-    for (var e in this.all_users) {
-      if (this.all_users[e]["email"] != this.fire.auth.currentUser.email) {
-        this.all_users_email.push(this.all_users[e]["email"]);
+    for ( var e in this.all_users){
+      if(this.all_users[e]['email'] != this.fire.auth.currentUser.email){
+        this.all_users_email.push(this.all_users[e]['email']);
       }
     }
 
@@ -155,39 +143,33 @@ export class SendInvitePage {
   }
 
   ionViewDidLoad() {
-    console.log("ionViewDidLoad SendInvitePage");
+    console.log('ionViewDidLoad SendInvitePage');
   }
 
-  showSuccessPrompt() {
+  showSuccessPrompt(){
     let alert = this.alertCtrl.create({
-      title: "Success",
-      message: "Your invitations are successfully sent.",
-      buttons: ["OK"],
+      title: 'Success',
+      message: 'Your invitations are successfully sent.',
+      buttons: ['OK']
     });
     alert.present();
   }
 
-  refresh() {
+  refresh(){
     this.selected_users = [];
-    for (var email in this.selections) {
-      if (this.selections[email] == true) {
+    for(var email in this.selections){
+      if (this.selections[email] == true){
         this.selected_users.push(email);
       }
     }
 
-    if (
-      (this.selected_users.length < this.numPersons && this.selAll == true) ||
-      (this.selected_users.length < this.all_users_email.length &&
-        this.selAll == true) ||
-      this.selected_users.length == 0
-    ) {
+    if ( (this.selected_users.length < this.numPersons && this.selAll == true) || (this.selected_users.length < this.all_users_email.length && this.selAll == true) || (this.selected_users.length == 0) ) {
       this.selAll = false;
-    } else if (
-      this.selected_users.length == this.numPersons ||
-      this.selected_users.length == this.all_users_email.length
-    ) {
+    }
+    else if ( (this.selected_users.length == this.numPersons) || (this.selected_users.length == this.all_users_email.length) ) {
       this.selAll = true;
     }
+    
   }
 
   selectAllUsers() {
@@ -197,7 +179,7 @@ export class SendInvitePage {
         this.selections[this.all_users_email[email]] = true;
         this.selected_users.push(this.all_users_email[email]);
       }
-    }
+    } 
     if (this.selAll == false) {
       for (var user_email in this.all_users_email) {
         this.selections[this.all_users_email[user_email]] = false;
@@ -217,23 +199,19 @@ export class SendInvitePage {
     this.all_users_email = this.og_all_users_email;
   }
 
-  sendInvitation() {
+  sendInvitation(){
     console.log(this.selected_users);
     var bindSelf = this;
 
-    this.thisSurvey["s_id"] = this.s_id;
+    this.thisSurvey['s_id'] = this.s_id;
 
-    this.notification["s_id"] = this.s_id;
-    this.notification["s_author"] = this.author;
-    this.notification["s_author_id"] = this.userID;
-    this.notification["s_title"] = this.title;
-    this.notification["date"] = new Date().toISOString();
-    var newNotifKey = firebase
-      .database()
-      .ref()
-      .child("/notifications/" + u + "/surveyNotifs/")
-      .push().key;
-    this.notification["notifId"] = newNotifKey;
+    this.notification['s_id'] = this.s_id;
+    this.notification['s_author'] = this.author;
+    this.notification['s_author_id'] = this.userID;
+    this.notification['s_title'] = this.title;
+    this.notification['date'] = new Date().toISOString();
+    var newNotifKey = firebase.database().ref().child('/notifications/'+ u +'/surveyNotifs/').push().key;
+    this.notification['notifId'] = newNotifKey;
 
     var successFlag = true;
     var surveyInvites = [];
@@ -242,57 +220,42 @@ export class SendInvitePage {
 
     for (var s in this.selected_users) {
       for (var u in this.all_users) {
+
         var survey_id = this.s_id;
 
-        if (this.all_users[u]["email"] == this.selected_users[s]) {
-          console.log(
-            "Sending invitation to " + this.all_users[u]["email"] + "..."
-          );
-
-          const allSurveyInvites: firebase.database.Reference = firebase
-            .database()
-            .ref("/user_surveys/" + u + "/invitations");
-          allSurveyInvites.on("value", (allSurveySnapshot) => {
+        if(this.all_users[u]['email'] == this.selected_users[s]) {
+          console.log("Sending invitation to " + this.all_users[u]['email'] + "...");
+          
+          const allSurveyInvites:firebase.database.Reference = firebase.database().ref('/user_surveys/'+u+'/invitations');
+          allSurveyInvites.on('value', allSurveySnapshot => {
             surveyInvites = allSurveySnapshot.val();
           });
-          for (var invit in surveyInvites) {
-            survey_invites_ids.push(surveyInvites[invit]["s_id"]);
+          for ( var invit in surveyInvites){
+            survey_invites_ids.push(surveyInvites[invit]['s_id']);
           }
-          console.log(survey_invites_ids);
-          this.notification["s_respondent"] = this.all_users[u]["email"];
-          this.notification["s_respondent_id"] = u;
+          console.log(survey_invites_ids)
+          this.notification['s_respondent'] = this.all_users[u]['email'];
+          this.notification['s_respondent_id'] = u;
 
           if (survey_invites_ids.indexOf(survey_id) !== -1) {
-            console.log(
-              "You're not allowed to send the survey invitation twice"
-            );
-            unsent.push(this.all_users[u]["email"]);
+            console.log("You're not allowed to send the survey invitation twice");
+            unsent.push(this.all_users[u]['email']);
             // successFlag = false;
             // console.log("unsent: ", unsent);
-          } else {
-            firebase
-              .database()
-              .ref("/user_surveys/" + u + "/invitations/" + survey_id)
-              .set(this.thisSurvey, function (error) {
-                if (error) {
-                  console.log(
-                    "Not successful pushing to invitations (for some users ONLY)." +
-                      error
-                  );
-                  successFlag = false;
-                } else {
-                  console.log(
-                    "Successfully added the surveyID to invitations!"
-                  );
-                  successFlag = true && successFlag;
-                }
-              });
+          }
+          else {
+            firebase.database().ref("/user_surveys/"+u+"/invitations/"+survey_id).set(this.thisSurvey, function(error){              
+              if(error){
+                console.log("Not successful pushing to invitations (for some users ONLY)."+error);
+                successFlag = false;
+              }else{
+                console.log("Successfully added the surveyID to invitations!");
+                successFlag = true && successFlag;
+              }
+            });
 
             if (successFlag) {
-              firebase
-                .database()
-                .ref("/notifications/" + u + "/surveyNotifs/" + newNotifKey)
-                .set(bindSelf.notification);
+              firebase.database().ref('/notifications/'+ u +'/surveyNotifs/' + newNotifKey).set(bindSelf.notification);
             }
           }
           break;
@@ -303,42 +266,41 @@ export class SendInvitePage {
     if (unsent.length > 0) {
       if (unsent.length == 1) {
         let oneUnsent = this.alertCtrl.create({
-          title: "Failed",
-          message:
-            "Your survey invitation was not sent to " +
-            unsent[0] +
-            ". This user has already received your survey invite.",
-          buttons: ["OK"],
+          title: 'Failed',
+          message: 'Your survey invitation was not sent to ' + unsent[0] + '. This user has already received your survey invite.',
+          buttons: ['OK']
         });
         oneUnsent.present();
-      } else {
+      }
+      else {
         let manyUnsent = this.alertCtrl.create({
-          title: "Notice",
-          message:
-            "Failed to send to some users. Users might already have your survey invites.",
-          buttons: ["OK"],
+          title: 'Notice',
+          message: 'Failed to send to some users. Users might already have your survey invites.',
+          buttons: ['OK']
         });
         manyUnsent.present();
       }
-    } else if (unsent.length == 0) {
-      if (successFlag) {
+      
+    }
+    else if (unsent.length == 0) { 
+      if(successFlag){
         this.showSuccessPrompt();
-      } else {
+      }else{
         this.configService.showSimpleConnectionError();
       }
     }
     // if(successFlag){
     //   this.showSuccessPrompt();
     // }
-    else {
+    else{
       this.configService.showSimpleConnectionError();
     }
 
-    this.navCtrl.pop();
+  	this.navCtrl.pop();
   }
 
   gotoFiltersPage() {
-    this.navCtrl.push(FiltersPage);
+     this.navCtrl.push(FiltersPage);
   }
 
   onInput(ev) {
@@ -350,10 +312,12 @@ export class SendInvitePage {
     var val = ev.target.value;
 
     // if the value is an empty string don't filter the items
-    if (val && val.trim() != "") {
+    if (val && val.trim() != '') {
       this.all_users_email = this.all_users_email.filter((item) => {
-        return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
-      });
+        return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      })
     }
   }
+
+
 }

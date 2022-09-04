@@ -1,5 +1,5 @@
-import { Component, ViewChild } from "@angular/core";
-import { IonicPage, NavController, NavParams } from "ionic-angular";
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
  * Generated class for the NewMsgPage page.
@@ -10,18 +10,20 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 
 @IonicPage()
 @Component({
-  selector: "page-new-msg",
-  templateUrl: "new-msg.html",
+  selector: 'page-new-msg',
+  templateUrl: 'new-msg.html',
 })
 export class NewMsgPage {
-  @ViewChild("receiver") receiver;
+  @ViewChild('receiver') receiver;
   chatmate;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.chatmate = navParams.get("chatmate");
+
+  	this.chatmate = navParams.get('chatmate');
   }
 
   ionViewDidLoad() {
-    console.log("ionViewDidLoad NewMsgPage");
+    console.log('ionViewDidLoad NewMsgPage');
   }
+
 }
