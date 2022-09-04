@@ -1,6 +1,6 @@
 ### About
 
-This project is a continuation of project named [surevey2018](https://github.com/airtorres/surevey2018) - an Android mobile application built with the Ionic framework. On this version, the application is synchronized with Firebase as the remote repository of application data.
+This project is a continuation of [surevey2018](https://github.com/airtorres/surevey2018) - an Android mobile application built with the Ionic framework. On this version, the application is synchronized with Firebase as the remote repository of application data.
 
 ## Welcome to SUREVEY!
 
