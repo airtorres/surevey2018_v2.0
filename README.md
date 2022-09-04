@@ -1,10 +1,10 @@
 ### About
 
-This project is a continuation of project named [surevey2018](https://github.com/airtorres/surevey2018). On this project, the android mobile application is synchronized with Firebase as the remote repository of application data.
+This project is a continuation of project named [surevey2018](https://github.com/airtorres/surevey2018) - an Android mobile application built with the Ionic framework. On this version, the application is synchronized with Firebase as the remote repository of application data.
 
 ## Welcome to SUREVEY!
 
-**Surevey** is a survey-maker and survey results analyzer Android mobile application.
+**Surevey** is a survey-maker and a survey results analyzer Android mobile application.
 
 Before installing the mobile application on your device,
 make sure that your device have Android version 4 or higher.
