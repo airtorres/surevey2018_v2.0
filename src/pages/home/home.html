@@ -1,114 +1,132 @@
 <ion-header class="page-header">
-	<ion-navbar color="primary">
-		<button ion-button icon-only clear menuToggle>
-			<ion-icon name="menu"></ion-icon>
-		</button>
-		<ion-title>Dashboard</ion-title>
-	</ion-navbar>
+  <ion-navbar color="primary">
+    <button ion-button icon-only clear menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Dashboard</ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-menu [content]="content">
-	<ion-header text-center no-border>
-		<ion-toolbar padding>
-			<ion-avatar>
-				<img class="avatar" src="../assets/imgs/user.png">
-			</ion-avatar>
-			<ion-label text-center id="usernameTitle">
-				{{ username }}
-			</ion-label>
-			<ion-label id="emailTitle">{{ currentUser }}</ion-label>
-		</ion-toolbar>
-	</ion-header>
+  <ion-header text-center no-border>
+    <ion-toolbar padding>
+      <ion-avatar>
+        <img class="avatar" src="../assets/imgs/user.png" />
+      </ion-avatar>
+      <ion-label text-center id="usernameTitle"> {{ username }} </ion-label>
+      <ion-label id="emailTitle">{{ currentUser }}</ion-label>
+    </ion-toolbar>
+  </ion-header>
 
-	<ion-content class="menu_items">
-		<ion-list>
-			<ion-item (click)="gotoProfile()" menuClose no-lines>
-				<ion-icon item-left name="person"></ion-icon>
-				Profile
-			</ion-item>
-			<ion-item (click)="gotoSettings()" menuClose no-lines>
-				<ion-icon item-left name="settings"></ion-icon>
-				Settings
-			</ion-item>
-			<ion-item (click)="logout()" menuClose no-lines>
-				<ion-icon  item-left name="log-out"></ion-icon>
-				Sign out
-			</ion-item>
-		</ion-list>
-	</ion-content>
+  <ion-content class="menu_items">
+    <ion-list>
+      <ion-item (click)="gotoProfile()" menuClose no-lines>
+        <ion-icon item-left name="person"></ion-icon>
+        Profile
+      </ion-item>
+      <ion-item (click)="gotoSettings()" menuClose no-lines>
+        <ion-icon item-left name="settings"></ion-icon>
+        Settings
+      </ion-item>
+      <ion-item (click)="logout()" menuClose no-lines>
+        <ion-icon item-left name="log-out"></ion-icon>
+        Sign out
+      </ion-item>
+    </ion-list>
+  </ion-content>
 </ion-menu>
 
 <ion-nav id="nav" #content [root]="rootPage"></ion-nav>
 
 <ion-content>
-	<ion-card padding text-center class="main-card card-radius">
-		<ion-card-content>
-			<ion-card-title>Start your survey now!</ion-card-title>
-			<button block ion-button (click)="create_survey()">Create survey</button>
-			<button block ion-button (click)="browse_templates()">Browse survey templates</button>
-		</ion-card-content>
-	</ion-card>
+  <ion-card padding text-center class="main-card card-radius">
+    <ion-card-content>
+      <ion-card-title>Start your survey now!</ion-card-title>
+      <button block ion-button (click)="create_survey()">Create survey</button>
+      <button block ion-button (click)="browse_templates()">
+        Browse survey templates
+      </button>
+    </ion-card-content>
+  </ion-card>
 
-	<ion-item-divider no-lines style="text-transform: uppercase;">Ongoing Surveys</ion-item-divider>
+  <ion-item-divider no-lines style="text-transform: uppercase"
+    >Ongoing Surveys</ion-item-divider
+  >
 
-	<div padding *ngIf="mySurveys.length == 0">
-		<ion-note>No Survey</ion-note>
-	</div>
+  <div padding *ngIf="mySurveys.length == 0">
+    <ion-note>No Survey</ion-note>
+  </div>
 
-	<ion-card class="ongoing-card card-radius" *ngFor="let item of mySurveys">
+  <ion-card class="ongoing-card card-radius" *ngFor="let item of mySurveys">
+    <div padding class="ongoing-card-header">
+      <ion-card-title id="ongoing-card-title"
+        >{{ item['title'] }}</ion-card-title
+      >
+      <ion-row>
+        <ion-col>
+          <p style="font-size: 12px">
+            Created: {{ transformDate(item['created_at']) }}
+          </p>
+        </ion-col>
 
-		<div padding class="ongoing-card-header">
-			<ion-card-title id="ongoing-card-title">{{ item['title'] }}</ion-card-title>
-			<ion-row>
-			    <ion-col>
-			      	<p style="font-size: 12px;">Created: {{ transformDate(item['created_at']) }}</p>
-			    </ion-col>
+        <ion-col>
+          <ion-buttons end>
+            <button
+              ion-button
+              id="view-ongoing-btn"
+              (click)="gotoSummary(item)"
+            >
+              VIEW DETAILS
+            </button>
+          </ion-buttons>
+        </ion-col>
+      </ion-row>
+    </div>
 
-			    <ion-col>
-			    	<ion-buttons end>
-			     		<button ion-button id="view-ongoing-btn" (click)="gotoSummary(item)">VIEW DETAILS</button>
-			     	</ion-buttons>
-			    </ion-col>
-		  	</ion-row>
-		</div>
+    <ion-row padding>
+      <ion-col> {{ item['num_responses'] }} total responses </ion-col>
+    </ion-row>
+  </ion-card>
 
-		<ion-row padding>
-		    <ion-col>
-		      	{{ item['num_responses'] }} total responses
-		    </ion-col>
-		</ion-row>
-		 
-		
-	</ion-card>
+  <ion-item-divider no-lines style="text-transform: uppercase"
+    >Survey Invites</ion-item-divider
+  >
 
-	<ion-item-divider no-lines style="text-transform: uppercase;">Survey Invites</ion-item-divider>
+  <div padding *ngIf="survey_invites.length == 0">
+    <ion-note>No Survey Invitations</ion-note>
+  </div>
 
-	<div padding *ngIf="survey_invites.length == 0">
-		<ion-note>No Survey Invitations</ion-note>
-	</div>
+  <div *ngFor="let item of survey_invites">
+    <ion-card
+      class="invite-card card-radius"
+      *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == true"
+    >
+      <ion-card-content>
+        <ion-card-title id="invite-card-title"
+          >{{ item['title'] }}</ion-card-title
+        >
 
-	<div *ngFor="let item of survey_invites">
-		<ion-card class="invite-card card-radius" *ngIf="invite_status[item['id']] != 'completed' && item['isActive'] == true">
+        <ion-row>
+          <ion-col>
+            <p>
+              By: {{ transformAuthorName(item['author_id'], item['author']) }}
+            </p>
+          </ion-col>
 
-			<ion-card-content>
-
-				<ion-card-title id="invite-card-title">{{ item['title'] }}</ion-card-title>
-				
-				<ion-row>
-				    <ion-col>
-				      	<p>By: {{ transformAuthorName(item['author_id'], item['author']) }}</p>
-				    </ion-col>
-
-				    <ion-col>
-				    	<ion-buttons end>
-					     	<button ion-button small id="invite-respond-btn" (click)="gotoAnswer(item)">RESPOND NOW</button>
-					    </ion-buttons>
-				    </ion-col>
-			  	</ion-row>
-
-			</ion-card-content>
-
-		</ion-card>
-	</div>
-
+          <ion-col>
+            <ion-buttons end>
+              <button
+                ion-button
+                small
+                id="invite-respond-btn"
+                (click)="gotoAnswer(item)"
+              >
+                RESPOND NOW
+              </button>
+            </ion-buttons>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

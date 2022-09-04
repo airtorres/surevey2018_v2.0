@@ -1,27 +1,24 @@
 <ion-header>
-
   <ion-navbar color="primary">
     <ion-title>Summary</ion-title>
     <ion-buttons end>
-      <button ion-button (click)="deleteSurvey()" style="margin-right: 10px;">
+      <button ion-button (click)="deleteSurvey()" style="margin-right: 10px">
         <ion-icon name="trash"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
-
 
 <ion-content padding>
   <div text-center>
-    <ion-label text-wrap style="font-size: 25px;">
-      {{ title }}
-    </ion-label>
-    
+    <ion-label text-wrap style="font-size: 25px"> {{ title }} </ion-label>
+
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-label class="num-title" style="margin: 0" text-center>{{ num_responses }}</ion-label>
+          <ion-label class="num-title" style="margin: 0" text-center
+            >{{ num_responses }}</ion-label
+          >
           <p style="margin: 0">TOTAL RESPONSES</p>
         </ion-col>
 
@@ -29,69 +26,121 @@
           <ion-label class="num-title" text-center>15</ion-label>
           <p>COMPLETE RESPONSES</p>
         </ion-col> -->
-    </ion-row>
+      </ion-row>
     </ion-grid>
   </div>
 
   <!-- MAIN BUTTONS -->
 
   <ion-list>
-    <button ion-item (click)="gotoEdit()" style="padding-left: 0px;" [disabled]="num_responses != 0 || this.configService.getNumResponses(s_id) != 0">
-      <ion-icon item-left name="create" color="blue" style="font-size: 25px;"></ion-icon>
+    <button
+      ion-item
+      (click)="gotoEdit()"
+      style="padding-left: 0px"
+      [disabled]="num_responses != 0 || this.configService.getNumResponses(s_id) != 0"
+    >
+      <ion-icon
+        item-left
+        name="create"
+        color="blue"
+        style="font-size: 25px"
+      ></ion-icon>
       Edit
     </button>
 
-    <button ion-item (click)="gotoSendInvitePage()" style="padding-left: 0px;" [disabled]="isActive == false">
-      <ion-icon item-left name="send" color="blue" style="font-size: 25px;"></ion-icon>
+    <button
+      ion-item
+      (click)="gotoSendInvitePage()"
+      style="padding-left: 0px"
+      [disabled]="isActive == false"
+    >
+      <ion-icon
+        item-left
+        name="send"
+        color="blue"
+        style="font-size: 25px"
+      ></ion-icon>
       Send Invites
     </button>
 
-    <button ion-item (click)="gotoResultsPage()" style="padding-left: 0px;">
-      <ion-icon item-left name="analytics" color="blue" style="font-size: 25px;"></ion-icon>
+    <button ion-item (click)="gotoResultsPage()" style="padding-left: 0px">
+      <ion-icon
+        item-left
+        name="analytics"
+        color="blue"
+        style="font-size: 25px"
+      ></ion-icon>
       Analyze
     </button>
 
-    <button ion-item (click)="gotoRespondentView()" style="padding-left: 0px;">
-      <ion-icon item-left name="checkbox-outline" color="blue" style="font-size: 25px;"></ion-icon>
+    <button ion-item (click)="gotoRespondentView()" style="padding-left: 0px">
+      <ion-icon
+        item-left
+        name="checkbox-outline"
+        color="blue"
+        style="font-size: 25px"
+      ></ion-icon>
       Answer
     </button>
 
-    <button ion-item (click)="gotoRespondentViewReadOnly()" style="padding-left: 0px;">
-      <ion-icon item-left name="eye" color="blue" style="font-size: 25px;"></ion-icon>
+    <button
+      ion-item
+      (click)="gotoRespondentViewReadOnly()"
+      style="padding-left: 0px"
+    >
+      <ion-icon
+        item-left
+        name="eye"
+        color="blue"
+        style="font-size: 25px"
+      ></ion-icon>
       Preview
     </button>
   </ion-list>
 
   <!-- SETTINGS -->
-  <ion-item-divider style="color: #12608A; font-size: 16px;padding-left: 0px;" no-lines>SETTINGS</ion-item-divider>	
-  <ion-item style="padding-left: 0px;">
-    <ion-label>Survey Status:
-      <span style="color: #73CA5F;" *ngIf="isActive">OPEN</span>
-      <span style="color: #FF675C;" *ngIf="!isActive">CLOSED</span> 
+  <ion-item-divider
+    style="color: #12608a; font-size: 16px; padding-left: 0px"
+    no-lines
+    >SETTINGS</ion-item-divider
+  >
+  <ion-item style="padding-left: 0px">
+    <ion-label
+      >Survey Status:
+      <span style="color: #73ca5f" *ngIf="isActive">OPEN</span>
+      <span style="color: #ff675c" *ngIf="!isActive">CLOSED</span>
     </ion-label>
-    <ion-toggle [(ngModel)]="isActive" (ionChange)="updateSurveyStatus()" color="blue"></ion-toggle>
+    <ion-toggle
+      [(ngModel)]="isActive"
+      (ionChange)="updateSurveyStatus()"
+      color="blue"
+    ></ion-toggle>
   </ion-item>
 
   <!-- DETAILS -->
-  <ion-item-divider style="color: #12608A; font-size: 16px;padding-left: 0px;" no-lines>DETAILS</ion-item-divider> 
+  <ion-item-divider
+    style="color: #12608a; font-size: 16px; padding-left: 0px"
+    no-lines
+    >DETAILS</ion-item-divider
+  >
 
   <ion-list>
-    <ion-item style="padding-left: 0px;">
+    <ion-item style="padding-left: 0px">
       <ion-label>Respondents</ion-label>
-      <ion-note item-end color="blue" style="font-size: 1.6rem;">{{ this.configService.connectedToFirebaseFlag? this.configService.getNumResponses(s_id):num_responses }}</ion-note>
+      <ion-note item-end color="blue" style="font-size: 1.6rem"
+        >{{ this.configService.connectedToFirebaseFlag?
+        this.configService.getNumResponses(s_id):num_responses }}</ion-note
+      >
     </ion-item>
 
-    <ion-item style="padding-left: 0px;">
+    <ion-item style="padding-left: 0px">
       <ion-label>Created</ion-label>
-      <ion-note item-end style="font-size: 16px;">{{ created_date }}</ion-note>
+      <ion-note item-end style="font-size: 16px">{{ created_date }}</ion-note>
     </ion-item>
 
-    <ion-item style="padding-left: 0px;">
+    <ion-item style="padding-left: 0px">
       <ion-label>Modified</ion-label>
-      <ion-note item-end style="font-size: 16px;">{{ updated_date }}</ion-note>
+      <ion-note item-end style="font-size: 16px">{{ updated_date }}</ion-note>
     </ion-item>
-
   </ion-list>
-
-
 </ion-content>
