@@ -82,11 +82,11 @@ export class NotificationPage {
       .database()
       .ref("/notifications/" + this.userID + "/surveyNotifs")
       .on("value", (allUserNotifRef) => {
-        var notification = allUserNotifRef.val();
+        const notification = allUserNotifRef.val();
 
         this.allUserNotif = [];
         this.user_notifID = [];
-        for (var i in notification) {
+        for (const i in notification) {
           this.allUserNotif.push(notification[i]);
           if (notification[i]["isSeen"] == false) {
             this.user_notifID.push(i);
@@ -102,7 +102,7 @@ export class NotificationPage {
 
   updateIsSeen() {
     console.log(this.user_notifID);
-    for (var notifIdx in this.user_notifID) {
+    for (const notifIdx in this.user_notifID) {
       firebase
         .database()
         .ref(
@@ -150,7 +150,7 @@ export class NotificationPage {
 
   updateIsSeenStatusToTrue(notif) {
     try {
-      var that = this;
+      const that = this;
       firebase
         .database()
         .ref(
@@ -183,10 +183,10 @@ export class NotificationPage {
 
   answerInvi(survey) {
     // check for Firebase connection
-    var notif = survey["notifId"];
-    var item = this.configService.getSurveyData(survey["s_id"]);
+    const notif = survey["notifId"];
+    const item = this.configService.getSurveyData(survey["s_id"]);
 
-    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    const connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
     if (connectedToFirebaseFlag && survey["s_status"] != "completed") {
       this.updateIsSeenStatusToTrue(notif);
       this.navCtrl.push(AnswerSurveyPage, {
@@ -200,7 +200,7 @@ export class NotificationPage {
   }
 
   deleteInvi(survey) {
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: "Warning",
       message: "Are you sure to delete this invitation?",
       buttons: [
@@ -225,9 +225,9 @@ export class NotificationPage {
   }
 
   showDeleteConfirmationAlert(notif) {
-    var msg = "Are you sure to delete this notification?";
+    const msg = "Are you sure to delete this notification?";
 
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: "Warning",
       message: msg,
       buttons: [
@@ -250,7 +250,7 @@ export class NotificationPage {
   }
 
   deleteNotification(notif) {
-    let loading = this.loadingCtrl.create({
+    const loading = this.loadingCtrl.create({
       content: "Deleting survey...",
     });
 

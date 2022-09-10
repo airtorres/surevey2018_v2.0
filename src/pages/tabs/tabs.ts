@@ -21,14 +21,14 @@ export class TabsPage {
   tab4Root = ChatBoxPage;
 
   userID;
-  public notifBadgeCount: number = 0;
+  public notifBadgeCount = 0;
   public notifBadge;
   userNotifs = [];
 
   conversationIDs = [];
   chatmates = [];
   userChats = [];
-  public chatBadgeCount: number = 0;
+  public chatBadgeCount = 0;
 
   constructor(
     private fire: AngularFireAuth,
@@ -43,14 +43,14 @@ export class TabsPage {
       .database()
       .ref("/notifications/" + this.userID + "/surveyNotifs");
     allUserNotifRef.on("value", (allUserNotifSnapshot) => {
-      var notif = allUserNotifSnapshot.val();
+      const notif = allUserNotifSnapshot.val();
       this.userNotifs = [];
       this.notifBadgeCount = 0;
-      for (var i in notif) {
+      for (const i in notif) {
         this.userNotifs.push(notif[i]);
       }
       console.log(this.userNotifs);
-      for (var n in this.userNotifs) {
+      for (const n in this.userNotifs) {
         if (this.userNotifs[n]["isSeen"] == false) {
           this.notifBadgeCount++;
         }
@@ -61,10 +61,10 @@ export class TabsPage {
       .database()
       .ref("/notifications/" + this.userID + "/chatNotifs/");
     allUserChatNotif.on("value", (allUserChatNotifSnap) => {
-      var chatnotif = allUserChatNotifSnap.val();
+      const chatnotif = allUserChatNotifSnap.val();
       console.log(chatnotif);
       this.chatBadgeCount = 0;
-      for (var c in chatnotif) {
+      for (const c in chatnotif) {
         if (chatnotif[c]["isSeen"] == false) {
           this.chatBadgeCount++;
         }

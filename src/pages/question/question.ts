@@ -57,9 +57,9 @@ export class QuestionPage {
       this.isRequired = this.thisQuestion["isRequired"];
 
       if (this.thisQuestion["options"]) {
-        for (var opt = 0; opt < this.thisQuestion["options"].length; opt++) {
+        for (let opt = 0; opt < this.thisQuestion["options"].length; opt++) {
           if (opt != 0) {
-            var val = { value: this.thisQuestion["options"][opt] };
+            const val = { value: this.thisQuestion["options"][opt] };
             this.anArray.push(val);
           }
         }
@@ -70,7 +70,7 @@ export class QuestionPage {
 
     // storing the previous values to check the changes
     this.prev_anArray = [];
-    for (var i in this.anArray) {
+    for (const i in this.anArray) {
       this.prev_anArray.push(this.anArray[i]);
     }
     this.prev_anArray = JSON.stringify(this.prev_anArray);
@@ -96,10 +96,10 @@ export class QuestionPage {
 
   canAddQuestion(options, type) {
     if (this.question && this.question.value != "") {
-      var pattern = new RegExp(
+      const pattern = new RegExp(
         "^([a-zA-Z0-9]+)([ \\.\\-\\,\\(\\)\\+\\$\\!\\?])*[a-zA-Z0-9]+"
       );
-      var isValidTitle = pattern.test(this.question.value);
+      const isValidTitle = pattern.test(this.question.value);
 
       if (isValidTitle) {
         if (
@@ -163,7 +163,7 @@ export class QuestionPage {
         );
       }
 
-      for (var opt in this.anArray) {
+      for (const opt in this.anArray) {
         this.thisQuestion["options"].push(this.anArray[opt]["value"]);
       }
     } else if (this.type == "time") {
@@ -172,7 +172,7 @@ export class QuestionPage {
     }
 
     // removing the uncessesary empty item ont thisQuestion['options']
-    var options = this.thisQuestion["options"]
+    let options = this.thisQuestion["options"]
       ? this.thisQuestion["options"]
       : [];
     if (
@@ -184,7 +184,7 @@ export class QuestionPage {
       }
     }
 
-    var valid = this.canAddQuestion(options, this.type);
+    const valid = this.canAddQuestion(options, this.type);
 
     if (valid) {
       this.navCtrl.getPrevious().data.question_data = this.thisQuestion
@@ -226,7 +226,7 @@ export class QuestionPage {
   }
 
   checkAllChanges() {
-    var exitFlag = false;
+    let exitFlag = false;
 
     if (
       this.type == "multipleChoice" &&
@@ -275,7 +275,7 @@ export class QuestionPage {
     // here you can use other vars to see if there are reasons we want to keep user in this page:
     if (!this.userCanLeave && !this.addingFlag) {
       return new Promise((resolve, reject) => {
-        let alert = this.alertCtrl.create({
+        const alert = this.alertCtrl.create({
           title: "Changes made",
           message: "Do you want to save?",
           buttons: [

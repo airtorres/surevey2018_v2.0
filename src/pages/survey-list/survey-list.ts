@@ -32,7 +32,7 @@ import { Storage } from "@ionic/storage";
   templateUrl: "survey-list.html",
 })
 export class SurveyListPage {
-  surveyList: string = "all";
+  surveyList = "all";
   item;
 
   currUser;
@@ -85,7 +85,7 @@ export class SurveyListPage {
 
   gotoRespondentView(item) {
     // check for Firebase connection
-    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    const connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     if (
       connectedToFirebaseFlag &&
@@ -116,8 +116,8 @@ export class SurveyListPage {
   }
 
   fetchSurveys() {
-    var i;
-    var surv = [];
+    let i;
+    let surv = [];
 
     firebase
       .database()
@@ -147,10 +147,10 @@ export class SurveyListPage {
       .database()
       .ref("/user_surveys/" + this.fire.auth.currentUser.uid + "/invitations")
       .on("value", (survSnapshot) => {
-        var all_invitations = survSnapshot.val();
+        const all_invitations = survSnapshot.val();
 
         this.survey_invites_ids = [];
-        for (var invit in all_invitations) {
+        for (const invit in all_invitations) {
           this.survey_invites_ids.push(all_invitations[invit]["s_id"]);
           this.invite_status[invit] = all_invitations[invit]["status"];
         }
@@ -170,7 +170,7 @@ export class SurveyListPage {
         }
       });
 
-    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    const connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
     if (!connectedToFirebaseFlag) {
       // getting the survey data from localDB if not connected to Firebase
       this.loadSurveysFromLocalDB();
@@ -178,7 +178,7 @@ export class SurveyListPage {
   }
 
   confirmDeleteSurvey(item) {
-    var surveyId = item["id"];
+    const surveyId = item["id"];
     if (this.configService.isConnectedToFirebase()) {
       this.configService.deleteSurvey(surveyId);
     } else {
@@ -187,7 +187,7 @@ export class SurveyListPage {
   }
 
   showDeleteConfirmationAlert(item) {
-    var msg = "Are you sure to delete this survey?";
+    let msg = "Are you sure to delete this survey?";
     if (item["type"]) {
       if (item["type"] == "mySurvey") {
         console.log("Deleting my survey...");
@@ -199,9 +199,9 @@ export class SurveyListPage {
       msg = "Are you sure to delete this Draft?";
     }
 
-    var s_title = item["title"] ? item["title"] : "Unkown Survey";
+    const s_title = item["title"] ? item["title"] : "Unkown Survey";
 
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: msg,
       message: s_title,
       buttons: [
@@ -236,7 +236,7 @@ export class SurveyListPage {
   }
 
   deleteSurveyInvitation(item) {
-    let loading = this.loadingCtrl.create({
+    const loading = this.loadingCtrl.create({
       content: "Deleting invitation...",
     });
 

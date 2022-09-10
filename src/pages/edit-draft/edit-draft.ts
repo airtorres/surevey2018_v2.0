@@ -87,7 +87,7 @@ export class EditDraftPage {
   }
 
   addQuestion(questionType) {
-    let data = {
+    const data = {
       type: questionType,
     };
     console.log(data);
@@ -106,7 +106,7 @@ export class EditDraftPage {
     this.survey["author"] = this.currUser;
     this.survey["isActive"] = true; //the survey is active upon creation
 
-    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    const connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     if (connectedToFirebaseFlag) {
       //   try{
@@ -138,7 +138,7 @@ export class EditDraftPage {
   }
 
   showTemporaryAlert() {
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: "Info",
       message: "This functionality will be implemented soon.",
       buttons: ["OK"],
@@ -154,8 +154,8 @@ export class EditDraftPage {
   saveToUserSurveyList() {
     // load surveys from firebase
     try {
-      var thisSurveyId = this.s_id;
-      var thisUser = {};
+      const thisSurveyId = this.s_id;
+      let thisUser = {};
 
       // saving survey id to user's survey list
       const userToSurveyRef: firebase.database.Reference = firebase
@@ -213,7 +213,7 @@ export class EditDraftPage {
   }
 
   deleteDraft() {
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: "Warning",
       message: "Are you sure to delete this survey?",
       buttons: [
@@ -253,8 +253,8 @@ export class EditDraftPage {
     console.log("reloading question IDs ...");
 
     this.questions_with_IDs = [];
-    for (var q in this.questions) {
-      var temp = this.questions[q];
+    for (const q in this.questions) {
+      const temp = this.questions[q];
       temp["q_id"] = "";
       temp["q_id"] = q;
       this.questions_with_IDs.push(temp);
@@ -264,9 +264,9 @@ export class EditDraftPage {
   }
 
   public ionViewWillEnter() {
-    var push_flag = this.navParams.get("push_flag");
-    var replace_flag = this.navParams.get("replace_flag");
-    var qID = this.navParams.get("qID"); // qID from question.ts
+    const push_flag = this.navParams.get("push_flag");
+    const replace_flag = this.navParams.get("replace_flag");
+    const qID = this.navParams.get("qID"); // qID from question.ts
 
     if (push_flag) {
       this.question_data = this.navParams.get("question_data") || null;
@@ -295,7 +295,7 @@ export class EditDraftPage {
 
   showSavingPrompt(saveFromTop) {
     return new Promise((resolve, reject) => {
-      let alert = this.alertCtrl.create({
+      const alert = this.alertCtrl.create({
         title: "Error saving survey",
         message: "Connection timeout.",
         buttons: [

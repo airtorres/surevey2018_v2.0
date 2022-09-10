@@ -61,12 +61,12 @@ export class HomePage {
       this.storage.get("offline_responses").then((res) => {
         if (res) {
           // for each surveyId
-          for (var survId in res) {
+          for (const survId in res) {
             console.log("SURVEY ID = " + survId);
 
             // for each responses on this survey
-            for (var responseIdx in res[survId]) {
-              var newUserKey = firebase
+            for (const responseIdx in res[survId]) {
+              const newUserKey = firebase
                 .database()
                 .ref()
                 .child("responses/" + survId)
@@ -115,7 +115,7 @@ export class HomePage {
   }
 
   gotoAnswer(item) {
-    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    const connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     if (connectedToFirebaseFlag) {
       this.navCtrl.push(AnswerSurveyPage, { item: item, viewOnly: false });
@@ -125,7 +125,7 @@ export class HomePage {
   }
 
   logout() {
-    let loadingSignout = this.loadingCtrl.create({
+    const loadingSignout = this.loadingCtrl.create({
       content: "Signing out",
     });
 
@@ -180,8 +180,8 @@ export class HomePage {
   }
 
   loadSurveys() {
-    var i;
-    var surv = [];
+    let i;
+    let surv = [];
 
     firebase
       .database()
@@ -212,10 +212,10 @@ export class HomePage {
       .database()
       .ref("/user_surveys/" + this.fire.auth.currentUser.uid + "/invitations")
       .on("value", (survSnapshot) => {
-        var all_invitations = survSnapshot.val();
+        const all_invitations = survSnapshot.val();
 
         this.survey_invites_ids = [];
-        for (var invit in all_invitations) {
+        for (const invit in all_invitations) {
           this.survey_invites_ids.push(all_invitations[invit]["s_id"]);
           this.invite_status[invit] = all_invitations[invit]["status"];
         }

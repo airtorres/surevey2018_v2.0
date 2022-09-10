@@ -70,7 +70,7 @@ export class SurveySummaryPage {
       .database()
       .ref("/surveys/" + this.s_id)
       .on("value", (sSnapshot) => {
-        var s = sSnapshot.val();
+        const s = sSnapshot.val();
         if (s) {
           this.title = s["title"];
         }
@@ -97,7 +97,7 @@ export class SurveySummaryPage {
   }
 
   gotoSendInvitePage() {
-    let loadingUsers = this.loadingForResultsCtrl.create({
+    const loadingUsers = this.loadingForResultsCtrl.create({
       content: "Please wait...",
     });
 
@@ -140,7 +140,7 @@ export class SurveySummaryPage {
 
   gotoResultsPage() {
     if (this.configService.isConnectedToFirebase()) {
-      let loadingForResults = this.loadingForResultsCtrl.create({
+      const loadingForResults = this.loadingForResultsCtrl.create({
         content: "Please wait...",
       });
 
@@ -171,7 +171,7 @@ export class SurveySummaryPage {
   }
 
   confirmDeleteSurvey() {
-    var surveyId = this.s_id;
+    const surveyId = this.s_id;
     if (this.configService.isConnectedToFirebase()) {
       this.configService.deleteSurvey(surveyId);
     } else {
@@ -184,7 +184,7 @@ export class SurveySummaryPage {
   }
 
   deleteSurvey() {
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: "Are you sure to delete this survey?",
       message: this.title,
       buttons: [
@@ -222,7 +222,7 @@ export class SurveySummaryPage {
 
     if (!this.configService.isConnectedToFirebase()) {
       this.storage.get("mySurveys").then((s) => {
-        for (var i in s) {
+        for (const i in s) {
           if (s[i]["id"] == this.s_id) {
             this.num_responses = s[i]["num_responses"];
           }

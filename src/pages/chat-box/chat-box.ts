@@ -47,11 +47,11 @@ export class ChatBoxPage {
       .database()
       .ref("/chatmates/" + this.userId)
       .on("value", (chatmatesSnapshot) => {
-        var allChatmates = chatmatesSnapshot.val();
+        const allChatmates = chatmatesSnapshot.val();
         console.log(allChatmates);
         this.chatmatelist = [];
         if (allChatmates) {
-          for (var id in allChatmates) {
+          for (const id in allChatmates) {
             this.chatmatelist.push(allChatmates[id]);
 
             this.loadMsgDisplays(allChatmates[id]);
@@ -63,32 +63,32 @@ export class ChatBoxPage {
   }
 
   loadisReadNotifs(chatmateId) {
-    var convoId = this.getConvoId(this.userId, chatmateId);
+    const convoId = this.getConvoId(this.userId, chatmateId);
     firebase
       .database()
       .ref(
         "/notifications/" + this.userId + "/chatNotifs/" + convoId + "/isSeen"
       )
       .on("value", (readSnapshot) => {
-        var isRead = readSnapshot.val();
+        const isRead = readSnapshot.val();
         this.isReadDict[chatmateId] = isRead;
       });
   }
 
   getChatmateName(cid) {
     // var name = this.configService.transformAuthorNameNoEmail(cid);
-    var name = "";
-    var email = "";
+    let name = "";
+    let email = "";
     const user: firebase.database.Reference = firebase
       .database()
       .ref("/users/" + cid);
     user.on("value", (userSnapshot) => {
-      var u = userSnapshot.val();
+      const u = userSnapshot.val();
 
       if (u) {
         email = u["email"];
-        var firstname = u["first_name"];
-        var lastname = u["last_name"];
+        const firstname = u["first_name"];
+        const lastname = u["last_name"];
 
         if (u["first_name"] != null && u["last_name"] != null) {
           name = firstname + " " + lastname;
@@ -130,7 +130,7 @@ export class ChatBoxPage {
   markAsRead(chatmateId) {
     this.isReadDict[chatmateId] = true;
 
-    var convoId = this.getConvoId(this.userId, chatmateId);
+    const convoId = this.getConvoId(this.userId, chatmateId);
     firebase
       .database()
       .ref(
@@ -159,17 +159,17 @@ export class ChatBoxPage {
   }
 
   loadMsgDisplays(chatmateId) {
-    var convoId = this.getConvoId(chatmateId, this.userId);
-    var last = "";
+    const convoId = this.getConvoId(chatmateId, this.userId);
+    let last = "";
     firebase
       .database()
       .ref("/chat_messages/" + convoId)
       .orderByChild("date_sent")
       .on("value", (chatSnapshot) => {
-        var allMsg = chatSnapshot.val();
+        const allMsg = chatSnapshot.val();
         if (allMsg) {
-          var msg = [];
-          for (var m in allMsg) {
+          const msg = [];
+          for (const m in allMsg) {
             msg.push(allMsg[m]);
           }
           last = msg[msg.length - 1];
@@ -177,10 +177,10 @@ export class ChatBoxPage {
           this.messageDisplays[chatmateId]["last_msg"] = "";
           this.messageDisplays[chatmateId]["last_msg"] = last["content"];
           this.messageDisplays[chatmateId]["date"] = "";
-          var date = this.transformDate(last["date_sent"]).split(" ");
-          var fdate = "";
+          const date = this.transformDate(last["date_sent"]).split(" ");
+          let fdate = "";
           if (date) {
-            var formated = (date[0] + " " + date[1]).split(",");
+            const formated = (date[0] + " " + date[1]).split(",");
             fdate = formated[0];
           }
           this.messageDisplays[chatmateId]["date"] = fdate;
@@ -201,7 +201,7 @@ export class ChatBoxPage {
   }
 
   delChatCopy(chatmateId) {
-    var that = this;
+    const that = this;
     firebase
       .database()
       .ref("/chatmates/" + this.fire.auth.currentUser.uid + "/" + chatmateId)

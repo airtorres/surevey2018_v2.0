@@ -53,11 +53,11 @@ export class ChatPage {
       .database()
       .ref("/chat_messages/" + this.conversationId)
       .on("value", (chatSnapshot) => {
-        var allMsg = chatSnapshot.val();
+        const allMsg = chatSnapshot.val();
 
         if (allMsg) {
           this.allmessages = [];
-          for (var msg in allMsg) {
+          for (const msg in allMsg) {
             this.allmessages.push(allMsg[msg]);
           }
         }
@@ -97,15 +97,15 @@ export class ChatPage {
   }
 
   sendMessage() {
-    var newPostKey = this.conversationId;
-    var bindSelf = this;
-    var message = {
+    const newPostKey = this.conversationId;
+    const bindSelf = this;
+    const message = {
       content: this.chatMessage.value,
       date_sent: new Date().toISOString(),
       sender: this.userId,
       receiver: this.authorId,
     };
-    var chatNotif = {
+    const chatNotif = {
       isSeen: false,
       receiver: this.authorId,
       sender: this.userId,
@@ -115,8 +115,8 @@ export class ChatPage {
       .database()
       .ref("/chat_messages/")
       .once("value", (chatSnapshot) => {
-        var that = this;
-        var newMessageKey = firebase
+        const that = this;
+        const newMessageKey = firebase
           .database()
           .ref()
           .child(newPostKey)
@@ -151,7 +151,7 @@ export class ChatPage {
   }
 
   confirmDeleteChat() {
-    var that = this;
+    const that = this;
     firebase
       .database()
       .ref("/chatmates/" + this.userId + "/" + this.authorId)
@@ -167,8 +167,8 @@ export class ChatPage {
   }
 
   delChatCopy() {
-    var mate = this.chatmate ? this.chatmate : "(Missing Receiver Info)";
-    let alert = this.alertCtrl.create({
+    const mate = this.chatmate ? this.chatmate : "(Missing Receiver Info)";
+    const alert = this.alertCtrl.create({
       title: "Are you sure to delete this conversation?",
       message: "Convo with: " + mate,
       buttons: [

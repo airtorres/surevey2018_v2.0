@@ -16,7 +16,7 @@ import "firebase/database";
 
 import { ConfigurationProvider } from "../../providers/configuration/configuration";
 
-declare var google;
+declare let google;
 // google.charts.load('current', {packages: ['table']});
 // declare var cordova: any;
 
@@ -78,21 +78,21 @@ export class ResultsPage {
   }
 
   load() {
-    var q_to_opt = [];
-    for (var q in this.questions) {
+    const q_to_opt = [];
+    for (const q in this.questions) {
       // setting default chart
       this.chartOptions[q] = "";
       this.chartOptions[q] = "pie";
 
-      var opt_to_res = [];
-      for (var opt in this.questions[q]["options"]) {
-        var option = this.questions[q]["options"][opt];
+      const opt_to_res = [];
+      for (const opt in this.questions[q]["options"]) {
+        const option = this.questions[q]["options"][opt];
 
         // only if a question has options
         if (option) {
           opt_to_res[option] = [];
 
-          for (var rr in this.responses) {
+          for (const rr in this.responses) {
             // getting the users whose answer is this particular option
             if (
               this.responses[rr]["answers"][q] &&
@@ -109,8 +109,8 @@ export class ResultsPage {
     console.log(q_to_opt);
 
     // tabulating the votes
-    for (var item in q_to_opt) {
-      for (var optn in q_to_opt[item]) {
+    for (const item in q_to_opt) {
+      for (const optn in q_to_opt[item]) {
         q_to_opt[item][optn] = q_to_opt[item][optn].length;
       }
     }
@@ -136,16 +136,16 @@ export class ResultsPage {
       }
     } else {
       this.openAnswers[idx] = [];
-      for (var ans in this.responses) {
+      for (const ans in this.responses) {
         if (this.responses[ans]["answers"][idx]) {
           this.openAnswers[idx].push(this.responses[ans]["answers"][idx]);
         }
       }
     }
 
-    var resultsDiv = document.getElementById("resDiv_" + idx);
-    var btn = document.getElementById("view_btn_" + idx);
-    var closebtn = document.getElementById("closeIcon_" + idx);
+    const resultsDiv = document.getElementById("resDiv_" + idx);
+    const btn = document.getElementById("view_btn_" + idx);
+    const closebtn = document.getElementById("closeIcon_" + idx);
     resultsDiv.style.display = "block";
     btn.style.display = "none";
     closebtn.style.display = "block";
@@ -154,9 +154,9 @@ export class ResultsPage {
   }
 
   closeResult(idx) {
-    var resultsDiv = document.getElementById("resDiv_" + idx);
-    var btn = document.getElementById("view_btn_" + idx);
-    var closebtn = document.getElementById("closeIcon_" + idx);
+    const resultsDiv = document.getElementById("resDiv_" + idx);
+    const btn = document.getElementById("view_btn_" + idx);
+    const closebtn = document.getElementById("closeIcon_" + idx);
     btn.style.display = "block";
     resultsDiv.style.display = "none";
     closebtn.style.display = "none";
@@ -166,37 +166,37 @@ export class ResultsPage {
   }
 
   shiftBgColor(idx) {
-    var item = document.getElementById("item_" + idx);
+    const item = document.getElementById("item_" + idx);
     item.style.backgroundColor = "#12608A";
     item.style.color = "white";
 
-    var closebtn = document.getElementById("closeIcon_" + idx);
+    const closebtn = document.getElementById("closeIcon_" + idx);
     closebtn.style.backgroundColor = "#12608A";
     closebtn.style.color = "white";
 
-    var div = document.getElementById("questionAndResultDiv_" + idx);
+    const div = document.getElementById("questionAndResultDiv_" + idx);
     div.style.borderColor = "rgba(18, 96, 138, 0.14)";
   }
 
   shiftToWhiteBg(idx) {
-    var item = document.getElementById("item_" + idx);
+    const item = document.getElementById("item_" + idx);
     item.style.backgroundColor = "white";
     item.style.color = "black";
 
-    var closebtn = document.getElementById("closeIcon_" + idx);
+    const closebtn = document.getElementById("closeIcon_" + idx);
     closebtn.style.backgroundColor = "white";
     closebtn.style.color = "#12608A";
 
-    var div = document.getElementById("questionAndResultDiv_" + idx);
+    const div = document.getElementById("questionAndResultDiv_" + idx);
     div.style.borderColor = "#F0F0F0";
   }
 
   showPieChart(idx) {
     try {
-      var question_res = [];
+      const question_res = [];
 
-      var count = 0;
-      for (var opt in this.results[idx]) {
+      let count = 0;
+      for (const opt in this.results[idx]) {
         question_res[count] = [];
         question_res[count].push(opt);
         question_res[count].push(this.results[idx][opt]);
@@ -206,13 +206,13 @@ export class ResultsPage {
       console.log(question_res);
 
       // Create the data table.
-      var data = new google.visualization.DataTable();
+      const data = new google.visualization.DataTable();
       data.addColumn("string", this.questions[idx]["message"]);
       data.addColumn("number", "No. of Votes");
       data.addRows(question_res);
 
       // Set chart options
-      var options = {
+      const options = {
         title: "",
         width: 320,
         height: 375,
@@ -227,7 +227,7 @@ export class ResultsPage {
       document.getElementById("opt_" + idx).style.display = "block";
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.PieChart(
+      const chart = new google.visualization.PieChart(
         document.getElementById("results_div_" + idx)
       );
       chart.draw(data, options);
@@ -239,10 +239,10 @@ export class ResultsPage {
 
   showBarChart(idx) {
     try {
-      var question_res = [];
+      const question_res = [];
 
-      var count = 0;
-      for (var opt in this.results[idx]) {
+      let count = 0;
+      for (const opt in this.results[idx]) {
         question_res[count] = [];
         question_res[count].push(opt);
         question_res[count].push(this.results[idx][opt]);
@@ -252,13 +252,13 @@ export class ResultsPage {
       console.log(question_res);
 
       // Create the data table.
-      var data = new google.visualization.DataTable();
+      const data = new google.visualization.DataTable();
       data.addColumn("string", this.questions[idx]["message"]);
       data.addColumn("number", "No. of votes");
       data.addRows(question_res);
 
       // Set chart options
-      var options = {
+      const options = {
         title: "",
         // 'isStacked': 'percent',
         bar: { groupWidth: "90%" },
@@ -268,7 +268,7 @@ export class ResultsPage {
       };
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.BarChart(
+      const chart = new google.visualization.BarChart(
         document.getElementById("results_div_" + idx)
       );
       chart.draw(data, options);
@@ -280,10 +280,10 @@ export class ResultsPage {
 
   showDonutChart(idx) {
     try {
-      var question_res = [];
+      const question_res = [];
 
-      var count = 0;
-      for (var opt in this.results[idx]) {
+      let count = 0;
+      for (const opt in this.results[idx]) {
         question_res[count] = [];
         question_res[count].push(opt);
         question_res[count].push(this.results[idx][opt]);
@@ -293,13 +293,13 @@ export class ResultsPage {
       console.log(question_res);
 
       // Create the data table.
-      var data = new google.visualization.DataTable();
+      const data = new google.visualization.DataTable();
       data.addColumn("string", "Topping");
       data.addColumn("number", "Slices");
       data.addRows(question_res);
 
       // Set chart options
-      var options = {
+      const options = {
         title: "",
         width: 320,
         height: 375,
@@ -313,7 +313,7 @@ export class ResultsPage {
       };
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.PieChart(
+      const chart = new google.visualization.PieChart(
         document.getElementById("results_div_" + idx)
       );
       chart.draw(data, options);
@@ -332,37 +332,37 @@ export class ResultsPage {
   }
 
   downloadCSV() {
-    let loadingDownload = this.loadingCtrl.create({
+    const loadingDownload = this.loadingCtrl.create({
       content: "Downloading...",
     });
 
     loadingDownload.present().then(() => {});
 
-    var csvHeader = [];
-    for (var q in this.questions) {
+    const csvHeader = [];
+    for (const q in this.questions) {
       csvHeader.push(this.questions[q]["message"]);
     }
 
     // getting rows of results
-    var resultsData = [];
-    for (var r in this.responses) {
+    const resultsData = [];
+    for (const r in this.responses) {
       resultsData.push(this.responses[r]["answers"]);
     }
 
-    let csv = papa.unparse({
+    const csv = papa.unparse({
       fields: csvHeader,
       data: resultsData,
     });
 
-    var filename = this.survey_title + " - RESULTS.csv";
+    const filename = this.survey_title + " - RESULTS.csv";
     // var filename2 = this.survey_title + " - TRY.xls"; // binary file format
-    let blob = new Blob([csv]);
+    const blob = new Blob([csv]);
 
     if (this.platform.is("android")) {
       console.log("ANDROID");
 
       try {
-        let filePath = this.file.externalRootDirectory
+        const filePath = this.file.externalRootDirectory
           ? this.file.externalRootDirectory
           : this.file.cacheDirectory;
         // let filePath = cordova.file.externalDataDirectory;
@@ -383,7 +383,7 @@ export class ResultsPage {
       console.log("NOTTTT ANDROID");
     }
 
-    var a = window.document.createElement("a");
+    const a = window.document.createElement("a");
     a.href = window.URL.createObjectURL(blob);
     a.download = filename;
     document.body.appendChild(a);

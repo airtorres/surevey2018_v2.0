@@ -41,9 +41,9 @@ export class SignupPage {
     private storage: Storage,
     private fire: AngularFireAuth
   ) {
-    let EMAILPATTERN =
+    const EMAILPATTERN =
       /^[a-z0-9][a-z0-9!#$%&'*+\/=?^_`{|}~.-]*\@[a-z0-9]+\.[a-z0-9]+(\.[a-z0-9]+)*$/i;
-    let USERNAMEPATTERN = /^[a-z]+[a-z0-9!#$%&'*+\/=?^_`{|}~.-]*/i;
+    const USERNAMEPATTERN = /^[a-z]+[a-z0-9!#$%&'*+\/=?^_`{|}~.-]*/i;
     this.authSignup = this.formbuilder.group({
       username: [
         "",
@@ -75,7 +75,7 @@ export class SignupPage {
   }
 
   showAgreementPage() {
-    let alertAgree = this.alertCtrl.create({
+    const alertAgree = this.alertCtrl.create({
       title: "Terms and Conditions",
       message:
         "By signing up, you agree to share your basic info and the details and information that you used on this application to the administrators, the Surevey Team.",
@@ -95,11 +95,11 @@ export class SignupPage {
 
   signup() {
     console.log(this.email.value);
-    let loading = this.loadingCtrl.create({
+    const loading = this.loadingCtrl.create({
       content: "Signing up",
     });
 
-    var that = this;
+    const that = this;
 
     loading.present().then(() => {
       // SIGNING UP TO FIREBASE -----------------------------------------
@@ -107,16 +107,16 @@ export class SignupPage {
         .createUserWithEmailAndPassword(this.email.value, this.password.value)
         .then((data) => {
           console.log("Data got:\n", data);
-          var id;
+          let id;
           try {
             id = this.fire.auth.currentUser.uid;
           } catch (e) {
             console.log(e);
           }
 
-          var hashPassword = this.loginService.md5(this.password.value);
+          const hashPassword = this.loginService.md5(this.password.value);
 
-          var user = {
+          const user = {
             username: this.username.value,
             email: this.email.value,
             password: hashPassword,
@@ -132,7 +132,7 @@ export class SignupPage {
             state: "",
           };
 
-          var user_survey = {
+          const user_survey = {
             email: this.email.value,
             surveys: [],
             invitations: [],

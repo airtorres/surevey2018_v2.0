@@ -109,7 +109,7 @@ export class AnswerSurveyPage {
 
     this.questions = this.thisSurvey["questions"];
     // saving the id of the question to its selfNode
-    for (var q in this.questions) {
+    for (const q in this.questions) {
       this.questions[q]["id"] = "";
       this.questions[q]["id"] = q;
 
@@ -117,7 +117,7 @@ export class AnswerSurveyPage {
         this.answers[q] = [];
 
         // initializing the checkboxes to false
-        for (var o in this.questions[q]["options"]) {
+        for (const o in this.questions[q]["options"]) {
           this.answers[q][o] = false;
         }
       } else {
@@ -139,7 +139,7 @@ export class AnswerSurveyPage {
   }
 
   showNetworkError() {
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: "Network Error",
       message: "You must be connected to the Internet.",
       buttons: ["OK"],
@@ -148,7 +148,7 @@ export class AnswerSurveyPage {
   }
 
   showSuccesSubmit() {
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: "Success",
       message: "Answers Submitted!.",
       buttons: ["OK"],
@@ -158,7 +158,7 @@ export class AnswerSurveyPage {
 
   UpdateInvitationStatus() {
     try {
-      var that = this;
+      const that = this;
       firebase
         .database()
         .ref(
@@ -186,7 +186,7 @@ export class AnswerSurveyPage {
 
   UpdateNotifSurveyStatus() {
     try {
-      var that = this;
+      const that = this;
       firebase
         .database()
         .ref(
@@ -227,9 +227,9 @@ export class AnswerSurveyPage {
 
     this.storage.get("mySurveys").then((mySurveys) => {
       if (mySurveys) {
-        for (var mySurv in mySurveys) {
+        for (const mySurv in mySurveys) {
           if (mySurveys[mySurv]["id"] == this.s_id) {
-            var numresponses = mySurveys[mySurv]["num_responses"];
+            let numresponses = mySurveys[mySurv]["num_responses"];
 
             numresponses = numresponses + 1;
             mySurveys[mySurv]["num_responses"] = numresponses;
@@ -248,8 +248,8 @@ export class AnswerSurveyPage {
   submit() {
     this.okayAnswers = [];
 
-    var cleanSaveFlag = true;
-    for (var q in this.questions) {
+    let cleanSaveFlag = true;
+    for (const q in this.questions) {
       if (
         this.questions[q]["isRequired"] == true &&
         (this.answers[q] == "" ||
@@ -268,7 +268,7 @@ export class AnswerSurveyPage {
     } else {
       this.configService.displayToast("Some answers are Empty or Invalid!");
 
-      for (var idx in this.questions) {
+      for (const idx in this.questions) {
         if (this.okayAnswers[idx] == 1) {
           document.getElementById("qItem_" + idx).classList.add("warning");
         } else {
@@ -279,13 +279,13 @@ export class AnswerSurveyPage {
   }
 
   submitResponse() {
-    let loadingSubmitting = this.loadingCtrl.create({
+    const loadingSubmitting = this.loadingCtrl.create({
       content: "Submitting response",
     });
 
     loadingSubmitting.present().then(() => {
-      var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
-      var bindSelf = this;
+      const connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+      const bindSelf = this;
 
       console.log("submitting response ...");
 
@@ -301,7 +301,7 @@ export class AnswerSurveyPage {
       this.notification["s_respondent"] = this.currUser;
       this.notification["s_respondent_id"] = this.fire.auth.currentUser.uid;
       this.notification["date"] = new Date().toISOString();
-      var newNotifKey = firebase
+      const newNotifKey = firebase
         .database()
         .ref()
         .child(
@@ -310,10 +310,10 @@ export class AnswerSurveyPage {
         .push().key;
       this.notification["notifId"] = newNotifKey;
 
-      for (var q in this.questions) {
+      for (const q in this.questions) {
         if (this.questions[q]["type"] == "checkbox") {
-          var finalAns = [];
-          for (var a in this.answers[q]) {
+          const finalAns = [];
+          for (const a in this.answers[q]) {
             if (this.answers[q][a] == true) {
               finalAns.push(this.questions[q]["options"][a]);
             }
@@ -322,13 +322,13 @@ export class AnswerSurveyPage {
         }
       }
 
-      var that = this;
+      const that = this;
 
       // setting the respondents name through 'manual' input
       // STORE to localDB
       if (this.navParams.get("diff_respondent_flag")) {
         // USE NEWLY GENERATED KEY for this unique user...
-        var newUserKey = firebase
+        const newUserKey = firebase
           .database()
           .ref()
           .child("responses/" + this.s_id)
@@ -374,7 +374,7 @@ export class AnswerSurveyPage {
         // store response to firebase
         if (connectedToFirebaseFlag) {
           try {
-            var myId = this.fire.auth.currentUser
+            const myId = this.fire.auth.currentUser
               ? this.fire.auth.currentUser.uid
               : this.currUser;
             firebase

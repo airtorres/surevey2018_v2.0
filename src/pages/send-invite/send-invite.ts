@@ -41,7 +41,7 @@ export class SendInvitePage {
   public generated_users_from_filter = [];
   public numPersons;
 
-  selAll: boolean = false;
+  selAll = false;
   public length;
 
   public s_id;
@@ -101,7 +101,7 @@ export class SendInvitePage {
       this.all_users_email = this.generated_users_from_filter;
       this.selAll = true;
 
-      for (var email in this.all_users_email) {
+      for (const email in this.all_users_email) {
         this.selections[this.all_users_email[email]] = true;
         this.selected_users.push(this.all_users_email[email]);
       }
@@ -109,7 +109,7 @@ export class SendInvitePage {
       this.numPersons = parseInt(this.numPersons["value"]);
     }
     if (this.generated_users_from_filter.length < this.numPersons) {
-      let noteNotEnoughGeneratedUsersToast = this.toastCtrl.create({
+      const noteNotEnoughGeneratedUsersToast = this.toastCtrl.create({
         message: "There weren't enough users that fit your filter options.",
         duration: 4000,
         showCloseButton: true,
@@ -121,7 +121,7 @@ export class SendInvitePage {
 
   checkConnection() {
     // check for Firebase connection
-    var connectFlag = this.configService.isConnectedToFirebase();
+    const connectFlag = this.configService.isConnectedToFirebase();
 
     if (connectFlag) {
       this.loadUsersFromFirebase();
@@ -140,7 +140,7 @@ export class SendInvitePage {
     });
 
     // getting the emails of all_users
-    for (var e in this.all_users) {
+    for (const e in this.all_users) {
       if (this.all_users[e]["email"] != this.fire.auth.currentUser.email) {
         this.all_users_email.push(this.all_users[e]["email"]);
       }
@@ -159,7 +159,7 @@ export class SendInvitePage {
   }
 
   showSuccessPrompt() {
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: "Success",
       message: "Your invitations are successfully sent.",
       buttons: ["OK"],
@@ -169,7 +169,7 @@ export class SendInvitePage {
 
   refresh() {
     this.selected_users = [];
-    for (var email in this.selections) {
+    for (const email in this.selections) {
       if (this.selections[email] == true) {
         this.selected_users.push(email);
       }
@@ -193,13 +193,13 @@ export class SendInvitePage {
   selectAllUsers() {
     this.selected_users = [];
     if (this.selAll == true) {
-      for (var email in this.all_users_email) {
+      for (const email in this.all_users_email) {
         this.selections[this.all_users_email[email]] = true;
         this.selected_users.push(this.all_users_email[email]);
       }
     }
     if (this.selAll == false) {
-      for (var user_email in this.all_users_email) {
+      for (const user_email in this.all_users_email) {
         this.selections[this.all_users_email[user_email]] = false;
         this.selected_users = [];
       }
@@ -207,7 +207,7 @@ export class SendInvitePage {
   }
 
   clearSelected() {
-    for (var user_email in this.all_users_email) {
+    for (const user_email in this.all_users_email) {
       this.selections[this.all_users_email[user_email]] = false;
       this.selected_users = [];
     }
@@ -219,7 +219,7 @@ export class SendInvitePage {
 
   sendInvitation() {
     console.log(this.selected_users);
-    var bindSelf = this;
+    const bindSelf = this;
 
     this.thisSurvey["s_id"] = this.s_id;
 
@@ -228,21 +228,21 @@ export class SendInvitePage {
     this.notification["s_author_id"] = this.userID;
     this.notification["s_title"] = this.title;
     this.notification["date"] = new Date().toISOString();
-    var newNotifKey = firebase
+    const newNotifKey = firebase
       .database()
       .ref()
       .child("/notifications/" + u + "/surveyNotifs/")
       .push().key;
     this.notification["notifId"] = newNotifKey;
 
-    var successFlag = true;
-    var surveyInvites = [];
-    var survey_invites_ids = [];
-    var unsent = [];
+    let successFlag = true;
+    let surveyInvites = [];
+    const survey_invites_ids = [];
+    const unsent = [];
 
-    for (var s in this.selected_users) {
+    for (const s in this.selected_users) {
       for (var u in this.all_users) {
-        var survey_id = this.s_id;
+        const survey_id = this.s_id;
 
         if (this.all_users[u]["email"] == this.selected_users[s]) {
           console.log(
@@ -255,7 +255,7 @@ export class SendInvitePage {
           allSurveyInvites.on("value", (allSurveySnapshot) => {
             surveyInvites = allSurveySnapshot.val();
           });
-          for (var invit in surveyInvites) {
+          for (const invit in surveyInvites) {
             survey_invites_ids.push(surveyInvites[invit]["s_id"]);
           }
           console.log(survey_invites_ids);
@@ -302,7 +302,7 @@ export class SendInvitePage {
 
     if (unsent.length > 0) {
       if (unsent.length == 1) {
-        let oneUnsent = this.alertCtrl.create({
+        const oneUnsent = this.alertCtrl.create({
           title: "Failed",
           message:
             "Your survey invitation was not sent to " +
@@ -312,7 +312,7 @@ export class SendInvitePage {
         });
         oneUnsent.present();
       } else {
-        let manyUnsent = this.alertCtrl.create({
+        const manyUnsent = this.alertCtrl.create({
           title: "Notice",
           message:
             "Failed to send to some users. Users might already have your survey invites.",
@@ -347,7 +347,7 @@ export class SendInvitePage {
     this.initialize();
 
     // set val to the value of the ev target
-    var val = ev.target.value;
+    const val = ev.target.value;
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() != "") {

@@ -24,7 +24,7 @@ export class TemplateListPage {
         .get("built_in_templates")
         .then((templates) => {
           this.built_in_templates = [];
-          for (var temp in templates) {
+          for (const temp in templates) {
             this.built_in_templates.push(templates[temp]);
           }
         })
@@ -41,7 +41,7 @@ export class TemplateListPage {
   }
 
   edit_templates(title) {
-    for (var temp in this.built_in_templates) {
+    for (const temp in this.built_in_templates) {
       if (this.built_in_templates[temp]["title"] == title) {
         this.navCtrl.push(CreateSurveyPage, {
           surveyFromTemplate: this.built_in_templates[temp],

@@ -164,7 +164,7 @@ export class EditProfilePage {
   }
 
   loadCompleteCountryStateCityData() {
-    var completeCountriesData = [];
+    const completeCountriesData = [];
     if (this.configService.isConnectedToFirebase()) {
       const surv: firebase.database.Reference = firebase
         .database()
@@ -186,7 +186,7 @@ export class EditProfilePage {
 
   getBdate() {
     console.log(this.bdate);
-    var age = this.calculateAge(this.bdate);
+    const age = this.calculateAge(this.bdate);
     if (age < 15) {
       this.bDateValidationNote = "You must 15 years old and above.";
     } else {
@@ -195,8 +195,8 @@ export class EditProfilePage {
   }
 
   getCountries() {
-    var countryNames = [];
-    for (var c in this.completeCountryStateCityData) {
+    const countryNames = [];
+    for (const c in this.completeCountryStateCityData) {
       countryNames.push(c);
     }
     this.countries = countryNames;
@@ -236,13 +236,13 @@ export class EditProfilePage {
   calculateAge(birthdate) {
     console.log(birthdate);
 
-    var today = new Date();
-    var todayYear = today.getFullYear();
-    var todayMonth = today.getMonth() + 1;
-    var todayDay = today.getDate();
-    var bday = new Date(birthdate);
+    const today = new Date();
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth() + 1;
+    const todayDay = today.getDate();
+    const bday = new Date(birthdate);
 
-    var age = todayYear - bday.getFullYear();
+    let age = todayYear - bday.getFullYear();
 
     if (todayMonth < bday.getMonth() - 1) {
       age--;
@@ -258,7 +258,7 @@ export class EditProfilePage {
 
   saveProfile(popFlag) {
     this.exitFlag = true;
-    var ageValFlag = true;
+    let ageValFlag = true;
     if (this.configService.isConnectedToFirebase()) {
       if (this.bdate != null) {
         if (this.calculateAge(this.bdate) < 15) {
@@ -360,7 +360,7 @@ export class EditProfilePage {
 
     if (!this.userCanLeave && !this.exitFlag) {
       return new Promise((resolve, reject) => {
-        let alert = this.alertCtrl.create({
+        const alert = this.alertCtrl.create({
           title: "Changes made",
           message: "Do you want to save these changes?",
           buttons: [
@@ -412,7 +412,7 @@ export class EditProfilePage {
         alert(JSON.stringify(newUrl));
 
         let dirPath = newUrl.nativeURL;
-        let dirPathSegments = dirPath.split("/"); //break the string into an array
+        const dirPathSegments = dirPath.split("/"); //break the string into an array
         dirPathSegments.pop(); //remove its last element
         dirPath = dirPathSegments.join("/");
 
@@ -426,9 +426,9 @@ export class EditProfilePage {
   }
 
   async upload(buffer, name) {
-    let blob = new Blob([buffer], { type: "image/jpeg" });
+    const blob = new Blob([buffer], { type: "image/jpeg" });
 
-    let storage = firebase.storage();
+    const storage = firebase.storage();
     storage
       .ref("images/" + name)
       .put(blob)

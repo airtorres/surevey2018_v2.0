@@ -126,7 +126,7 @@ export class FiltersPage {
 
   checkConnection() {
     // check for Firebase connection
-    var connectFlag = this.configService.isConnectedToFirebase();
+    const connectFlag = this.configService.isConnectedToFirebase();
 
     if (connectFlag) {
       this.loadUsersFromFirebase();
@@ -145,14 +145,14 @@ export class FiltersPage {
     });
 
     // getting all users excluding the current logged in user
-    for (var u in this.users) {
+    for (const u in this.users) {
       if (this.users[u]["email"] != this.fire.auth.currentUser.email) {
         this.all_users.push(this.users[u]);
       }
     }
 
     // getting the emails of all_users
-    for (var e in this.all_users) {
+    for (const e in this.all_users) {
       if (this.all_users[e]["email"] != this.fire.auth.currentUser.email) {
         this.all_users_email.push(this.all_users[e]["email"]);
       }
@@ -196,7 +196,7 @@ export class FiltersPage {
   }
 
   applyFilterToast() {
-    let applyFilter = this.toastCtrl.create({
+    const applyFilter = this.toastCtrl.create({
       message: "Applied filters successfully!",
       duration: 3100,
       position: "bottom",
@@ -212,7 +212,7 @@ export class FiltersPage {
       this.navCtrl.getPrevious().data.generated_users = this.all_users_email;
     } else {
       while (length != this.numPersons.value) {
-        let user =
+        const user =
           this.all_users_email[
             Math.floor(Math.random() * this.all_users_email.length)
           ];
@@ -240,19 +240,19 @@ export class FiltersPage {
     filteredUsers = this.all_users;
     let arrayofUsers = [];
 
-    let ageMin = this.min.value;
-    let ageMax = this.max.value;
-    let sex = this.sex;
-    let profession = this.profession;
-    let country = this.country;
-    let state = this.state;
-    let city = this.city;
+    const ageMin = this.min.value;
+    const ageMax = this.max.value;
+    const sex = this.sex;
+    const profession = this.profession;
+    const country = this.country;
+    const state = this.state;
+    const city = this.city;
 
     // retrieve sample with ageMin only
     if (ageMin != "" && ageMax == "") {
       console.log("ageMin");
       arrayofUsers = [];
-      for (var e in filteredUsers) {
+      for (const e in filteredUsers) {
         if (filteredUsers[e]["age"] >= ageMin) {
           console.log(filteredUsers[e]["age"], filteredUsers[e]["email"]);
           arrayofUsers.push(filteredUsers[e]);
@@ -266,7 +266,7 @@ export class FiltersPage {
     if (ageMin == "" && ageMax != "") {
       console.log("ageMax");
       arrayofUsers = [];
-      for (var m in filteredUsers) {
+      for (const m in filteredUsers) {
         if (
           filteredUsers[m]["age"] <= ageMax &&
           filteredUsers[m]["age"] >= 15
@@ -284,14 +284,14 @@ export class FiltersPage {
       console.log("ageMin and ageMax");
       arrayofUsers = [];
       if (ageMin == ageMax) {
-        for (var mn1 in filteredUsers) {
+        for (const mn1 in filteredUsers) {
           if (filteredUsers[mn1]["age"] == ageMin) {
             console.log(filteredUsers[mn1]["age"], filteredUsers[mn1]["email"]);
             arrayofUsers.push(filteredUsers[mn1]);
           }
         }
       } else {
-        for (var mn in filteredUsers) {
+        for (const mn in filteredUsers) {
           if (
             filteredUsers[mn]["age"] >= ageMin &&
             filteredUsers[mn]["age"] <= ageMax
@@ -309,7 +309,7 @@ export class FiltersPage {
     if (sex != "Male & Female") {
       console.log("sex: ", sex);
       arrayofUsers = [];
-      for (var s in filteredUsers) {
+      for (const s in filteredUsers) {
         if (filteredUsers[s]["sex"] == sex) {
           console.log(filteredUsers[s]["sex"], filteredUsers[s]["email"]);
           arrayofUsers.push(filteredUsers[s]);
@@ -323,7 +323,7 @@ export class FiltersPage {
     if (profession != "Any") {
       console.log("profession: ", profession);
       arrayofUsers = [];
-      for (var p in filteredUsers) {
+      for (const p in filteredUsers) {
         if (filteredUsers[p]["profession"] == profession) {
           console.log(
             filteredUsers[p]["profession"],
@@ -340,7 +340,7 @@ export class FiltersPage {
     if (country != "Anywhere" && state == "Anywhere" && city == "Anywhere") {
       console.log("country");
       arrayofUsers = [];
-      for (var c in filteredUsers) {
+      for (const c in filteredUsers) {
         if (filteredUsers[c]["country"] == country) {
           console.log(filteredUsers[c]["country"], filteredUsers[c]["email"]);
           arrayofUsers.push(filteredUsers[c]);
@@ -353,7 +353,7 @@ export class FiltersPage {
     if (country != "Anywhere" && state != "Anywhere" && city == "Anywhere") {
       console.log("country, state");
       arrayofUsers = [];
-      for (var st in filteredUsers) {
+      for (const st in filteredUsers) {
         if (
           filteredUsers[st]["country"] == country &&
           filteredUsers[st]["state"] == state
@@ -373,7 +373,7 @@ export class FiltersPage {
     if (country != "Anywhere" && state != "Anywhere" && city != "Anywhere") {
       console.log("country, state, city");
       arrayofUsers = [];
-      for (var ci in filteredUsers) {
+      for (const ci in filteredUsers) {
         if (
           filteredUsers[ci]["country"] == country &&
           filteredUsers[ci]["state"] == state &&
@@ -393,7 +393,7 @@ export class FiltersPage {
     }
 
     // get all emails after filtering from filterdUsers array
-    for (var user in filteredUsers) {
+    for (const user in filteredUsers) {
       this.all_users_email.push(filteredUsers[user]["email"]);
     }
 
@@ -402,7 +402,7 @@ export class FiltersPage {
 
   requiredField() {
     if (this.numPersons.value == "") {
-      let incompleteFieldsToast = this.toastCtrl.create({
+      const incompleteFieldsToast = this.toastCtrl.create({
         message: "Please input the number of respondents to be generated.",
         duration: 2000,
         position: "bottom",
@@ -410,7 +410,7 @@ export class FiltersPage {
 
       incompleteFieldsToast.present();
     } else if (this.numPersons.value < 1) {
-      let invalidToast = this.toastCtrl.create({
+      const invalidToast = this.toastCtrl.create({
         message: "Please input numbers greater than 1.",
         duration: 2000,
         position: "bottom",
@@ -422,7 +422,7 @@ export class FiltersPage {
   }
 
   validateAgeRange() {
-    let minAgeRangeError = this.toastCtrl.create({
+    const minAgeRangeError = this.toastCtrl.create({
       message: "Please input positive numbers for age between 15-90.",
       duration: 2000,
       position: "bottom",
@@ -432,7 +432,7 @@ export class FiltersPage {
     document.getElementById("ageRange").classList.add("warning");
   }
   validateInputAgeRange() {
-    let ageRangeError = this.toastCtrl.create({
+    const ageRangeError = this.toastCtrl.create({
       message: "Invalid range.",
       duration: 2000,
       position: "bottom",
@@ -467,7 +467,7 @@ export class FiltersPage {
         this.state == "Anywhere" &&
         this.city == "Anywhere"
       ) {
-        let generateUsersByRandom = this.loadingCtrl.create({
+        const generateUsersByRandom = this.loadingCtrl.create({
           content: "\nGenerating users... Please wait",
         });
 
@@ -476,7 +476,7 @@ export class FiltersPage {
           generateUsersByRandom.dismiss();
         });
       } else {
-        var validAge = true;
+        let validAge = true;
         // cluster or stratified sampling
         if (this.min.value != "" && this.max.value == "") {
           if (this.min.value < 15 || this.min.value > 90) {
@@ -504,7 +504,7 @@ export class FiltersPage {
         }
 
         if (validAge) {
-          let generateUsersByClusterStratified = this.loadingCtrl.create({
+          const generateUsersByClusterStratified = this.loadingCtrl.create({
             content: "\nApplying filters... Generating users... Please wait",
           });
 

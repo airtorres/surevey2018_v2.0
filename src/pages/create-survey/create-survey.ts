@@ -89,7 +89,7 @@ export class CreateSurveyPage {
 
       this.push_flag_for_survey = false;
     } else if (this.navParams.get("surveyFromTemplate")) {
-      var survTemplate = this.navParams.get("surveyFromTemplate");
+      const survTemplate = this.navParams.get("surveyFromTemplate");
 
       this.initial_title = survTemplate["title"];
       this.intial_desc = survTemplate["description"];
@@ -129,7 +129,7 @@ export class CreateSurveyPage {
   }
 
   addQuestion(questionType) {
-    let data = {
+    const data = {
       type: questionType,
     };
     console.log(data);
@@ -140,19 +140,19 @@ export class CreateSurveyPage {
   }
 
   checkIfSameTitle(surveyTitle) {
-    var mysurveylist = this.configService.getUserSurveysList(
+    const mysurveylist = this.configService.getUserSurveysList(
       this.fire.auth.currentUser.uid
     );
 
-    var equal = true;
+    let equal = true;
     if (mysurveylist) {
-      for (var i in mysurveylist) {
+      for (const i in mysurveylist) {
         if (mysurveylist[i] != this.s_id) {
           const survey: firebase.database.Reference = firebase
             .database()
             .ref("/surveys/" + mysurveylist[i]);
           survey.once("value", (surveySnapshot) => {
-            var isEqualTitle =
+            const isEqualTitle =
               surveySnapshot.child("title").val() == surveyTitle;
             if (isEqualTitle) {
               equal = false;
@@ -169,15 +169,15 @@ export class CreateSurveyPage {
   }
 
   canSave(popFlag) {
-    var isValidTitle = true;
+    let isValidTitle = true;
 
     if (this.surveyTitle.value && this.surveyTitle.value != "") {
-      var pattern = new RegExp(
+      const pattern = new RegExp(
         "^([a-zA-Z0-9]+)([a-zA-Z0-9]+[ \\.\\-\\,\\(\\)\\+\\$\\!\\?]+)*[a-zA-Z0-9]+$"
       );
       isValidTitle = pattern.test(this.surveyTitle.value);
 
-      var noDuplicate = this.checkIfSameTitle(this.surveyTitle.value);
+      const noDuplicate = this.checkIfSameTitle(this.surveyTitle.value);
       console.log(noDuplicate);
 
       if (isValidTitle && noDuplicate) {
@@ -208,7 +208,7 @@ export class CreateSurveyPage {
     this.survey["isActive"] = true; //the survey is active upon creation
 
     // check for Firebase connection
-    var connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
+    const connectedToFirebaseFlag = this.configService.isConnectedToFirebase();
 
     if (this.push_flag_for_survey) {
       this.survey["created_at"] = new Date().toISOString();
@@ -222,7 +222,7 @@ export class CreateSurveyPage {
 
         try {
           // generate ID for this survey
-          var newPostKey = firebase
+          const newPostKey = firebase
             .database()
             .ref()
             .child("surveys")
@@ -271,14 +271,14 @@ export class CreateSurveyPage {
 
   saveToUserSurveyList(popFlag) {
     try {
-      var mylist = [];
-      var thisSurveyId = this.s_id;
-      var mysurveylist = this.configService.getUserSurveysList(
+      const mylist = [];
+      const thisSurveyId = this.s_id;
+      const mysurveylist = this.configService.getUserSurveysList(
         this.fire.auth.currentUser.uid
       );
 
       if (mysurveylist) {
-        for (var m in mysurveylist) {
+        for (const m in mysurveylist) {
           mylist.push(mysurveylist[m]);
         }
         mylist.push(thisSurveyId);
@@ -318,7 +318,7 @@ export class CreateSurveyPage {
   }
 
   deleteQuestion(q_id, q_msg) {
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: "Are you sure to delete this question?",
       message: q_msg,
       buttons: [
@@ -349,8 +349,8 @@ export class CreateSurveyPage {
     console.log("reloading question IDs ...");
 
     this.questions_with_IDs = [];
-    for (var q in this.questions) {
-      var temp = this.questions[q];
+    for (const q in this.questions) {
+      const temp = this.questions[q];
       temp["q_id"] = "";
       temp["q_id"] = q;
       this.questions_with_IDs.push(temp);
@@ -360,9 +360,9 @@ export class CreateSurveyPage {
   }
 
   public ionViewWillEnter() {
-    var push_flag = this.navParams.get("push_flag");
-    var replace_flag = this.navParams.get("replace_flag");
-    var qID = this.navParams.get("qID"); // qID from question.ts
+    const push_flag = this.navParams.get("push_flag");
+    const replace_flag = this.navParams.get("replace_flag");
+    const qID = this.navParams.get("qID"); // qID from question.ts
 
     if (push_flag) {
       this.question_data = this.navParams.get("question_data") || null;
@@ -430,7 +430,7 @@ export class CreateSurveyPage {
     // here you can use other vars to see if there are reasons we want to keep user in this page:
     if (!this.userCanLeave && !this.enteringQuestionPage && !this.savingFlag) {
       return new Promise((resolve, reject) => {
-        let alert = this.alertCtrl.create({
+        const alert = this.alertCtrl.create({
           title: "Changes made",
           message: "Do you want to save?",
           buttons: [
@@ -482,7 +482,7 @@ export class CreateSurveyPage {
 
   showSavingPrompt(saveFromTop) {
     return new Promise((resolve, reject) => {
-      let alert = this.alertCtrl.create({
+      const alert = this.alertCtrl.create({
         title: "Error saving survey",
         message: "Connection timeout.",
         buttons: [

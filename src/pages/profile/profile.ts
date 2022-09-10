@@ -43,9 +43,9 @@ export class ProfilePage {
   }
 
   getAddress() {
-    var country = this.userData["country"] ? this.userData["country"] : "";
-    var state = this.userData["state"] ? this.userData["state"] : "";
-    var city = this.userData["city"] ? this.userData["city"] : "";
+    const country = this.userData["country"] ? this.userData["country"] : "";
+    let state = this.userData["state"] ? this.userData["state"] : "";
+    let city = this.userData["city"] ? this.userData["city"] : "";
 
     if (city != "") {
       city = city + ", ";

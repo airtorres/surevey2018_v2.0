@@ -37,7 +37,7 @@ export class ConfigurationProvider {
   ) {
     console.log("Hello ConfigurationProvider Provider");
 
-    var that = this;
+    const that = this;
     firebase
       .database()
       .ref("/")
@@ -54,7 +54,7 @@ export class ConfigurationProvider {
   }
 
   displayToast(msg) {
-    let toast = this.toastCtrl.create({
+    const toast = this.toastCtrl.create({
       message: msg,
       duration: 2000,
       position: "bottom",
@@ -64,7 +64,7 @@ export class ConfigurationProvider {
   }
 
   showSimpleAlert(thisTitle, msg) {
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: thisTitle,
       message: msg,
       buttons: ["OK"],
@@ -73,7 +73,7 @@ export class ConfigurationProvider {
   }
 
   showSimpleConnectionError() {
-    let alert = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: "Connection Timeout",
       message: "You must be connected to the internet.",
       buttons: ["OK"],
@@ -82,16 +82,16 @@ export class ConfigurationProvider {
   }
 
   transformAuthorName(authorId, email) {
-    var name = email;
+    let name = email;
     const user: firebase.database.Reference = firebase
       .database()
       .ref("/users/" + authorId);
     user.on("value", (userSnapshot) => {
-      var u = userSnapshot.val();
+      const u = userSnapshot.val();
 
       if (u) {
-        var firstname = u["first_name"];
-        var lastname = u["last_name"];
+        const firstname = u["first_name"];
+        const lastname = u["last_name"];
 
         if (u["first_name"] != null && u["last_name"] != null) {
           name = firstname + " " + lastname;
@@ -107,18 +107,18 @@ export class ConfigurationProvider {
   }
 
   transformAuthorNameNoEmail(authorId) {
-    var name = "";
-    var email = "";
+    let name = "";
+    let email = "";
     const user: firebase.database.Reference = firebase
       .database()
       .ref("/users/" + authorId);
     user.on("value", (userSnapshot) => {
-      var u = userSnapshot.val();
+      const u = userSnapshot.val();
 
       if (u) {
         email = u["email"];
-        var firstname = u["first_name"];
-        var lastname = u["last_name"];
+        const firstname = u["first_name"];
+        const lastname = u["last_name"];
 
         if (u["first_name"] != null && u["last_name"] != null) {
           name = firstname + " " + lastname;
@@ -134,8 +134,8 @@ export class ConfigurationProvider {
   }
 
   transformDate(isoDate) {
-    var date = new Date(isoDate);
-    var months = [
+    const date = new Date(isoDate);
+    const months = [
       "Jan",
       "Feb",
       "Mar",
@@ -150,11 +150,11 @@ export class ConfigurationProvider {
       "Dec",
     ];
 
-    var month = months[date.getMonth()];
-    var day = date.getDate();
-    var year = date.getFullYear();
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
 
-    var dateVal = month + " " + day + ", " + year;
+    const dateVal = month + " " + day + ", " + year;
 
     if (dateVal) {
       return dateVal;
@@ -164,19 +164,19 @@ export class ConfigurationProvider {
   }
 
   transformTime(isoDate) {
-    var date = new Date(isoDate);
-    var time = date.toTimeString().split(" ")[0];
+    const date = new Date(isoDate);
+    const time = date.toTimeString().split(" ")[0];
 
     return time;
   }
 
   transformDateNumFormat(isoDate) {
-    var dateVal = "No Date Specified";
+    let dateVal = "No Date Specified";
     if (isoDate) {
-      var date = new Date(isoDate);
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var year = date.getFullYear();
+      const date = new Date(isoDate);
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const year = date.getFullYear();
 
       dateVal = month + "/" + day + "/" + year;
 
@@ -222,8 +222,8 @@ export class ConfigurationProvider {
         .ref("/built_in_templates");
       templateRef.on("value", (templateSnapshot) => {
         this.built_in_templates = [];
-        var tempRef = templateSnapshot.val();
-        for (var temp in tempRef) {
+        const tempRef = templateSnapshot.val();
+        for (const temp in tempRef) {
           this.built_in_templates.push(tempRef[temp]);
         }
         this.storage.set("built_in_templates", this.built_in_templates);
@@ -248,10 +248,10 @@ export class ConfigurationProvider {
   }
 
   deleteSurveyFromSurveyList(surveyId) {
-    var mySurvs = this.getUserSurveysList(this.fire.auth.currentUser.uid);
+    const mySurvs = this.getUserSurveysList(this.fire.auth.currentUser.uid);
 
-    var bindSelf = this;
-    for (var index in mySurvs) {
+    const bindSelf = this;
+    for (const index in mySurvs) {
       if (surveyId == mySurvs[index]) {
         firebase
           .database()
@@ -275,12 +275,12 @@ export class ConfigurationProvider {
   }
 
   deleteSurvey(surveyId) {
-    let loading = this.loadingCtrl.create({
+    const loading = this.loadingCtrl.create({
       content: "Deleting survey...",
     });
 
     loading.present().then(() => {
-      var bindSelf = this;
+      const bindSelf = this;
       firebase
         .database()
         .ref("/surveys/" + surveyId)
@@ -312,7 +312,7 @@ export class ConfigurationProvider {
   }
 
   deleteSurveyInvitation(surveyId) {
-    var bindSelf = this;
+    const bindSelf = this;
     firebase
       .database()
       .ref(
@@ -337,8 +337,8 @@ export class ConfigurationProvider {
   }
 
   deleteSentInvitationNotifFromSurveyList(surveyId) {
-    var notifInvites = this.getNotifSurveyInvites();
-    for (var n in notifInvites) {
+    const notifInvites = this.getNotifSurveyInvites();
+    for (const n in notifInvites) {
       if (notifInvites[n]["s_id"] == surveyId) {
         firebase
           .database()
@@ -360,16 +360,16 @@ export class ConfigurationProvider {
   }
 
   getNotifSurveyInvites() {
-    var invites = [];
+    const invites = [];
     const notifinviteRef: firebase.database.Reference = firebase
       .database()
       .ref(
         "/notifications/" + this.fire.auth.currentUser.uid + "/surveyNotifs/"
       );
     notifinviteRef.on("value", (notifInviteSnap) => {
-      var notifInvite = notifInviteSnap.val();
+      const notifInvite = notifInviteSnap.val();
       if (notifInvite) {
-        for (var ni in notifInvite) {
+        for (const ni in notifInvite) {
           if (
             notifInvite[ni]["type"] == "invitation" &&
             notifInvite[ni]["s_status"] == "pending"
@@ -383,7 +383,7 @@ export class ConfigurationProvider {
   }
 
   getSurveyData(surveyId) {
-    var thisSurvey = [];
+    let thisSurvey = [];
     const survey: firebase.database.Reference = firebase
       .database()
       .ref("/surveys/" + surveyId);
@@ -394,7 +394,7 @@ export class ConfigurationProvider {
   }
 
   getUserSurveysAllList(userId) {
-    var all = [];
+    let all = [];
     const surv: firebase.database.Reference = firebase
       .database()
       .ref("/user_surveys/" + userId);
@@ -405,7 +405,7 @@ export class ConfigurationProvider {
   }
 
   getUserSurveysList(userId) {
-    var mySurvs = this.mysurveylist;
+    let mySurvs = this.mysurveylist;
     const surv: firebase.database.Reference = firebase
       .database()
       .ref("/user_surveys/" + userId + "/surveylist");
@@ -417,7 +417,7 @@ export class ConfigurationProvider {
   }
 
   getUserInvitationsList(userId) {
-    var invits = [];
+    let invits = [];
     const surv: firebase.database.Reference = firebase
       .database()
       .ref("/user_surveys/" + userId + "/invitations");
@@ -428,7 +428,7 @@ export class ConfigurationProvider {
   }
 
   getNumResponses(surveyId) {
-    var num_responses = 0;
+    let num_responses = 0;
     const resp: firebase.database.Reference = firebase
       .database()
       .ref("/responses/" + surveyId);
@@ -468,7 +468,7 @@ export class ConfigurationProvider {
 
   // ================= CONFIGURING COUNTRY_STATE_CITY ====================================
   getCountryStateCityDataFromLocalDB() {
-    var countries = [];
+    let countries = [];
     try {
       this.storage.get("country_state_city").then((data) => {
         if (data) {
@@ -482,7 +482,7 @@ export class ConfigurationProvider {
   }
 
   getCountryStateCityDataFromFirebase() {
-    var countries = [];
+    let countries = [];
     const surv: firebase.database.Reference = firebase
       .database()
       .ref("/country_state_city/");
@@ -505,9 +505,9 @@ export class ConfigurationProvider {
   }
 
   getAllCountryNames() {
-    var countries = this.getCountryStateCityData();
-    var countryNames = [];
-    for (var c in countries) {
+    const countries = this.getCountryStateCityData();
+    const countryNames = [];
+    for (const c in countries) {
       countryNames.push(c);
     }
     return countryNames;
@@ -515,11 +515,11 @@ export class ConfigurationProvider {
 
   // returns details of states (includes cities)
   getAllStates() {
-    var states = [];
-    var all = this.getCountryStateCityData();
-    for (var country in all) {
-      for (var state in all[country]) {
-        var temp = {};
+    const states = [];
+    const all = this.getCountryStateCityData();
+    for (const country in all) {
+      for (const state in all[country]) {
+        const temp = {};
         temp[state] = "";
         temp[state] = all[country];
         states.push(temp);
@@ -530,10 +530,10 @@ export class ConfigurationProvider {
 
   // returns statenames only
   getAllStateNames() {
-    var states = [];
-    var all = this.getCountryStateCityData();
-    for (var country in all) {
-      for (var state in all[country]) {
+    const states = [];
+    const all = this.getCountryStateCityData();
+    for (const country in all) {
+      for (const state in all[country]) {
         states.push(state);
       }
     }
@@ -542,7 +542,7 @@ export class ConfigurationProvider {
 
   // returns details of states (includes cities); for given country
   getStatesOf(countryId) {
-    var states = [];
+    let states = [];
     if (countryId && countryId != "Anywhere") {
       if (this.isConnectedToFirebase()) {
         const s: firebase.database.Reference = firebase
@@ -550,13 +550,13 @@ export class ConfigurationProvider {
           .ref("/country_state_city/" + countryId);
         s.once("value", (statesSnapshot) => {
           if (statesSnapshot.val()) {
-            var temp = statesSnapshot.val();
+            const temp = statesSnapshot.val();
             states = temp;
           }
         });
         return states;
       } else {
-        var all = this.getCountryStateCityDataFromLocalDB();
+        const all = this.getCountryStateCityDataFromLocalDB();
         if (all[countryId]) {
           states = all[countryId];
         }
@@ -572,13 +572,13 @@ export class ConfigurationProvider {
 
   // returns state names of the given country
   getStateNamesOf(countryId) {
-    var statenames = [];
+    let statenames = [];
     if (countryId == "Anywhere") {
       statenames = this.getAllStateNames();
     } else if (!countryId) {
       console.log("Not a valid country.");
     } else {
-      for (var state in this.getStatesOf(countryId)) {
+      for (const state in this.getStatesOf(countryId)) {
         statenames.push(state);
       }
     }
@@ -586,11 +586,11 @@ export class ConfigurationProvider {
   }
 
   getAllCityNames() {
-    var cities = [];
-    var all = this.getCountryStateCityData();
-    for (var country in all) {
-      for (var state in all[country]) {
-        for (var cityIdx in all[country][state]) {
+    const cities = [];
+    const all = this.getCountryStateCityData();
+    for (const country in all) {
+      for (const state in all[country]) {
+        for (const cityIdx in all[country][state]) {
           cities.push(all[country][state][cityIdx]);
         }
       }
@@ -599,19 +599,19 @@ export class ConfigurationProvider {
   }
 
   getCitiesOf(stateId, countryId) {
-    var cities = [];
+    const cities = [];
     if (stateId && countryId) {
       if (countryId == "Anywhere") {
         return this.getAllCityNames();
       } else if (stateId == "Anywhere") {
-        var states = this.getStatesOf(countryId);
-        for (var s in states) {
-          for (var city in states[s]) {
+        const states = this.getStatesOf(countryId);
+        for (const s in states) {
+          for (const city in states[s]) {
             cities.push(states[s][city]);
           }
         }
       } else {
-        var all = this.getCountryStateCityData();
+        const all = this.getCountryStateCityData();
         if (all[countryId]) {
           return all[countryId][stateId];
         }

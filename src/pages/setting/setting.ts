@@ -42,7 +42,7 @@ export class SettingPage {
   }
 
   updatePassword() {
-    var that = this;
+    const that = this;
 
     if (this.newpassword.value.length < 6) {
       this.configService.displayToast(
@@ -53,9 +53,9 @@ export class SettingPage {
         .database()
         .ref("/users/" + this.userID + "/password")
         .once("value", (dataSnapshot) => {
-          var mypswd = dataSnapshot.val();
+          const mypswd = dataSnapshot.val();
 
-          var newPSWD = this.loginService.md5(this.newpassword.value);
+          const newPSWD = this.loginService.md5(this.newpassword.value);
 
           if (this.loginService.md5(this.currpassword.value) == mypswd) {
             if (this.newpassword.value == this.retypeNew.value) {

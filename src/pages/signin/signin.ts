@@ -56,7 +56,7 @@ export class SigninPage {
       console.log("Error logging in using localDB");
     }
 
-    let EMAILPATTERN =
+    const EMAILPATTERN =
       /^[a-z0-9][a-z0-9!#$%&'*+\/=?^_`{|}~.-]*\@[a-z0-9]+\.[a-z0-9]+(\.[a-z0-9]+)*$/i;
 
     this.authSignin = this.formbuilder.group({
@@ -89,7 +89,7 @@ export class SigninPage {
   showInvalidLogin() {
     try {
       // document.getElementById('invalidLogin_div').style.display = "block";
-      let invalidLogin = this.toastCtrl.create({
+      const invalidLogin = this.toastCtrl.create({
         message: "Email and password does not match!",
         duration: 2000,
         position: "bottom",
@@ -111,7 +111,7 @@ export class SigninPage {
   }
 
   signin() {
-    let loading = this.loadingCtrl.create({
+    const loading = this.loadingCtrl.create({
       content: "Signing in",
     });
 
